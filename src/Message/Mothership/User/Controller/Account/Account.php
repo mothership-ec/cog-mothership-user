@@ -46,8 +46,6 @@ class Account extends Controller
 		// Load the current order 
 		$order = $this->get('order.loader')->getByID($orderID);
 		$address = $this->get('order.address.loader')->getByOrder($order);
-		de($order);
-
 		
 		return $this->render('Message:Mothership:User::Account:orderdetails', array(
 			'order' => $order,
