@@ -9,7 +9,7 @@ use Message\Mothership\Ecommerce\Form\UserRegister;
 /**
  * Class Account
  *
- * Controller for processing orders in Fulfillment
+ * Controller for editing user account details
  */
 class Edit extends Controller
 {
@@ -42,8 +42,37 @@ class Edit extends Controller
 		$form = $this->addressForm();
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			de($data);
+
+			$user = $this->get('user.current');
+			
+			// Update the user here
+			$user->title  	 = $data['title'];
+			$user->forename  = $data['forename'];
+			$user->surname   = $data['surname'];
+			//$user->email  = $data['email'];
+
+			$updateUser = $this->get('user.edit');
+			$updateUser->save($user);
+
+			// Update the address
+			$addresses = $this->get('commerce.user.collection')->getByProperty('type', 'billing');
+			$address = array_pop($addresses);
+			$address->lines[1] 	  = $data['address_line_1'];
+			$address->lines[2] 	  = $data['address_line_2'];
+			$address->lines[3] 	  = $data['address_line_3'];
+			$address->lines[4] 	  = $data['address_line_4'];
+			$address->town 		  = $data['town'];
+			$address->stateID 	  = $data['state_id'];
+			$address->countryID   = $data['country_id'];
+			$address->postcode 	  = $data['postcode'];
+			//$address->telephone = $data['telephone']
+
+			$addressEdit = $this->get('commerce.user.address.edit');
+			$addressEdit->save($address);
+
+			$this->addFlash('notice', 'Updated Used Details');
 		}
 
+		return $this->redirectToReferer();;
 	}
 }
