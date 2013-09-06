@@ -14,16 +14,14 @@ class Account extends Controller
 {
 	public function index()
 	{
-		// Load the user
 		$user = $this->get('user.current');
-		// Load the user addresses
-		$billingaddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
-		$deliveryaddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
+		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
+		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
 		return $this->render('Message:Mothership:User::Account:account', array(
 			'user'    => $user,
-			'billingaddress' => $billingaddress,
-			'deliveryaddress' => $deliveryaddress,
+			'billingAddress' => $billingAddress,
+			'deliveryAddress' => $deliveryAddress,
 		));
 	}
 
@@ -34,7 +32,7 @@ class Account extends Controller
 		// return their orders
 		$orders = $this->get('order.loader')->getByUser($user);
 
-		return $this->render('Message:Mothership:Commerce::order:order:summary', array(
+		return $this->render('Message:Mothership:User::account:order-listing', array(
 			'orders' => $orders,
 		));
 	}
@@ -44,12 +42,13 @@ class Account extends Controller
 		// Load the current order 
 		$order = $this->get('order.loader')->getByID($orderID);
 		$address = $this->get('order.address.loader')->getByOrder($order);
+		$returns = $this->get('return.loader')->getByOrder($order);
 		
-		return $this->render('Message:Mothership:User::Account:orderdetails', array(
-			'order' => $order,
+		return $this->render('Message:Mothership:User::account:order-details', array(
+			'order'   => $order,
+			'returns' => $returns,
 			'address' => $address,
 		));
 		
 	}
-
 }

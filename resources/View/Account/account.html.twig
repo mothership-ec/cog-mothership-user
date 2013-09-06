@@ -1,54 +1,31 @@
-<p>Name: <br />
-	{{ user.forename }} {{ user.surname }}</p>
 
-<p>Email:<br />
-	{{ user.email }}</p>
+<section>
+	<h1>Account Detail</h1>
+	<ul>
+		<li><span>Title</span> {{user.title}}</li>
+		<li><span>Name</span> {{user.forename}} {{ user.surname }}</li>
+		<li><span>E-Mail-Address</span> {{ user.email }}</li>
+	</ul>
+</section>
+{% if billingAddress %}
+	{% set address = billingAddress %}
+	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
+{% endif %}
 
-<p>Telephone:<br />
-	{{ billingaddress.telephone }} </p>
-
-<p>Billing Address: <br />
-
-	{% for line in billingaddress.lines if line %}
-		{{ line }} <br />
-	{% endfor %}
-
-	{{ billingaddress.town }} <br />
-
-	{% if billingaddress.stateID %}
-		{{ billingaddress.stateID }} <br />
-	{% endif %}
-
-	{{ billingaddress.postcode }} <br />
-
-	{{ billingaddress.country }} </p>
-
-<p>Billing telephone:<br />
-	{{ billingaddress.telephone }} </p>
-
-<p>Delivery Address: <br />
-
-	{% for line in deliveryaddress.lines if line %}
-		{{ line }} <br />
-	{% endfor %}
-
-	{{ deliveryaddress.town }} <br />
-
-	{% if deliveryaddress.stateID %}
-		{{ deliveryaddress.stateID }} <br />
-	{% endif %}
-
-	{{ deliveryaddress.postcode }} <br />
-
-	{{ deliveryaddress.country }} </p>
-
-<p>Delivery telephone:<br />
-	{{ deliveryaddress.telephone }} </p>
-
-<p>Send me email updates: <br />
-	??</p>
+{% if deliveryAddress %}
+	{% set address = deliveryAddress %}
+	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
+{% endif %}
 
 
-<a href ="">Edit account details</a><br />
-<a href ="">Show order history</a><br />
-<a href ="">Return an item</a><br />
+<p>
+	<li>Send me E-Mail updates?</li>
+</p>
+
+<div>
+	<ul>
+		<li><a href="{{ url('ms.user.edit') }}">Edit account details</a></li>
+		<li><a href="{{ url('ms.user.order.listing') }}">Show order history</a></li>
+		<li><a href="">Return an item</a></li>
+	</ul>
+</div>

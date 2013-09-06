@@ -5,6 +5,7 @@ namespace Message\Mothership\User\Controller\Account;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form\UserAddresses;
 use Message\Mothership\User\Form\UserDetails;
+use Message\Mothership\Commerce\User\Address\Address;
 
 /**
  * Class Account
@@ -15,86 +16,182 @@ class Edit extends Controller
 {
 	public function index()
 	{
-		$billingform = $this->addressForm('billing');
-		$deliveryform = $this->addressForm('delivery');
-		$accountdetails = $this->detailsForm();
+		$user = $this->get('user.current');
+		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
+		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
+		
+		if(!$billingAddress) {
+			$billingAddress = new Address;
+			$billingAddress->type = 'billing';
+		}
+		if(!$deliveryAddress) {
+			$deliveryAddress = new Address;
+			$deliveryAddress->type = 'delivery';
+		}
+
+		$billingForm  = $this->_getAddressForm($billingAddress);
+		$deliveryForm = $this->_getAddressForm($deliveryAddress);
+		$detailForm   = $this->_getDetailForm();
 
 		return $this->render('Message:Mothership:User::Account:edit', array(
-			'billingform'	  => $billingform,
-			'deliveryform'	  => $deliveryform,
-			'accountdetails'  => $accountdetails,
+			'billingForm' 	=> $billingForm,
+			'deliveryForm'	=> $deliveryForm,
+			'detailForm' 	=> $detailForm,
 		));
 	}
 
-	public function addressForm($type)
+	public function detail()
+	{
+		return $this->render('Message:Mothership:User::account:detail-edit', array(
+			'form' => $this->_getDetailForm(),
+		));
+	}
+
+	public function address($type)
 	{
 		$user = $this->get('user.current');
 		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
 
-		//de($address);
-
-		$form = new UserAddresses($this->_services);
-		$form = $form->buildForm($user, $address, $type, $this->generateUrl('ms.user.edit.action'));
-
-		return $form;
+		return $this->render('Message:Mothership:User::account:address-edit', array(
+			'form' => $this->_getAddressForm($address),
+		));
 	}
 
-	public function addressFormProcess()
+	public function processDetail()
 	{
-		$form = $this->addressForm();
+		$form = $this->_getDetailForm();
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-
 			$user = $this->get('user.current');
 
-			$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
-			$address->lines[1] 	  = $data['address_line_1'];
-			$address->lines[2] 	  = $data['address_line_2'];
-			$address->lines[3] 	  = $data['address_line_3'];
-			$address->lines[4] 	  = $data['address_line_4'];
-			$address->town 		  = $data['town'];
-			$address->stateID 	  = $data['state_id'];
-			$address->countryID   = $data['country_id'];
-			$address->postcode 	  = $data['postcode'];
-			$address->telephone   = $data['telephone'];
+			$user->title 	= $data['title'];
+			$user->forename = $data['forename'];
+			$user->surname 	= $data['surname'];
 
-			$addressEdit = $this->get('commerce.user.address.edit');
-			$addressEdit->save($address);
-
-			$this->addFlash('notice', 'Updated User Details');
+			if($this->get('user.edit')->save($user)) {
+				$this->addFlash('success', 'You successfully updated your account detail');
+				return $this->redirectToRoute('ms.user.account');
+			} else {
+				$this->addFlash('error', 'Your account detail could not be updated');
+			}
 		}
-
-		return $this->redirectToReferer();;
+		return $this->redirectToReferer();
 	}
 
-	public function detailsForm()
+
+	public function processAddress($type)
+	{
+		$user = $this->get('user.current');
+		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		$created = false;
+		if(!$address) {
+			$address = new Address;
+			$address->type = $type;
+			$created = true;
+		}
+		$form = $this->_getAddressForm($address);
+
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			for($i = 1; $i <= Address::AMOUNT_LINES; ++$i) {
+				$address->lines[$i] = $data['lines'][$i];
+			}
+
+			$address->town 		= $data['town'];
+			$address->stateID	= $data['stateID'];
+			$address->countryID = $data['countryID'];
+			$address->country 	= $this->get('country.list')->getByID($address->countryID);
+			$address->postcode 	= $data['postcode'];
+			$address->telephone = $data['telephone'];
+			$address->userID	= $user->id;
+
+			if($created) {
+				if($this->get('commerce.user.address.create')->create($address)) {
+					$this->addFlash('success', sprintf('You successfully created a %s address.', $type));
+				}
+			} else {
+				if($this->get('commerce.user.address.edit')->save($address)) {
+					$this->addFlash('success', sprintf('You successfully updated you %s address detail.', $type));
+				}
+			}
+		}
+
+		return $this->redirectToReferer();
+	}
+
+	protected function _getDetailForm()
 	{
 		$user = $this->get('user.current');
 
-		//de($user);
+		$form = $this->get('form')
+			->setName('detail-edit')
+			->setAction($this->generateUrl('ms.user.detail.edit.action'))
+			->setMethod('post');
 
-		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($user, $this->generateUrl('ms.user.edit.action'));
+		// TODO: Get choices from somewhere else!!
+		$titleChoices = array(
+			'Mr'   => 'Mr',
+			'Mrs'  => 'Mrs',
+			'Ms'   => 'Ms',
+			'Miss' => 'Miss',
+		);
+
+		$form->add('title', 'choice', 'Title', array(
+			'choices' 	=> $titleChoices,
+			'data'  	=> $user->title,
+			'expanded' 	=> false,
+			'multiple'	=> false,
+		))->val()->optional();
+
+		$form->add('forename', 'text', 'Forename', array('data' => $user->forename))
+			->val()->maxLength(255);
+
+		$form->add('surname', 'text', 'Surname', array('data' => $user->surname))
+			->val()->maxLength(255);
+
+		$form->add('email-updates', 'checkbox', 'Send me e-mail updates')->val()->optional();
 
 		return $form;
 	}
 
 
-	public function detailsFormProcess() 
-	{	
-		$form = $this->detailsForm();
+	protected function _getAddressForm(Address $address)
+	{
+		d($address->type);
+		$form = $this->get('form')
+			->setName(sprintf('%s-address-edit', $address->type))
+			->setAction($this->generateUrl('ms.user.address.edit.action', array('type' => $address->type)))
+			->setMethod('post');
+		
+		$linesForm = $this->get('form')
+			->setName('lines')
+			->addOptions(array(
+				'auto_initialize' => false,
+			));
 
-		$user = $this->get('user.current');
+		$linesForm->add('1', 'text', ' ', array(
+			'data' => $address->lines[1],
+		));
 
-		$user->title  	 = $data['title'];
-		$user->forename  = $data['forename'];
-		$user->surname   = $data['surname'];
-		$user->email     = $data['email'];
+		for($i = 2; $i <= Address::AMOUNT_LINES; ++$i) {
+			$linesForm->add(sprintf('%s', $i), 'text', ' ', array(
+				'data' => $address->lines[$i],
+			))->val()->optional();
+		}
 
-		$updateUser = $this->get('user.edit');
-		$updateUser->save($user);
+		$form->add($linesForm->getForm(), 'form', 'Address Lines');
 
-		$this->addFlash('notice', 'Updated User Details');
+		$form->add('town','text','Town', array('data' => $address->town));
+		$form->add('postcode','text','Postcode', array('data' => $address->postcode));
+		$form->add('stateID','text','State ID', array('data' => $address->stateID))
+			->val()->optional();
+
+		$form->add('countryID','choice','Country', array(
+			'choices' => $this->get('country.list')->all(),
+			'data'    => $address->countryID,
+		));
+
+		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
+
+		return $form;
 	}
-
 }
