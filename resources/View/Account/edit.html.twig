@@ -1,4 +1,22 @@
-{{ form_start(form) }}
-	{{ form_rest(form) }}
+{{ 'Account Details '}}
+
+{{ form_start(accountdetails) }}
+	{{ form_rest(accountdetails) }}
 	<button type="submit">Update</button>
-{{ form_end(form) }}
+{{ form_end(accountdetails) }}
+
+
+{{ 'Billing Address '}}
+
+{{ form_start(billingform) }}
+	{{ form_rest(billingform) }}
+	<button type="submit">Update</button>
+{{ form_end(billingform) }}
+
+
+{{ 'Delivery Address '}}
+
+{{ form_start(deliveryform) }}
+	{{ form_rest(deliveryform) }}
+	<button type="submit">Update</button>
+{{ form_end(deliveryform) }}

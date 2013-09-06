@@ -17,15 +17,13 @@ class Account extends Controller
 		// Load the user
 		$user = $this->get('user.current');
 		// Load the user addresses
-		$addresses = $this->get('commerce.user.loader')->getByUser($user);
-		// Get the most recent
-		$address = array_shift($addresses);
-
-		//de($address);
+		$billingaddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
+		$deliveryaddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
 		return $this->render('Message:Mothership:User::Account:account', array(
 			'user'    => $user,
-			'address' => $address,
+			'billingaddress' => $billingaddress,
+			'deliveryaddress' => $deliveryaddress,
 		));
 	}
 

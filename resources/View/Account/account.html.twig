@@ -1,30 +1,52 @@
 <p>Name: <br />
 	{{ user.forename }} {{ user.surname }}</p>
 
-<p>Address: <br />
-
-	{% for line in address.lines if line %}
-		{{ line }} <br />
-	{% endfor %}
-
-	{{ address.town }} <br />
-
-	{% if address.stateID %}
-		{{ address.stateID }} <br />
-	{% endif %}
-
-	{{ address.postcode }} <br />
-
-	{{ address.country }} </p>
-
 <p>Email:<br />
 	{{ user.email }}</p>
 
+<p>Telephone:<br />
+	{{ billingaddress.telephone }} </p>
+
+<p>Billing Address: <br />
+
+	{% for line in billingaddress.lines if line %}
+		{{ line }} <br />
+	{% endfor %}
+
+	{{ billingaddress.town }} <br />
+
+	{% if billingaddress.stateID %}
+		{{ billingaddress.stateID }} <br />
+	{% endif %}
+
+	{{ billingaddress.postcode }} <br />
+
+	{{ billingaddress.country }} </p>
+
+<p>Billing telephone:<br />
+	{{ billingaddress.telephone }} </p>
+
+<p>Delivery Address: <br />
+
+	{% for line in deliveryaddress.lines if line %}
+		{{ line }} <br />
+	{% endfor %}
+
+	{{ deliveryaddress.town }} <br />
+
+	{% if deliveryaddress.stateID %}
+		{{ deliveryaddress.stateID }} <br />
+	{% endif %}
+
+	{{ deliveryaddress.postcode }} <br />
+
+	{{ deliveryaddress.country }} </p>
+
+<p>Delivery telephone:<br />
+	{{ deliveryaddress.telephone }} </p>
+
 <p>Send me email updates: <br />
 	??</p>
-
-<p>Telephone:<br />
-	{{ address.telephone }} </p>
 
 
 <a href ="">Edit account details</a><br />

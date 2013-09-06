@@ -3,8 +3,8 @@
 namespace Message\Mothership\User\Controller\Account;
 
 use Message\Cog\Controller\Controller;
-use Message\Mothership\Ecommerce\Form\UserDetails;
-use Message\Mothership\Ecommerce\Form\UserRegister;
+use Message\Mothership\User\Form\UserAddresses;
+use Message\Mothership\User\Form\UserDetails;
 
 /**
  * Class Account
@@ -15,24 +15,26 @@ class Edit extends Controller
 {
 	public function index()
 	{
-		// Load the user addresses
-		$form = $this->addressForm();
+		$billingform = $this->addressForm('billing');
+		$deliveryform = $this->addressForm('delivery');
+		$accountdetails = $this->detailsForm();
 
 		return $this->render('Message:Mothership:User::Account:edit', array(
-			'form'    => $form,
+			'billingform'	  => $billingform,
+			'deliveryform'	  => $deliveryform,
+			'accountdetails'  => $accountdetails,
 		));
 	}
 
-	public function addressForm()
+	public function addressForm($type)
 	{
 		$user = $this->get('user.current');
-		$addresses = $this->get('commerce.user.collection')->getByProperty('type', 'billing');
-		$address = array_pop($addresses);
-		$address->forename = $user->forename;
-		$address->surname = $user->surname;
+		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
 
-		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($user, $address, 'billing', $this->generateUrl('ms.user.edit.action'));
+		//de($address);
+
+		$form = new UserAddresses($this->_services);
+		$form = $form->buildForm($user, $address, $type, $this->generateUrl('ms.user.edit.action'));
 
 		return $form;
 	}
@@ -44,19 +46,8 @@ class Edit extends Controller
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 
 			$user = $this->get('user.current');
-			
-			// Update the user here
-			$user->title  	 = $data['title'];
-			$user->forename  = $data['forename'];
-			$user->surname   = $data['surname'];
-			//$user->email  = $data['email'];
 
-			$updateUser = $this->get('user.edit');
-			$updateUser->save($user);
-
-			// Update the address
-			$addresses = $this->get('commerce.user.collection')->getByProperty('type', 'billing');
-			$address = array_pop($addresses);
+			$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
 			$address->lines[1] 	  = $data['address_line_1'];
 			$address->lines[2] 	  = $data['address_line_2'];
 			$address->lines[3] 	  = $data['address_line_3'];
@@ -65,14 +56,45 @@ class Edit extends Controller
 			$address->stateID 	  = $data['state_id'];
 			$address->countryID   = $data['country_id'];
 			$address->postcode 	  = $data['postcode'];
-			//$address->telephone = $data['telephone']
+			$address->telephone   = $data['telephone'];
 
 			$addressEdit = $this->get('commerce.user.address.edit');
 			$addressEdit->save($address);
 
-			$this->addFlash('notice', 'Updated Used Details');
+			$this->addFlash('notice', 'Updated User Details');
 		}
 
 		return $this->redirectToReferer();;
 	}
+
+	public function detailsForm()
+	{
+		$user = $this->get('user.current');
+
+		//de($user);
+
+		$form = new UserDetails($this->_services);
+		$form = $form->buildForm($user, $this->generateUrl('ms.user.edit.action'));
+
+		return $form;
+	}
+
+
+	public function detailsFormProcess() 
+	{	
+		$form = $this->detailsForm();
+
+		$user = $this->get('user.current');
+
+		$user->title  	 = $data['title'];
+		$user->forename  = $data['forename'];
+		$user->surname   = $data['surname'];
+		$user->email     = $data['email'];
+
+		$updateUser = $this->get('user.edit');
+		$updateUser->save($user);
+
+		$this->addFlash('notice', 'Updated User Details');
+	}
+
 }
