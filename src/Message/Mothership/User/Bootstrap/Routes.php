@@ -17,8 +17,14 @@ class Routes implements RoutesInterface
 
 		$router['ms.user.account']->add('ms.user.detail.edit.action', '/edit/detail', '::Controller:Account:Edit#processDetail')
 			->setMethod('post');
+		$router['ms.user.account']->add('ms.user.detail.edit', '/edit/detail', '::Controller:Account:Edit#detail');
+
 		$router['ms.user.account']->add('ms.user.address.edit.action', '/edit/address/{type}', '::Controller:Account:Edit#processAddress')
 			->setMethod('post');
+		$router['ms.user.account']->add('ms.user.address.edit', '/edit/address/{type}', '::Controller:Account:Edit#address');
+		$router['ms.user.account']->add('ms.user.address.delete', '/edit/address/{type}/delete', '::Controller:Account:Edit#deleteAddress')
+			->setMethod('DELETE');
+
 		$router['ms.user.account']->add('ms.user.edit', '/edit', '::Controller:Account:Edit#index');
 	}
 }

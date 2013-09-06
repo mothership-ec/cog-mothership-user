@@ -42,7 +42,7 @@ class Edit extends Controller
 
 	public function detail()
 	{
-		return $this->render('Message:Mothership:User::account:detail-edit', array(
+		return $this->render('Message:Mothership:User::account:edit-detail', array(
 			'form' => $this->_getDetailForm(),
 		));
 	}
@@ -51,10 +51,29 @@ class Edit extends Controller
 	{
 		$user = $this->get('user.current');
 		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		if(!$address) {
+			$address = new Address;
+			$address->type = $type;
+		}
 
-		return $this->render('Message:Mothership:User::account:address-edit', array(
+		return $this->render('Message:Mothership:User::account:edit-address', array(
 			'form' => $this->_getAddressForm($address),
 		));
+	}
+
+	public function deleteAddress($type)
+	{
+		if ($delete = $this->get('request')->get('delete')) {
+			$user = $this->get('user.current');
+			$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+
+			if ($address = $this->get('commerce.user.address.delete')->delete($address)) {
+				$this->addFlash('success', 'You successfully deleted an address');
+			} else {
+				$this->addFlash('error', 'Your address could not be deleted.');
+			}
+		}
+		return $this->redirectToReferer();
 	}
 
 	public function processDetail()
@@ -67,10 +86,8 @@ class Edit extends Controller
 			$user->title 	= $data['title'];
 			$user->forename = $data['forename'];
 			$user->surname 	= $data['surname'];
-
 			if($this->get('user.edit')->save($user)) {
 				$this->addFlash('success', 'You successfully updated your account detail');
-				return $this->redirectToRoute('ms.user.account');
 			} else {
 				$this->addFlash('error', 'Your account detail could not be updated');
 			}
@@ -156,7 +173,6 @@ class Edit extends Controller
 
 	protected function _getAddressForm(Address $address)
 	{
-		d($address->type);
 		$form = $this->get('form')
 			->setName(sprintf('%s-address-edit', $address->type))
 			->setAction($this->generateUrl('ms.user.address.edit.action', array('type' => $address->type)))
