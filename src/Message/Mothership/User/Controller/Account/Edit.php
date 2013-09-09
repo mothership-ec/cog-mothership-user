@@ -32,11 +32,13 @@ class Edit extends Controller
 		$billingForm  = $this->_getAddressForm($billingAddress);
 		$deliveryForm = $this->_getAddressForm($deliveryAddress);
 		$detailForm   = $this->_getDetailForm();
+		$passwordForm = $this->_getPasswordForm();
 
 		return $this->render('Message:Mothership:User::Account:edit', array(
 			'billingForm' 	=> $billingForm,
 			'deliveryForm'	=> $deliveryForm,
 			'detailForm' 	=> $detailForm,
+			'passwordForm'  => $passwordForm,
 		));
 	}
 
@@ -74,6 +76,7 @@ class Edit extends Controller
 				$this->addFlash('error', 'Your address could not be deleted.');
 			}
 		}
+
 		return $this->redirectToReferer();
 	}
 	*/
@@ -94,6 +97,7 @@ class Edit extends Controller
 				$this->addFlash('error', 'Your account detail could not be updated');
 			}
 		}
+
 		return $this->redirectToReferer();
 	}
 
@@ -130,6 +134,36 @@ class Edit extends Controller
 			} else {
 				if($this->get('commerce.user.address.edit')->save($address)) {
 					$this->addFlash('success', sprintf('You successfully updated you %s address detail.', $type));
+				}
+			}
+		}
+
+		return $this->redirectToReferer();
+	}
+
+	public function processPassword()
+	{
+		$form = $this->_getPasswordForm();
+
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$user = $this->get('user.current');
+
+			$newPwd = $data['newPassword'];
+
+			$currentPwd = $this->get('user.loader')->getUserPassword($user);
+			if(!$this->get('user.password_hash')->check(
+				$data['oldPassword'],
+				$this->get('user.loader')->getUserPassword($user)
+			)) {
+				de('wrong pwd');
+				$this->addFlash('error', 'Your old password is not correct');
+			} elseif(strcmp($data['passwordRepeat'], $newPwd) !== 0) {
+				$this->addFlash('error', 'The entered passwords do not match');
+			} else {
+				if($this->get('user.edit')->changePassword($user, $newPwd)) {
+					$this->addFlash('success', 'You successfully changed your password');
+				} else {
+					$this->addFlash('error', 'Your password could not be changed');
 				}
 			}
 		}
@@ -209,6 +243,20 @@ class Edit extends Controller
 		));
 
 		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
+
+		return $form;
+	}
+
+	protected function _getPasswordForm()
+	{
+		$form = $this->get('form')
+			->setName('password-edit')
+			->setAction($this->generateUrl('ms.user.password.edit.action'))
+			->setMethod('post');
+
+		$form->add('oldPassword', 'password', 'Old Password');
+		$form->add('newPassword', 'password', 'New Password');
+		$form->add('passwordRepeat', 'password', 'Repeat Password');
 
 		return $form;
 	}

@@ -1,22 +1,38 @@
-{{ 'Account Details '}}
+<h1>Edit Account</h1>
 
-{{ form_start(detailForm) }}
-	{{ form_rest(detailForm) }}
-	<button type="submit">Update</button>
-{{ form_end(detailForm) }}
+<section>
+	<h2>{{ 'Account Details '}}</h2>
+
+	{{ form_start(detailForm) }}
+		{{ form_rest(detailForm) }}
+		<button type="submit">Update</button>
+	{{ form_end(detailForm) }}
+</section>
+
+<section>
+	<h2>{{ 'Billing Address '}}</h2>
+
+	{{ form_start(billingForm) }}
+		{{ form_rest(billingForm) }}
+		<button type="submit">Update</button>
+	{{ form_end(billingForm) }}
+</section>
+
+<section>
+	<h2>{{ 'Delivery Address '}}</h2>
+
+	{{ form_start(deliveryForm) }}
+		{{ form_rest(deliveryForm) }}
+		<button type="submit">Update</button>
+	{{ form_end(deliveryForm) }}
+</section>
 
 
-{{ 'Billing Address '}}
+<section>
+	<h2>{{ 'Change Password'}}</h2>
 
-{{ form_start(billingForm) }}
-	{{ form_rest(billingForm) }}
-	<button type="submit">Update</button>
-{{ form_end(billingForm) }}
-
-
-{{ 'Delivery Address '}}
-
-{{ form_start(deliveryForm) }}
-	{{ form_rest(deliveryForm) }}
-	<button type="submit">Update</button>
-{{ form_end(deliveryForm) }}
+	{{ form_start(passwordForm) }}
+		{{ form_rest(passwordForm) }}
+		<button type="submit">Save Password</button>
+	{{ form_end(passwordForm) }}
+</section>

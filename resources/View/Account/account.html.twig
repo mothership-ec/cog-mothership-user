@@ -8,9 +8,8 @@
 		<li><span>Name</span> {{user.forename}} {{ user.surname }}</li>
 		<li><span>E-Mail-Address</span> {{ user.email }}</li>
 	</ul>
-
-	<p><a href="{{ url('ms.user.detail.edit') }}">Change Detail</a></p>
 </section>
+
 {% if billingAddress %}
 	{% set address = billingAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
@@ -23,9 +22,6 @@
 	#}
 {% endif %}
 
-<p><a href="{{ url('ms.user.address.edit', {'type': 'billing'}) }}">{{ billingAddress ? "Update" : "Create" }} Billing Address</a></p>
-
-
 {% if deliveryAddress %}
 	{% set address = deliveryAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
@@ -37,15 +33,13 @@
 	</form>
 	#}
 {% endif %}
-<p><a href="{{ url('ms.user.address.edit', {'type': 'delivery'}) }}">{{ deliveryAddress ? "Update" : "Create" }} Delivery Address</a></p>
-
 <p>
 	<li>Send me E-Mail updates?</li>
 </p>
 
 <div>
 	<ul>
-		<li><a href="{{ url('ms.user.edit') }}">Edit account details</a></li>
+		<li><a href="{{ url('ms.user.edit') }}">Edit account details and settings</a></li>
 		<li><a href="{{ url('ms.user.order.listing') }}">Show order history</a></li>
 		<li><a href="">Return an item</a></li>
 	</ul>
