@@ -2,7 +2,9 @@
 <section>
 	<h1>Account Detail</h1>
 	<ul>
-		<li><span>Title</span> {{user.title}}</li>
+		{% if user.title %}
+			<li><span>Title</span> {{user.title}}</li>
+		{% endif %}
 		<li><span>Name</span> {{user.forename}} {{ user.surname }}</li>
 		<li><span>E-Mail-Address</span> {{ user.email }}</li>
 	</ul>
@@ -13,10 +15,12 @@
 	{% set address = billingAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
 
+	{#
 	<form action="{{ url('ms.user.address.delete', {'type': 'billing'}) }}" method="post" id="delete">
 	    <input type="hidden" name="_method" value="DELETE">
 	    <button name="delete[delete]" value="delete" id="delete" type="submit" class="button small delete">{{ 'Delete'|trans }}</button>
 	</form>
+	#}
 {% endif %}
 
 <p><a href="{{ url('ms.user.address.edit', {'type': 'billing'}) }}">{{ billingAddress ? "Update" : "Create" }} Billing Address</a></p>
@@ -26,10 +30,12 @@
 	{% set address = deliveryAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
 
+	{#
 	<form action="{{ url('ms.user.address.delete', {'type': 'discount'}) }}" method="post" id="delete">
 	    <input type="hidden" name="_method" value="DELETE">
 	    <button name="delete[delete]" value="delete" id="delete" type="submit" class="button small delete">{{ 'Delete'|trans }}</button>
 	</form>
+	#}
 {% endif %}
 <p><a href="{{ url('ms.user.address.edit', {'type': 'delivery'}) }}">{{ deliveryAddress ? "Update" : "Create" }} Delivery Address</a></p>
 

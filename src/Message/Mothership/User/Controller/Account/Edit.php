@@ -61,6 +61,7 @@ class Edit extends Controller
 		));
 	}
 
+	/*
 	public function deleteAddress($type)
 	{
 		if ($delete = $this->get('request')->get('delete')) {
@@ -75,6 +76,7 @@ class Edit extends Controller
 		}
 		return $this->redirectToReferer();
 	}
+	*/
 
 	public function processDetail()
 	{
