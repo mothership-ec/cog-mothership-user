@@ -13,18 +13,20 @@ use Message\Mothership\User\Form\UserDetails;
 class DetailsEdit extends Controller
 {
 
-	public function index()
+	public function index($userID)
 	{
-		$accountdetails = $this->detailsForm();
+		$user = $this->get('user.loader')->getByID($userID);
+
+		$accountdetails = $this->detailsForm($userID);
 
 		return $this->render('Message:Mothership:User::User:details', array(
 			'accountdetails'	  => $accountdetails,
 		));
 	}
 
-	public function detailsForm()
+	public function detailsForm($userID)
 	{
-		$user = $this->get('user.current');
+		$user = $this->get('user.loader')->getByID($userID);
 
 		//de($user);
 
@@ -35,28 +37,26 @@ class DetailsEdit extends Controller
 	}
 
 
-	public function detailsFormProcess()
+	public function detailsFormProcess($userID)
 	{
-		$form = $this->detailsForm();
+		$form = $this->detailsForm($userID);
 
-		$user = $this->get('user.current');
-de($data['title']);
-		$user->title  	 = $data['title'];
-		$user->forename  = $data['forename'];
-		$user->surname   = $data['surname'];
-		$user->email     = $data['email'];
+		if ($form->isValid() && $data = $form->getFilteredData()) {
+			$user = $this->get('user.current');
+			$user->title  	 = $data['title'];
+			$user->forename  = $data['forename'];
+			$user->surname   = $data['surname'];
+			$user->email     = $data['email'];
 
-
-		$updateUser = $this->get('user.edit');
-		$updateUser->save($user);
-		//	if($this->get('user.edit')->save($user)) {
-		//		$this->addFlash('success', 'You successfully updated your account detail');
-		//	} else {
-		//		$this->addFlash('error', 'Your account detail could not be updated');
-		//	}
-
-		$this->addFlash('notice', 'Updated User Details');
+			if($this->get('user.edit')->save($user)) {
+				$this->addFlash('success', 'Successfully updated account detaild');
+			} else {
+				$this->addFlash('error', 'Account detail could not be updated');
+			}
+		}
+		return $this->render('Message:Mothership:User::User:details', array(
+			'accountdetails'	  => $form,
+		));
 	}
-
 
 }

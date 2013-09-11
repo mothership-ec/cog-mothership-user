@@ -19,7 +19,7 @@ class UserDetails extends Handler
 
 	public function buildForm(UserInterface $user, $action = '')
 	{
-		
+
 		$defaults = array();
 		if (!is_null($user)) {
 			$defaults = array(
