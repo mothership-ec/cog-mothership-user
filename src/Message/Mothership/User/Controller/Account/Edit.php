@@ -19,7 +19,7 @@ class Edit extends Controller
 		$user = $this->get('user.current');
 		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
-		
+
 		if(!$billingAddress) {
 			$billingAddress = new Address;
 			$billingAddress->type = 'billing';
@@ -91,6 +91,8 @@ class Edit extends Controller
 			$user->title 	= $data['title'];
 			$user->forename = $data['forename'];
 			$user->surname 	= $data['surname'];
+			$user->email 	= $data['email'];
+
 			if($this->get('user.edit')->save($user)) {
 				$this->addFlash('success', 'You successfully updated your account detail');
 			} else {
@@ -201,6 +203,9 @@ class Edit extends Controller
 		$form->add('surname', 'text', 'Surname', array('data' => $user->surname))
 			->val()->maxLength(255);
 
+		$form->add('email', 'email', 'E-Mail', array('data' => $user->email))
+			->val()->maxLength(255);
+
 		$form->add('email-updates', 'checkbox', 'Send me e-mail updates')->val()->optional();
 
 		return $form;
@@ -213,7 +218,7 @@ class Edit extends Controller
 			->setName(sprintf('%s-address-edit', $address->type))
 			->setAction($this->generateUrl('ms.user.address.edit.action', array('type' => $address->type)))
 			->setMethod('post');
-		
+
 		$linesForm = $this->get('form')
 			->setName('lines')
 			->addOptions(array(
