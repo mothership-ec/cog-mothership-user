@@ -1,0 +1,37 @@
+{#% extends 'Message:Mothership:User::User:listing:view' %#}
+
+{% block main %}
+
+<div class="topbar">
+	<ul class="tabs">
+		<li>
+			<a href="" data-live>Details</a>
+		</li>
+		<li>
+			<a href="" data-live>Addresses</a>
+		</li>
+		<li>
+			<a href="" data-live>Order History</a>
+		</li>
+	</ul>
+</div>
+
+
+<h1>{{  'User Addresses' }}</h1>
+
+{{ 'Billing Address '}}
+
+{{ form_start(billingform) }}
+	{{ form_rest(billingform) }}
+	<button type="submit" class="button small save">Update</button>
+{{ form_end(billingform) }}
+
+
+{{ 'Delivery Address '}}
+
+{{ form_start(deliveryform) }}
+	{{ form_rest(deliveryform) }}
+	<button type="submit" class="button small save">Update</button>
+{{ form_end(deliveryform) }}
+
+{% endblock %}

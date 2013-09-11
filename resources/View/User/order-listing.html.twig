@@ -1,0 +1,25 @@
+{% extends 'Message:Mothership:User::User:listing:view' %}
+
+{% block main %}
+
+<div class="topbar">
+	<ul class="tabs">
+		<li>
+			<a href="" data-live>Details</a>
+		</li>
+		<li>
+			<a href="" data-live>Addresses</a>
+		</li>
+		<li>
+			<a href="" data-live>Order History</a>
+		</li>
+	</ul>
+</div>
+
+<h1>Order History</h1>
+
+
+{% set orderLink = 'ms.user.admin.order.detail'%}
+{% include 'Message:Mothership:Commerce::order:order:summary' %}
+
+{% endblock %}

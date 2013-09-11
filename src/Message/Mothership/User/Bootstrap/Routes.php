@@ -29,5 +29,29 @@ class Routes implements RoutesInterface
 			->setMethod('post');
 
 		$router['ms.user.account']->add('ms.user.edit', '/edit', '::Controller:Account:Edit#index');
+
+
+
+		$router['ms.user.user']->setParent('ms.cp')->setPrefix('/user');
+
+		$router['ms.user.user']->add('ms.user.user', '/', '::Controller:User:Listing#dashboard');
+
+		$router['ms.user.user']->add('ms.user.admin.detail.edit.action', '/{userID}/detail', '::Controller:User:DetailsEdit#detailsFormProcess')
+			->setMethod('post');
+		$router['ms.user.user']->add('ms.user.admin.detail.edit', '/{userID}/detail', '::Controller:User:DetailsEdit#index');
+
+		$router['ms.user.user']->add('ms.user.admin.address.edit.action', '/{userID}/address', '::Controller:User:AddressEdit#addressFormProcess')
+			->setMethod('post');
+		$router['ms.user.user']->add('ms.user.admin.address.edit', '/{userID}/address', '::Controller:User:AddressEdit#index');
+
+		$router['ms.user.user']->add('ms.user.admin.order.listing', '/{userID}/orders', '::Controller:User:OrderHistory#orderListing');
+		$router['ms.user.account']->add('ms.user.admin/order.detail', '/{userID}/view/{orderID}', '::Controller:Account:OrderHistory#orderDetail')
+			->setRequirement('orderID', '\d+');
+
+		$router['ms.user.user']->add('ms.user.admin.create.action', '/create', '::Controller:User:Create#newUserFormProcess')
+			->setMethod('post');
+		$router['ms.user.user']->add('ms.user.admin.create', '/create', '::Controller:User:Create#index');
+
+
 	}
 }
