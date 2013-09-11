@@ -38,29 +38,28 @@ class Create extends Controller
 		$form = $this->newUserForm();
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-
+			$user = $this->get('user');
 			$user->title  	 = $data['title'];
 			$user->forename  = $data['forename'];
 			$user->surname   = $data['surname'];
 			$user->email  	 = $data['email'];
+			$user->password  = $data['password'];
 
-			$updateUser = $this->get('user.edit');
-			$updateUser->save($user);
+			if($user = $this->get('user.create')->save($user)) {
 
-			$address->lines[1] 	  = $data['address_line_1'];
-			$address->lines[2] 	  = $data['address_line_2'];
-			$address->lines[3] 	  = $data['address_line_3'];
-			$address->lines[4] 	  = $data['address_line_4'];
-			$address->town 		  = $data['town'];
-			$address->stateID 	  = $data['state_id'];
-			$address->countryID   = $data['country_id'];
-			$address->postcode 	  = $data['postcode'];
-			$address->telephone   = $data['telephone'];
+				$this->addFlash('success', 'Successfully added new account');
 
-			$addressEdit = $this->get('commerce.user.address.edit');
-			$addressEdit->save($address);
+				return $this->redirectToRoute('ms.user.admin.detail.edit', array('userID' => $user->id));
+
+			} else {
+				$this->addFlash('error', 'Account could not be added');
+			}
 
 		}
+
+		return $this->render('Message:Mothership:User::User:create', array(
+			'newuser'	  => $form,
+		));
 	}
 
 }

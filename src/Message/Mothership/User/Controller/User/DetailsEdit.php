@@ -42,14 +42,14 @@ class DetailsEdit extends Controller
 		$form = $this->detailsForm($userID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$user = $this->get('user.current');
+			$user = $this->get('user.loader')->getByID($userID);
 			$user->title  	 = $data['title'];
 			$user->forename  = $data['forename'];
 			$user->surname   = $data['surname'];
 			$user->email     = $data['email'];
 
 			if($this->get('user.edit')->save($user)) {
-				$this->addFlash('success', 'Successfully updated account detaild');
+				$this->addFlash('success', 'Successfully updated account details');
 			} else {
 				$this->addFlash('error', 'Account detail could not be updated');
 			}
