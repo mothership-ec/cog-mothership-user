@@ -40,7 +40,7 @@ class Routes implements RoutesInterface
 			->setMethod('post');
 		$router['ms.user.user']->add('ms.user.admin.detail.edit', '/{userID}/detail', '::Controller:User:DetailsEdit#index');
 
-		$router['ms.user.user']->add('ms.user.admin.address.edit.action', '/{userID}/address', '::Controller:User:AddressEdit#addressFormProcess')
+		$router['ms.user.user']->add('ms.user.admin.address.edit.action', '/{userID}/address/{type}', '::Controller:User:AddressEdit#addressFormProcess')
 			->setMethod('post');
 		$router['ms.user.user']->add('ms.user.admin.address.edit', '/{userID}/address', '::Controller:User:AddressEdit#index');
 
