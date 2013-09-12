@@ -10,11 +10,10 @@ class Events implements EventsInterface
 {
 	public function registerEvents($dispatcher)
 	{
-		//$dispatcher->addSubscriber(new User\EventListener);
 
 		$dispatcher->addListener(Event::BUILD_MAIN_MENU, function($event) {
-			$event->addItem('ms.user.user', 'Users', array(
-				'ms.user.user'
+			$event->addItem('ms.cp.user.user', 'Users', array(
+				'ms.cp.user.user'
 			));
 		});
 	}

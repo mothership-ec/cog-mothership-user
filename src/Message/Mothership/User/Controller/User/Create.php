@@ -28,7 +28,7 @@ class Create extends Controller
 	public function newUserForm()
 	{
 		$form = new NewUser($this->_services);
-		$form = $form->buildForm($this->generateUrl('ms.user.admin.create.action'));
+		$form = $form->buildForm($this->generateUrl('ms.cp.user.admin.create.action'));
 
 		return $form;
 	}
@@ -49,7 +49,7 @@ class Create extends Controller
 
 				$this->addFlash('success', 'Successfully added new account');
 
-				return $this->redirectToRoute('ms.user.admin.detail.edit', array('userID' => $user->id));
+				return $this->redirectToRoute('ms.cp.user.admin.detail.edit', array('userID' => $user->id));
 
 			} else {
 				$this->addFlash('error', 'Account could not be added');

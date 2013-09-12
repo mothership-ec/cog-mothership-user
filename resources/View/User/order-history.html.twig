@@ -1,0 +1,19 @@
+{% extends 'Message:Mothership:User::User:listing:view' %}
+
+{% block main %}
+
+<hgroup class="title">
+		<h1>Update User</h1>
+</hgroup>
+
+{{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':user.id}))}}
+
+<div class="container-content extended">
+
+	<h1>Order History</h1>
+
+	{% include 'Message:Mothership:Commerce::order:order:summary' %}
+
+</div>
+
+{% endblock %}

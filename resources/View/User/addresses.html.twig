@@ -2,41 +2,28 @@
 
 {% block main %}
 
-<div class="topbar">
-	<ul class="tabs">
-		<li>
-			<a href="" data-live>Details</a>
-		</li>
-		<li>
-			<a href="" data-live>Addresses</a>
-		</li>
-		<li>
-			<a href="" data-live>Groups</a>
-		</li>
-		<li>
-			<a href="" data-live>Order History</a>
-		</li>
-	</ul>
-</div>
+<hgroup class="title">
+	<h1>Update User</h1>
+</hgroup>
+
+{{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':user.id}))}}
 
 <div class="container-content extended">
 
-<h1>{{  'User Addresses' }}</h1>
+	{{ 'Billing Address '}}
 
-{{ 'Billing Address '}}
-
-{{ form_start(billingform) }}
-	{{ form_rest(billingform) }}
-	<button type="submit" class="button small save">Update</button>
-{{ form_end(billingform) }}
+	{{ form_start(billingform) }}
+		{{ form_rest(billingform) }}
+		<button type="submit" class="button small save">Update</button>
+	{{ form_end(billingform) }}
 
 
-{{ 'Delivery Address '}}
+	{{ 'Delivery Address '}}
 
-{{ form_start(deliveryform) }}
-	{{ form_rest(deliveryform) }}
-	<button type="submit" class="button small save">Update</button>
-{{ form_end(deliveryform) }}
+	{{ form_start(deliveryform) }}
+		{{ form_rest(deliveryform) }}
+		<button type="submit" class="button small save">Update</button>
+	{{ form_end(deliveryform) }}
 
 </div>
 

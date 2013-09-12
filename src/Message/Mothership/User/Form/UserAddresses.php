@@ -30,6 +30,7 @@ class UserAddresses extends Handler
 				'state_id'       => $address->stateID,
 				'country_id'     => $address->countryID,
 				'telephone'		 => $address->telephone,
+	//			'type'			 => $address->type,
 			);
 		}
 
@@ -37,7 +38,7 @@ class UserAddresses extends Handler
 			->setMethod('POST')
 			->setDefaultValues($defaults)
 			->setAction($action);
-			
+
 		$this->add('address_line_1','text','');
 		$this->add('address_line_2','text','')
 			->val()->optional();

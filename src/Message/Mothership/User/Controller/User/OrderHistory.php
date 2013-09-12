@@ -4,37 +4,16 @@ namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
 
-/**
- * Class Account
- *
- * Controller for viewing user account details
- */
 class OrderHistory extends Controller
 {
-	public function orderListing()
+	public function index($userID)
 	{
-		// Load the logged in user
-		$user = $this->get('user.current');
-		// return their orders
+		$user = $this->get('user.loader')->getByID($userID);
 		$orders = $this->get('order.loader')->getByUser($user);
 
-		return $this->render('Message:Mothership:User::account:order-listing', array(
+		return $this->render('Message:Mothership:User::User:order-history', array(
 			'orders' => $orders,
 		));
 	}
 
-	public function orderDetail($orderID)
-	{
-		// Load the current order
-		$order = $this->get('order.loader')->getByID($orderID);
-		$address = $this->get('order.address.loader')->getByOrder($order);
-		$returns = $this->get('return.loader')->getByOrder($order);
-
-		return $this->render('Message:Mothership:User::account:order-details', array(
-			'order'   => $order,
-			'returns' => $returns,
-			'address' => $address,
-		));
-
-	}
 }

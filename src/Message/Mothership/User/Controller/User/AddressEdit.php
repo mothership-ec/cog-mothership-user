@@ -6,11 +6,6 @@ use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form\UserAddresses;
 use Message\Mothership\Commerce\User\Address\Address;
 
-/**
- * Class Account
- *
- * Controller for editing user account details
- */
 class AddressEdit extends Controller
 {
 	public function index($userID)
@@ -44,7 +39,7 @@ class AddressEdit extends Controller
 		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
 
 		$form = new UserAddresses($this->_services);
-		$form = $form->buildForm($user, $address, $type, $this->generateUrl('ms.user.admin.address.edit.action', array(
+		$form = $form->buildForm($user, $address, $type, $this->generateUrl('ms.cp.user.admin.address.edit.action', array(
 			'userID' => $user->id,
 			'type' => $type,
 		)));

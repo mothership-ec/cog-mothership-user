@@ -5,11 +5,6 @@ namespace Message\Mothership\User\Controller\User;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form\UserDetails;
 
-/**
- * Class Account
- *
- * Controller for editing user account details
- */
 class DetailsEdit extends Controller
 {
 
@@ -28,10 +23,8 @@ class DetailsEdit extends Controller
 	{
 		$user = $this->get('user.loader')->getByID($userID);
 
-		//de($user);
-
 		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($user, $this->generateUrl('ms.user.admin.detail.edit.action', array('userID' => $user->id)));
+		$form = $form->buildForm($user, $this->generateUrl('ms.cp.user.admin.detail.edit.action', array('userID' => $user->id)));
 
 		return $form;
 	}
@@ -58,5 +51,4 @@ class DetailsEdit extends Controller
 			'accountdetails'	  => $form,
 		));
 	}
-
 }
