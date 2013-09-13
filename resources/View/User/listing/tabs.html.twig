@@ -1,34 +1,16 @@
-{#<div class="topbar products">
-	<ul class="tabs">
-		<li class="active">
-			<a href="{{ url('ms.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
-		</li>
-		<li class="">
-			<a href="{{ url('ms.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
-		</li>
-		<li class="">
-			<a href="{{ url('ms.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
-		</li>
-		<li class="">
-			<a href="{{ url('mms.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
-		</li>
-	</ul>
-</div>
-#}
-
 <div class="topbar products">
 	<ul class="tabs">
 		<li class="">
-			<a href="" data-liv>Details</a>
+			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
 		</li>
 		<li class="">
-			<a href="" data-live>Addresses</a>
+			<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
 		</li>
 		<li class="">
-			<a href="" data-live>Groups</a>
+			<a href="{{ url('ms.cp.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
 		</li>
 		<li class="">
-			<a href="" data-live>Order History</a>
+			<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
 		</li>
 	</ul>
 </div>

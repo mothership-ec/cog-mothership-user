@@ -15,7 +15,8 @@ class DetailsEdit extends Controller
 		$accountdetails = $this->detailsForm($userID);
 
 		return $this->render('Message:Mothership:User::User:details', array(
-			'accountdetails'	  => $accountdetails,
+			'accountdetails'  => $accountdetails,
+			'userID'   		  => $userID,
 		));
 	}
 

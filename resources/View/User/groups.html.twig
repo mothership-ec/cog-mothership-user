@@ -3,17 +3,30 @@
 {% block main %}
 
 <hgroup class="title">
-	<h1>Update User</h1>
+	<h1>Update User - {{ userID }}</h1>
 </hgroup>
 
-{{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':user.ID}))}}
+{# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
+
+<div class="topbar products">
+	<ul class="tabs">
+		<li class="">
+			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
+		</li>
+		<li class="">
+			<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
+		</li>
+		<li class="active">
+			<a href="{{ url('ms.cp.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
+		</li>
+		<li class="">
+			<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
+		</li>
+	</ul>
+</div>
 
 <div class="container-content extended">
 
-	{{ form_start(form) }}
-		{{ form_rest(form) }}
-		<button type="submit" class="button small save">Update</button>
-	{{ form_end(form) }}
 
 </div>
 

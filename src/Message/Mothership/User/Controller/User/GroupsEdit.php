@@ -10,18 +10,9 @@ class GroupsEdit extends Controller
 
 	public function index($userID)
 	{
-
-	}
-
-	public function groupsForm($userID)
-	{
-
-	}
-
-
-	public function groupsFormProcess($userID)
-	{
-
+		return $this->render('Message:Mothership:User::User:groups', array(
+			'userID'    => $userID,
+		));
 	}
 
 }

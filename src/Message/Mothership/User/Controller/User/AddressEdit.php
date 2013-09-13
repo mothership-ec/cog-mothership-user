@@ -29,6 +29,7 @@ class AddressEdit extends Controller
 		return $this->render('Message:Mothership:User::User:addresses', array(
 			'billingform'	  => $billingform,
 			'deliveryform'	  => $deliveryform,
+			'userID'   		  => $userID,
 		));
 	}
 

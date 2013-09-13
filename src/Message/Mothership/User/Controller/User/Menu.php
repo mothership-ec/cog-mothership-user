@@ -8,7 +8,6 @@ class Menu extends Controller
 {
 	public function index($userID)
 	{
-		//de($userID);
 		return $this->render('Message:Mothership:User::User:listing:tabs', array(
 			'userID' => $userID,
 		));	}
