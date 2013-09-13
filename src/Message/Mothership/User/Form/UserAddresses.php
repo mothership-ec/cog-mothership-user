@@ -30,7 +30,6 @@ class UserAddresses extends Handler
 				'state_id'       => $address->stateID,
 				'country_id'     => $address->countryID,
 				'telephone'		 => $address->telephone,
-	//			'type'			 => $address->type,
 			);
 		}
 

@@ -38,11 +38,11 @@ class Routes implements RoutesInterface
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit.action', '/{userID}/detail', '::Controller:User:DetailsEdit#detailsFormProcess')
 			->setMethod('post');
-		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit', '/{userID}/detail', '::Controller:User:DetailsEdit#index');
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit', '/{userID}/details', '::Controller:User:DetailsEdit#index');
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.address.edit.action', '/{userID}/address/{type}', '::Controller:User:AddressEdit#addressFormProcess')
 			->setMethod('post');
-		$router['ms.cp.user.user']->add('ms.cp.user.admin.address.edit', '/{userID}/address', '::Controller:User:AddressEdit#index');
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.address.edit', '/{userID}/addresses', '::Controller:User:AddressEdit#index');
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.groups.edit', '/{userID}/groups', '::Controller:User:GroupsEdit#index');
 
@@ -52,10 +52,10 @@ class Routes implements RoutesInterface
 			->setMethod('post');
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.create', '/create', '::Controller:User:Create#index');
 
-		$router['ms.cp.user.user']->add('ms.cp.user.search.forward', '/search', '::Controller:Dashboard#searchRedirect')
+		$router['ms.cp.user.user']->add('ms.cp.user.search.forward', '/search', '::Controller:Listing#searchRedirect')
 			->setMethod('POST');
 
-		$router['ms.cp..user.user']->add('ms.cp.user.search', '/search/{term}', '::Controller:Dashboard#search');
+		$router['ms.cp..user.user']->add('ms.cp.user.search', '/search/{term}', '::Controller:Listing#search');
 
 
 	}

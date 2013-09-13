@@ -7,52 +7,53 @@ use Message\Cog\Controller\Controller;
 class Listing extends Controller
 {
 
-	public function searchAction()
+	public function index()
 	{
-
-	}
-
-	public function tabs($userID)
-	{
-		$tabs = array(
-			'Details' 		=> $this->generateUrl('ms.user.admin.detail.edit', 	  array('userID' => $user->id)),
-			'Addresses'	 	=> $this->generateUrl('ms.user.admin.address.edit',   array('userID' => $user->id)),
-			'Order History' => $this->generateUrl('ms.user.admin.order-history',  array('userID' => $user->id)),
-		);
-		
-		$current = ucfirst(trim(strrchr($this->get('http.request.master')->get('_controller'), '::'), ':'));
-		
-		return $this->render('Message:Mothership:User::listing:tabs', array(
-			'tabs'    => $tabs,
-			'userID'  => $userID,
+		return $this->render('::listing', array(
+			'users'            => $users,
+			'searchTerm'       => null,
+			'form'             => $this->_getUploadForm(),
+			'search_form'      => $this->_getSearchForm(),
 		));
 	}
 
-	public function sidebar()
+	public function searchRedirect()
 	{
-		$search_form = $this->form();
+		if ($search = $this->get('request')->request->get('user_search')) {
+			return $this->redirect($this->generateURL('ms.cp.admin.user.search', array(
+				'term' => $search['term'],
+			)));
+		}
 
-		return $this->render('Message:Mothership:User::User:listing:sidebar', array(
- 			'search_form'    => $search_form,
+		return $this->redirect($this->generateURL('ms.cp.admin.user.listing'));
+	}
+
+	public function search($term)
+	{
+		return $this->render('::listing', array(
+			'users'            => $this->get('file_manager.file.loader')->getBySearchTerm($term),
+			'searchTerm'       => $term,
+			'form'             => $this->_getUploadForm(),
+			'search_form'      => $this->_getSearchForm(),
 		));
 	}
+
+
+	protected function _getSearchForm()
+	{
+		$form = $this->get('form')
+			->setName('user_search')
+			->setMethod('POST')
+			->setAction($this->generateUrl('ms.cp.user.search.forward'));
+		$form->add('term', 'search', 'Enter search term...');
+
+		return $form;
+	}
+
 
 	public function dashboard()
 	{
 		return $this->render('Message:Mothership:User::User:listing:dashboard', array(
 		));
 	}
-
-	protected function _getSearchForm()
-	{
-		$form = $this->get('form')
-			->setName('order_search')
-			->setMethod('POST')
-			->setAction($this->generateUrl('ms.cp.user.search.action'));
-		$form->add('term', 'search', 'Search');
-
-		return $form;
-	}
-
-
 }

@@ -30,13 +30,16 @@ class AddressEdit extends Controller
 			'billingform'	  => $billingform,
 			'deliveryform'	  => $deliveryform,
 		));
-
 	}
 
 	public function addressForm($type,$userID)
 	{
 		$user = $this->get('user.loader')->getByID($userID);
 		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		if(!$address) {
+			$address = new Address;
+			$address->type = $type;
+		}
 
 		$form = new UserAddresses($this->_services);
 		$form = $form->buildForm($user, $address, $type, $this->generateUrl('ms.cp.user.admin.address.edit.action', array(
@@ -49,12 +52,20 @@ class AddressEdit extends Controller
 
 	public function addressFormProcess($type,$userID)
 	{
+		$user = $this->get('user.loader')->getByID($userID);
+		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		$created = false;
+		if(!$address) {
+			$address = new Address;
+			$address->type = $type;
+			$created = true;
+		}
+
 		$form = $this->addressForm($type,$userID);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			//de($data);
 			$user = $this->get('user.loader')->getByID($userID);
-			$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+
 			$address->lines[1] 	  = $data['address_line_1'];
 			$address->lines[2] 	  = $data['address_line_2'];
 			$address->lines[3] 	  = $data['address_line_3'];
@@ -64,14 +75,22 @@ class AddressEdit extends Controller
 			$address->countryID   = $data['country_id'];
 			$address->postcode 	  = $data['postcode'];
 			$address->telephone   = $data['telephone'];
+			$address->userID	  = $user->id;
 
-			if($this->get('commerce.user.address.edit')->save($address)) {
-				$this->addFlash('success', 'Successfully updated account details');
+			if($created) {
+				if($this->get('commerce.user.address.create')->create($address)) {
+					$this->addFlash('success', sprintf('You successfully created a %s address.', $type));
+				} else {
+					$this->addFlash('error', 'Account details could not be updated');
+				}
 			} else {
-				$this->addFlash('error', 'Account details could not be updated');
+				if($this->get('commerce.user.address.edit')->save($address)) {
+					$this->addFlash('success', sprintf('You successfully updated the %s address.', $type));
+				} else {
+					$this->addFlash('error', 'Account details could not be updated');
+				}
 			}
 		}
-
 		return $this->redirectToReferer();;
 	}
 
