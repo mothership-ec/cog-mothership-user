@@ -16,9 +16,9 @@ use Message\Mothership\User\User;
 class Create extends Controller
 {
 
-	public function index()
+	public function index(NewUser $newuser = null)
 	{
-		$newuser = $this->newUserForm();
+		$newuser = ($newuser) ?: $this->newUserForm();
 
 		return $this->render('Message:Mothership:User::User:create', array(
 			'newuser'	  => $newuser,
@@ -39,13 +39,13 @@ class Create extends Controller
 
 		// Check if the form is valid and attempt to get the data
 		if (false === $form->isValid() || false == $data = $form->getFilteredData()) {
-			return $this->redirectToRoute('ms.cp.user.admin.create');
+			return $this->index($form);
 		}
 
 		// Check if the user email already exists
 		if (null !== $this->get('user.loader')->getByEmail($data['email'])) {
-			$this->addFlash('error', 'A user already exists with the email address "%s"', $data['email']);
-			return $this->redirectToRoute('ms.cp.user.admin.create');
+			$this->addFlash('error', sprintf('A user already exists with the email address "%s"', $data['email']));
+			return $this->index($form);
 		}
 
 		// Create the user
@@ -59,7 +59,7 @@ class Create extends Controller
 		// Attempt to save the user
 		if (false === $user = $this->get('user.create')->save($user)) {
 			$this->addFlash('error', 'Account could not be added');
-			return $this->redirectToRoute('ms.cp.user.admin.create');
+			return $this->index($form);
 		}
 
 		$this->addFlash('success', 'Successfully added new account');
