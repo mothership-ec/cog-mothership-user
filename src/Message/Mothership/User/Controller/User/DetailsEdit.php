@@ -48,8 +48,9 @@ class DetailsEdit extends Controller
 				$this->addFlash('error', 'Account detail could not be updated');
 			}
 		}
-		return $this->render('Message:Mothership:User::User:details', array(
-			'accountdetails'	  => $form,
-		));
+
+		return $this->redirect($this->generateUrl('ms.cp.user.admin.detail.edit', array(
+			'userID' => $userID
+		)));
 	}
 }
