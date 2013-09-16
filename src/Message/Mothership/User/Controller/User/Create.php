@@ -37,29 +37,34 @@ class Create extends Controller
 	{
 		$form = $this->newUserForm();
 
-		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$user = $this->get('user');
-			$user->title  	 = $data['title'];
-			$user->forename  = $data['forename'];
-			$user->surname   = $data['surname'];
-			$user->email  	 = $data['email'];
-			$user->password  = $data['password'];
-
-			if($user = $this->get('user.create')->save($user)) {
-
-				$this->addFlash('success', 'Successfully added new account');
-
-				return $this->redirectToRoute('ms.cp.user.admin.detail.edit', array('userID' => $user->id));
-
-			} else {
-				$this->addFlash('error', 'Account could not be added');
-			}
-
+		// Check if the form is valid and attempt to get the data
+		if (false === $form->isValid() || false == $data = $form->getFilteredData()) {
+			return $this->redirectToRoute('ms.cp.user.admin.create');
 		}
 
-		return $this->render('Message:Mothership:User::User:create', array(
-			'newuser'	  => $form,
-		));
+		// Check if the user email already exists
+		if (null !== $this->get('user.loader')->getByEmail($data['email'])) {
+			$this->addFlash('error', 'A user already exists with the email address "%s"', $data['email']);
+			return $this->redirectToRoute('ms.cp.user.admin.create');
+		}
+
+		// Create the user
+		$user = $this->get('user');
+		$user->title  	 = $data['title'];
+		$user->forename  = $data['forename'];
+		$user->surname   = $data['surname'];
+		$user->email  	 = $data['email'];
+		$user->password  = $data['password'];
+
+		// Attempt to save the user
+		if (false === $user = $this->get('user.create')->save($user)) {
+			$this->addFlash('error', 'Account could not be added');
+			return $this->redirectToRoute('ms.cp.user.admin.create');
+		}
+
+		$this->addFlash('success', 'Successfully added new account');
+
+		return $this->redirectToRoute('ms.cp.user.admin.detail.edit', array('userID' => $user->id));
 	}
 
 }
