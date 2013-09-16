@@ -44,6 +44,7 @@ class Routes implements RoutesInterface
 			->setMethod('post');
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.address.edit', '/{userID}/addresses', '::Controller:User:AddressEdit#index');
 
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.groups.edit.action', '/{userID}/groups-action', '::Controller:User:GroupsEdit#groupsUpdate');
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.groups.edit', '/{userID}/groups', '::Controller:User:GroupsEdit#index');
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.orderhistory', '/{userID}/orders', '::Controller:User:OrderHistory#index');
