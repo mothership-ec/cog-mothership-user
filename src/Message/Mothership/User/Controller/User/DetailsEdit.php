@@ -49,6 +49,12 @@ class DetailsEdit extends Controller
 			}
 
 			if (isset($data['reset_password']) and $data['reset_password']) {
+				// Update the "password requested at" timestamp
+				$this->get('user.edit')->updatePasswordRequestTime($user);
+
+				// Generate the hash
+				$hash = $this->_generateHash($user);
+
 				$message = $this->get('mail.message');
 				$message->setTo('laurence@message.co.uk');
 				$message->setFrom('laurence@message.co.uk');
@@ -67,6 +73,12 @@ class DetailsEdit extends Controller
 				else {
 					$this->addFlash('error', sprintf('Could not send reset password email to %s', '_emailaddress_'));
 				}
+
+				// Dispatch password request event
+				$this->get('event.dispatcher')->dispatch(
+					Event\Event::PASSWORD_REQUEST,
+					new Event\Event($user)
+				);
 			}
 		}
 
