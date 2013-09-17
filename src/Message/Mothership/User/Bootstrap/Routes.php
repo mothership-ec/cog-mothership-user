@@ -56,7 +56,7 @@ class Routes implements RoutesInterface
 		$router['ms.cp.user.user']->add('ms.cp.user.search.forward', '/search', '::Controller:Listing#searchRedirect')
 			->setMethod('POST');
 
-		$router['ms.cp..user.user']->add('ms.cp.user.search', '/search/{term}', '::Controller:Listing#search');
+		$router['ms.cp.user.user']->add('ms.cp.user.search', '/search/{term}', '::Controller:Listing#search');
 
 
 	}
