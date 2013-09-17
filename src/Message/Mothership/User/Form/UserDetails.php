@@ -46,6 +46,8 @@ class UserDetails extends Handler
 		$this->add('surname','text','');
 		$this->add('email','text','');
 
+		$this->add('reset_password', 'checkbox', 'Send Reset Password Email?');
+
 		return $this;
 
 	}
