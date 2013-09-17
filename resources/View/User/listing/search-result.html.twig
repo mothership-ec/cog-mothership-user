@@ -3,5 +3,24 @@
 {% block main %}
 	<div class="dashboard">
 		<h1>Search results</h1>
+
+		<table>
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>User</th>
+					<th>Email</th>
+				</tr>
+			</thead>
+			<tbody>
+				{% for user in users %}
+					<tr>
+						<td><a href="{{ url('ms.cp.user.admin.detail.edit', { userID: user.id }) }}">{{ user.id }}</a></td>
+						<td>{{ user.name }}</td>
+						<td>{{ user.email }}</td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
 	</div>
 {% endblock %}

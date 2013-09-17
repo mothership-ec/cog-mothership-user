@@ -1,9 +1,7 @@
 {% extends 'Message:Mothership:ControlPanel::_templates/left_sidebar' %}
 
 {% block sidebar %}
-	<form action="" class="search">
-	    <input type="search" placeholder="Search users...">
-	    <button>Search</button>
-	</form>
+	{{ render(controller('Message:Mothership:User::Controller:User:Listing#searchForm')) }}
+
 	<a href="{{ url('ms.cp.user.admin.create')}}" class="button small create product" data-live>Add user</a>
 {% endblock %}
