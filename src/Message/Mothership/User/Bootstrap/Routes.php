@@ -55,6 +55,6 @@ class Routes implements RoutesInterface
 
 		$router['ms.cp.user.user']->add('ms.cp.user.search', '/search', '::Controller:User:Listing#search');
 
-
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.impersonate.action', '/impersonate', '::Controller:User:Impersonate#impersonate');
 	}
 }

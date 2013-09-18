@@ -3,7 +3,7 @@
 namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
-use Message\Mothership\User\Form\UserDetails;
+use Message\Mothership\User\Form;
 
 class DetailsEdit extends Controller
 {
@@ -12,31 +12,23 @@ class DetailsEdit extends Controller
 	{
 		$user = $this->get('user.loader')->getByID($userID);
 
-		$accountdetails = $this->detailsForm($userID);
+		$accountdetails = $this->_getDetailsForm($user);
+		$impersonateForm = $this->_getImpersonateForm($user);
 
 		return $this->render('Message:Mothership:User::User:details', array(
 			'accountdetails'  => $accountdetails,
+			'impersonateForm' => $impersonateForm,
 			'userID'   		  => $userID,
 		));
 	}
 
-	public function detailsForm($userID)
+	public function detailsFormProcess($userID)
 	{
 		$user = $this->get('user.loader')->getByID($userID);
 
-		$form = new UserDetails($this->_services);
-		$form = $form->buildForm($user, $this->generateUrl('ms.cp.user.admin.detail.edit.action', array('userID' => $user->id)));
-
-		return $form;
-	}
-
-
-	public function detailsFormProcess($userID)
-	{
-		$form = $this->detailsForm($userID);
+		$form = $this->_getDetailsForm($user);
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
-			$user = $this->get('user.loader')->getByID($userID);
 			$user->title  	 = $data['title'];
 			$user->forename  = $data['forename'];
 			$user->surname   = $data['surname'];
@@ -85,5 +77,21 @@ class DetailsEdit extends Controller
 		return $this->redirect($this->generateUrl('ms.cp.user.admin.detail.edit', array(
 			'userID' => $userID
 		)));
+	}
+
+	protected function _getDetailsForm($user)
+	{
+		$form = new Form\UserDetails($this->_services);
+		$form = $form->buildForm($user, $this->generateUrl('ms.cp.user.admin.detail.edit.action', array('userID' => $user->id)));
+
+		return $form;
+	}
+
+	protected function _getImpersonateForm($user)
+	{
+		$form = new Form\Impersonate($this->_services);
+		$form = $form->buildForm($user, $this->generateUrl('ms.cp.user.admin.impersonate.action', array('userID' => $user->id)));
+
+		return $form;
 	}
 }
