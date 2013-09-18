@@ -57,7 +57,7 @@ class Create extends Controller
 		$user->password  = $data['password'];
 
 		// Attempt to save the user
-		if (false === $user = $this->get('user.create')->save($user)) {
+		if (false === $user = $this->get('user.create')->create($user)) {
 			$this->addFlash('error', 'Account could not be added');
 			return $this->index($form);
 		}
