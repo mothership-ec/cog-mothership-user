@@ -29,7 +29,7 @@ class Impersonate extends Controller
 
 		// Fire the user login event
 		$this->get('event.dispatcher')->dispatch(
-			Event\Event::LOGIN,
+			\Message\User\Event\Event::LOGIN,
 			new Event\Event($user)
 		);
 
