@@ -39,16 +39,25 @@ class Account extends Controller
 
 	public function orderDetail($orderID)
 	{
-		// Load the current order 
+		// Load the logged in user
+		$user = $this->get('user.current');
+
+		// Load the current order
 		$order = $this->get('order.loader')->getByID($orderID);
+
+		// Check the order matches the user
+		if ($order->user->id !== $user->id) {
+			throw $this->createNotFoundException();
+		}
+
 		$address = $this->get('order.address.loader')->getByOrder($order);
 		$returns = $this->get('return.loader')->getByOrder($order);
-		
+
 		return $this->render('Message:Mothership:User::account:order-details', array(
 			'order'   => $order,
 			'returns' => $returns,
 			'address' => $address,
 		));
-		
+
 	}
 }
