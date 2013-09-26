@@ -40,7 +40,8 @@ class EventListener extends BaseListener implements SubscriberInterface
 	{
 		$user = $this->get('user.current');
 
-		if ($user instanceof AnoymousUser and
+		if ($user instanceof AnonymousUser and
+			is_array($event->getRequest()->get('_route_collections')) and
 			in_array('ms.user.account', $event->getRequest()->get('_route_collections'))
 		) {
 			$event->setResponse(new RedirectResponse('/'));
