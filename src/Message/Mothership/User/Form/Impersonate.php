@@ -21,7 +21,12 @@ class Impersonate extends Handler {
 		$this->setMethod('POST')
 			 ->setAction($action);
 
-		return $this;
+		$event = new ImpersonateFormEvent($this);
+
+		// Fire build event
+		$event = $this->_container['event.dispatcher']->dispatch('ms.cp.user.impersonate.form.build', $event);
+
+		return $event->getForm();
 	}
 
 }
