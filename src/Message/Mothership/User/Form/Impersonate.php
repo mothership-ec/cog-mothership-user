@@ -3,11 +3,9 @@
 namespace Message\Mothership\User\Form;
 
 use Message\Cog\Form\Handler;
-use Message\User\UserInterface;
-use Message\Mothership\User\User;
 use Message\Cog\Service\Container;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-
+use Message\User\UserInterface;
+use Message\Mothership\User\Event\ImpersonateFormEvent;
 
 class Impersonate extends Handler {
 

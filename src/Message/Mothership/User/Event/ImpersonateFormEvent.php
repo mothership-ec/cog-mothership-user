@@ -1,6 +1,6 @@
 <?php
 
-namespace Message\Mothership\ControlPanel\Event;
+namespace Message\Mothership\User\Event;
 
 /**
  * Event for building the impersonate form.
