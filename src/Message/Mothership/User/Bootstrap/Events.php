@@ -2,9 +2,9 @@
 
 namespace Message\Mothership\User\Bootstrap;
 
-use Message\Mothership\User\Controller\User;
 use Message\Mothership\ControlPanel\Event\Event;
 use Message\Cog\Bootstrap\EventsInterface;
+use Message\Mothership\User;
 
 class Events implements EventsInterface
 {
@@ -16,5 +16,7 @@ class Events implements EventsInterface
 				'ms.cp.user.user'
 			));
 		});
+
+		$dispatcher->addSubscriber(new User\EventListener);
 	}
 }

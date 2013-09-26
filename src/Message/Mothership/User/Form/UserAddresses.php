@@ -49,9 +49,7 @@ class UserAddresses extends Handler
 		$this->add('postcode','text','');
 		$this->add('state_id','text','State')
 			->val()->optional();
-		$this->add('country_id','choice','Country', array(
-			'choices' => $this->_container['country.list']->all()
-		));
+		$this->add('country_id', new \Message\Cog\Location\CountryType(), 'Country');
 		$this->add('telephone','text','');
 
 		return $this;
