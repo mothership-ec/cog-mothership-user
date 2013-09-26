@@ -2,6 +2,8 @@
 
 namespace Message\Mothership\User\Event;
 
+use Message\Cog\Event\Event;
+
 /**
  * Event for building the impersonate form.
  *
