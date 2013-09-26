@@ -9,14 +9,20 @@ class Impersonate extends Controller
 {
 	public function impersonate($userID)
 	{
+		// Get the user
+		$user = $this->get('user.loader')->getById($userID);
+
+		$form = $this->_getImpersonateForm($user);
+		$data = $form->getFilteredData();
+
 		// Set the user id to be impersonated
 		$this->get('http.session')->set('impersonate.impersonateID', $userID);
 
 		// Set the id of the admin who is impersonating the user
 		$this->get('http.session')->set('impersonate.userID', $this->get('user.current')->id);
 
-		// Get the user
-		$user = $this->get('user.loader')->getById($userID);
+		// Add the form data to the session
+		$this->get('http.session')->set('impersonate.data', $data);
 
 		// Fire login attempt event
 		// $this->get('event.dispatcher')->dispatch(
@@ -35,5 +41,13 @@ class Impersonate extends Controller
 
 		// Redirect the user to the homepage
 		return $this->redirect('/');
+	}
+
+	protected function _getImpersonateForm($user)
+	{
+		$form = new Form\Impersonate($this->_services);
+		$form = $form->buildForm($user, $this->generateUrl('ms.cp.user.admin.impersonate.action', array('userID' => $user->id)));
+
+		return $form;
 	}
 }
