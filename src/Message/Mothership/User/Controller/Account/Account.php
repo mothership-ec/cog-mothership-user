@@ -15,12 +15,14 @@ class Account extends Controller
 	public function index()
 	{
 		$user = $this->get('user.current');
+		$subscribed = $this->get('user.subscription.loader')->getByUser($user) ? 'Yes' : 'No';
 		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
 		return $this->render('Message:Mothership:User::Account:account', array(
-			'user'    => $user,
-			'billingAddress' => $billingAddress,
+			'user'            => $user,
+			'subscribed'      => $subscribed,
+			'billingAddress'  => $billingAddress,
 			'deliveryAddress' => $deliveryAddress,
 		));
 	}

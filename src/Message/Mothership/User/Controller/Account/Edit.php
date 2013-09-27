@@ -16,15 +16,16 @@ class Edit extends Controller
 {
 	public function index()
 	{
-		$user = $this->get('user.current');
-		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
+		$user            = $this->get('user.current');
+		$billingAddress  = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
-		if(!$billingAddress) {
+		if (!$billingAddress) {
 			$billingAddress = new Address;
 			$billingAddress->type = 'billing';
 		}
-		if(!$deliveryAddress) {
+
+		if (!$deliveryAddress) {
 			$deliveryAddress = new Address;
 			$deliveryAddress->type = 'delivery';
 		}
@@ -92,6 +93,12 @@ class Edit extends Controller
 			$user->forename = $data['forename'];
 			$user->surname 	= $data['surname'];
 			$user->email 	= $data['email'];
+
+			if (isset($data['email-updates']) && $data['email-updates']) {
+				$this->get('user.subscription.create')->create($data['email']);
+			} else {
+				$this->get('user.subscription.delete')->delete($data['email']);
+			}
 
 			if($this->get('user.edit')->save($user)) {
 				$this->addFlash('success', 'You successfully updated your account detail');
@@ -183,12 +190,7 @@ class Edit extends Controller
 			->setMethod('post');
 
 		// TODO: Get choices from somewhere else!!
-		$titleChoices = array(
-			'Mr'   => 'Mr',
-			'Mrs'  => 'Mrs',
-			'Ms'   => 'Ms',
-			'Miss' => 'Miss',
-		);
+		$titleChoices = $this->get('title.list');
 
 		$form->add('title', 'choice', 'Title', array(
 			'choices' 	=> $titleChoices,
@@ -206,7 +208,10 @@ class Edit extends Controller
 		$form->add('email', 'email', 'E-Mail', array('data' => $user->email))
 			->val()->maxLength(255);
 
-		$form->add('email-updates', 'checkbox', 'Send me e-mail updates')->val()->optional();
+		$selected = $this->get('user.subscription.loader')->getByUser($user) ? array('checked' => 'checked') : array();
+
+		$form->add('email-updates', 'checkbox', 'Send me e-mail updates', array('attr' => $selected
+		))->val()->optional();
 
 		return $form;
 	}

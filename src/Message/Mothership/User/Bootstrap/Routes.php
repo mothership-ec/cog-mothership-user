@@ -57,5 +57,11 @@ class Routes implements RoutesInterface
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.impersonate.action', '/{userID}/impersonate', '::Controller:User:Impersonate#impersonate')
 			->setMethod('POST');
+
+		$router['ms.user']->add('user.register.action', '/register/action', '::Controller:Register#registerAction')
+			->setMethod('POST');
+
+		$router['ms.user']->add('user.register', '/register', '::Controller:Register#index')
+			->setMethod('POST');
 	}
 }
