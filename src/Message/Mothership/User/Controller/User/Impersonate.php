@@ -4,6 +4,7 @@ namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form;
+use Message\User\Event\Event as UserEvent;
 
 class Impersonate extends Controller
 {
@@ -22,7 +23,9 @@ class Impersonate extends Controller
 		$this->get('http.session')->set('impersonate.userID', $this->get('user.current')->id);
 
 		// Add the form data to the session
-		$this->get('http.session')->set('impersonate.data', $data);
+		foreach ($data as $key => $value) {
+			$this->get('http.session')->set('impersonate.data.' . $key, $value);
+		}
 
 		// Fire login attempt event
 		// $this->get('event.dispatcher')->dispatch(
@@ -35,8 +38,8 @@ class Impersonate extends Controller
 
 		// Fire the user login event
 		$this->get('event.dispatcher')->dispatch(
-			Event\Event::LOGIN,
-			new Event\Event($user)
+			UserEvent::LOGIN,
+			new UserEvent($user)
 		);
 
 		// Redirect the user to the homepage
