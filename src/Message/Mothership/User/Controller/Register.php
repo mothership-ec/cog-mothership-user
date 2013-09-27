@@ -50,7 +50,7 @@ class Register extends Controller
 		$createUser->setTransaction($trans);
 		$user = $createUser->create($user);
 
-		if (isset($data['opt_in'])) {
+		if (isset($data['opt_in']) && $data['opt_in']) {
 			$addSubscriber = $this->get('user.subscription.create');
 			$addSubscriber->setTransaction($trans);
 			$addSubscriber->create($user->email);
