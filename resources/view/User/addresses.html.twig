@@ -25,30 +25,29 @@
 	</ul>
 </div>
 
-<div class="container-content extended">
+<div class="container-content">
+	<div class="container-details dual-column">
 
+<div class="column">
 	<h2> Billing Address</h2>
 
 	{{ form_start(billingform) }}
 		{{ form_rest(billingform) }}
-		<button type="submit" class="button small save">Update</button>
+		<button type="submit" class="button small save">Update billing address</button>
 	{{ form_end(billingform) }}
+</div>
 
-<br />
-<br />
-
+<div class="column">
 	<h2> Delivery Address</h2>
 
 	{{ form_start(deliveryform) }}
 		{{ form_rest(deliveryform) }}
-		<button type="submit" class="button small save">Update</button>
+		<button type="submit" class="button small save">Update delivery address</button>
 	{{ form_end(deliveryform) }}
-
-<br />
-<br />
-<br />
+</div>
 
 
+</div>
 </div>
 
 {% endblock %}

@@ -1,19 +1,17 @@
 {% extends 'Message:Mothership:User::User:listing:view' %}
 
 {% block main %}
-
+{{ form_start(impersonateForm) }}
 <hgroup class="title">
 	<h1>Update User - {{ userID }}</h1>
-
-	{{ form_start(impersonateForm) }}
-		{{ form_rest(impersonateForm) }}
-		<button class="button small">Log in as this user</button>
-	{{ form_end(impersonateForm) }}
+<div class="skip-payment">{{ form_rest(impersonateForm) }}</div>
 </hgroup>
+
+
 
 {# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
 
-<div class="topbar products">
+<div class="topbar">
 	<ul class="tabs">
 		<li class="active">
 			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
@@ -28,13 +26,18 @@
 			<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
 		</li>
 	</ul>
+
+		<div class="controls">
+		<button class="button small preview impersonate">Log in as this user</button>	{{ form_end(impersonateForm) }}
+
+	</div>
 </div>
 
 <div class="container-content extended">
 
 	{{ form_start(accountdetails) }}
 		{{ form_rest(accountdetails) }}
-		<button type="submit" class="button small save">Update</button>
+		<button type="submit" class="button small save" id="save-content">Update user</button>
 	{{ form_end(accountdetails) }}
 
 </div>

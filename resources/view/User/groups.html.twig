@@ -8,7 +8,7 @@
 
 {# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
 
-<div class="topbar products">
+<div class="topbar">
 	<ul class="tabs">
 		<li class="">
 			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
@@ -29,7 +29,7 @@
 
 	{{ form_start(groupsForm) }}
 		{{ form_row(groupsForm.groups) }}
-		<button type="submit" class="button small save">Update</button>
+		<button type="submit" class="button small save" id="save-content">Update</button>
 	{{ form_end(groupsForm) }}
 
 </div>
