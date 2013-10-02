@@ -1,3 +1,9 @@
+{% extends 'Message:Mothership:User::Account:account-layout' %}
+
+{% block content %}
+
 {% set orderLink = 'ms.user.order.detail'%}
 {% set userLink = 'ms.user.account'%}
 {% include 'Message:Mothership:Commerce::order:order:summary' %}
+
+{% endblock %}

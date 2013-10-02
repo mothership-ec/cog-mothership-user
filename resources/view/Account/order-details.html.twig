@@ -1,3 +1,7 @@
+{% extends 'Message:Mothership:User::Account:account-layout' %}
+
+{% block content %}
+
 <h1>Order Details</h1>
 <table>
 	<thead>
@@ -21,16 +25,16 @@
 				 London <br />
 				 E8 4TS	</td>
 			<td> {{ order.user.title }} {{ order.user.forename }} {{ order.user.surname }}
-			<br /> 
-				 {{ address.name }} <br /> 
+			<br />
+				 {{ address.name }} <br />
 			   	 {% for line in address.lines if line %}
    					{{ line }} <br />
 				 {% endfor %}
-				 {{ address.town }} <br /> 
+				 {{ address.town }} <br />
 				 {% if address.state %}
 					{{ address.state }} <br />
 				 {% endif %}
-				 {{ address.postcode }} <br /> 
+				 {{ address.postcode }} <br />
 				 {{ address.country }} </td>
 		</tr>
 	</tbody>
@@ -44,7 +48,7 @@
 <hgroup class="title">
 		<h1>Returns</h1>
 	</hgroup>
-	
+
 	<div class="container-content">
 	{% if not returns is empty %}
 		<table class="return-listing">
@@ -73,3 +77,5 @@
 		<p>{{ 'ms.commerce.return.status.none'|trans }}</p>
 	{% endif %}
 	</div>
+
+{% endblock %}

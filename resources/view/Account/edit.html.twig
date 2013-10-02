@@ -1,3 +1,7 @@
+{% extends 'Message:Mothership:User::Account:account-layout' %}
+
+{% block content %}
+
 <h1>Edit Account</h1>
 
 <section>
@@ -36,3 +40,5 @@
 		<button type="submit">Save Password</button>
 	{{ form_end(passwordForm) }}
 </section>
+
+{% endblock %}

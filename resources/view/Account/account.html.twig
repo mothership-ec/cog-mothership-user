@@ -1,4 +1,15 @@
+{% extends 'Message:Mothership:User::Account:account-layout' %}
 
+{% block menu %}
+<div>
+	<ul>
+		<li><a href="{{ url('ms.user.edit') }}">Edit account details and settings</a></li>
+		<li><a href="{{ url('ms.user.order.listing') }}">Show order history</a></li>
+	</ul>
+</div>
+{% endblock %}
+
+{% block content %}
 <section>
 	<h1>Account Detail</h1>
 	<ul>
@@ -13,34 +24,13 @@
 {% if billingAddress %}
 	{% set address = billingAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
-
-	{#
-	<form action="{{ url('ms.user.address.delete', {'type': 'billing'}) }}" method="post" id="delete">
-	    <input type="hidden" name="_method" value="DELETE">
-	    <button name="delete[delete]" value="delete" id="delete" type="submit" class="button small delete">{{ 'Delete'|trans }}</button>
-	</form>
-	#}
 {% endif %}
 
 {% if deliveryAddress %}
 	{% set address = deliveryAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
-
-	{#
-	<form action="{{ url('ms.user.address.delete', {'type': 'discount'}) }}" method="post" id="delete">
-	    <input type="hidden" name="_method" value="DELETE">
-	    <button name="delete[delete]" value="delete" id="delete" type="submit" class="button small delete">{{ 'Delete'|trans }}</button>
-	</form>
-	#}
 {% endif %}
 <p>
 	<li>Send me E-Mail updates? {{ subscribed }} </li>
 </p>
-
-<div>
-	<ul>
-		<li><a href="{{ url('ms.user.edit') }}">Edit account details and settings</a></li>
-		<li><a href="{{ url('ms.user.order.listing') }}">Show order history</a></li>
-		<li><a href="">Return an item</a></li>
-	</ul>
-</div>
+{% endblock %}

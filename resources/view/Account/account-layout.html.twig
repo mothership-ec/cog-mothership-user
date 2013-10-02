@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Account</title>
+	</head>
+	<body>
+	{% for key,types in app.session.getFlashBag.all %}
+		<div class="feedback {{ key }}">
+			{% for message in types %}
+				<p>{{ message|raw }}</p>
+			{% endfor %}
+		</div>
+	{% endfor %}
+
+	{% block menu %}{% endblock %}
+
+	{% block content %}{% endblock %}
+
+	</body>
+</html>
