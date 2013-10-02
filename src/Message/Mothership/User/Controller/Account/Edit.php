@@ -94,7 +94,7 @@ class Edit extends Controller
 			$user->surname 	= $data['surname'];
 			$user->email 	= $data['email'];
 
-			if (isset($data['email-updates']) && $data['email-updates']) {
+			if (isset($data['email_updates']) && $data['email_updates']) {
 				$this->get('user.subscription.create')->create($data['email']);
 			} else {
 				$this->get('user.subscription.delete')->delete($data['email']);
@@ -210,7 +210,7 @@ class Edit extends Controller
 
 		$selected = $this->get('user.subscription.loader')->getByUser($user) ? array('checked' => 'checked') : array();
 
-		$form->add('email-updates', 'checkbox', 'Send me e-mail updates', array('attr' => $selected
+		$form->add('email_updates', 'checkbox', 'Send me e-mail updates', array('attr' => $selected
 		))->val()->optional();
 
 		return $form;

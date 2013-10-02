@@ -1,6 +1,6 @@
 {% extends 'Message:Mothership:User::Account:account-layout' %}
 
-{% block menu %}
+{% block account_menu %}
 <div>
 	<ul>
 		<li><a href="{{ url('ms.user.edit') }}">Edit account details and settings</a></li>
@@ -9,13 +9,11 @@
 </div>
 {% endblock %}
 
-{% block content %}
+{% block account_content %}
+
 <section>
 	<h1>Account Detail</h1>
 	<ul>
-		{% if user.title %}
-			<li><span>Title</span> {{user.title}}</li>
-		{% endif %}
 		<li><span>Name</span> {{user.forename}} {{ user.surname }}</li>
 		<li><span>E-Mail-Address</span> {{ user.email }}</li>
 	</ul>
