@@ -35,7 +35,7 @@ class Edit extends Controller
 		$detailForm   = $this->_getDetailForm();
 		$passwordForm = $this->_getPasswordForm();
 
-		return $this->render('Message:Mothership:User::Account:edit', array(
+		return $this->render('Message:Mothership:User::account:edit', array(
 			'billingForm' 	=> $billingForm,
 			'deliveryForm'	=> $deliveryForm,
 			'detailForm' 	=> $detailForm,
