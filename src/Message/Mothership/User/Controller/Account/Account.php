@@ -4,7 +4,7 @@ namespace Message\Mothership\User\Controller\Account;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\Form\UserRegister;
-
+use Message\Mothership\Commerce\Order\Statuses as OrderStatuses;
 /**
  * Class Account
  *
@@ -59,6 +59,7 @@ class Account extends Controller
 			'order'   => $order,
 			'returns' => $returns,
 			'address' => $address,
+			'despatchedStatus' => OrderStatuses::DISPATCHED,
 		));
 
 	}
