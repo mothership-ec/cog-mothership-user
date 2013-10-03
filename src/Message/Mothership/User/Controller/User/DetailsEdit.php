@@ -15,7 +15,7 @@ class DetailsEdit extends Controller
 		$accountdetails = $this->_getDetailsForm($user);
 		$impersonateForm = $this->_getImpersonateForm($user);
 
-		return $this->render('Message:Mothership:User::User:details', array(
+		return $this->render('Message:Mothership:User::user:details', array(
 			'accountdetails'  => $accountdetails,
 			'impersonateForm' => $impersonateForm,
 			'userID'   		  => $userID,

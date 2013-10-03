@@ -8,7 +8,7 @@ class Menu extends Controller
 {
 	public function index($userID)
 	{
-		return $this->render('Message:Mothership:User::User:listing:tabs', array(
+		return $this->render('Message:Mothership:User::user:listing:tabs', array(
 			'userID' => $userID,
 		));	}
 }

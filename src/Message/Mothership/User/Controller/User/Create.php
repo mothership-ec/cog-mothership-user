@@ -20,7 +20,7 @@ class Create extends Controller
 	{
 		$newuser = ($newuser) ?: $this->newUserForm();
 
-		return $this->render('Message:Mothership:User::User:create', array(
+		return $this->render('Message:Mothership:User::user:create', array(
 			'newuser'	  => $newuser,
 		));
 	}

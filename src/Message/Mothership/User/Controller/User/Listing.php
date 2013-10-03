@@ -9,14 +9,14 @@ class Listing extends Controller
 
 	public function dashboard()
 	{
-		return $this->render('Message:Mothership:User::User:listing:dashboard');
+		return $this->render('Message:Mothership:User::user:listing:dashboard');
 	}
 
 	public function searchForm()
 	{
 		$form = $this->_getSearchForm();
 
-		return $this->render('Message:Mothership:User::User:listing:search-form', array(
+		return $this->render('Message:Mothership:User::user:listing:search-form', array(
 			'search_form' => $form
 		));
 	}
@@ -27,7 +27,7 @@ class Listing extends Controller
 		$data = $form->getFilteredData();
 		$users = $this->get('user.loader')->getBySearchTerm($data['term']);
 
-		return $this->render('Message:Mothership:User::User:listing:search-result', array(
+		return $this->render('Message:Mothership:User::user:listing:search-result', array(
 			'term' => $data['term'],
 			'users' => $users,
 		));

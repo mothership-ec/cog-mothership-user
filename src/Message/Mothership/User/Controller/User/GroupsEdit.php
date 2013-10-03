@@ -12,7 +12,7 @@ class GroupsEdit extends Controller
 	{
 		$groupsForm = $this->getGroupsForm($userID);
 
-		return $this->render('Message:Mothership:User::User:groups', array(
+		return $this->render('Message:Mothership:User::user:groups', array(
 			'userID'    => $userID,
 			'groupsForm' => $groupsForm,
 		));

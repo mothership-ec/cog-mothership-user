@@ -11,7 +11,7 @@ class OrderHistory extends Controller
 		$user = $this->get('user.loader')->getByID($userID);
 		$orders = $this->get('order.loader')->getByUser($user);
 
-		return $this->render('Message:Mothership:User::User:order-history', array(
+		return $this->render('Message:Mothership:User::user:order-history', array(
 			'orders' => $orders,
 			'userID' => $userID,
 		));
