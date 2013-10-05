@@ -189,15 +189,16 @@ class Edit extends Controller
 			->setAction($this->generateUrl('ms.user.detail.edit.action'))
 			->setMethod('post');
 
-		// TODO: Get choices from somewhere else!!
 		$titleChoices = $this->get('title.list');
 
-		$form->add('title', 'choice', 'Title', array(
-			'choices' 	=> $titleChoices,
-			'data'  	=> $user->title,
-			'expanded' 	=> false,
-			'multiple'	=> false,
-		))->val()->optional();
+		$form
+			->add('title', 'choice', 'Title', array(
+				'choices' 	=> $titleChoices,
+				'data'  	=> $user->title,
+				'expanded' 	=> false,
+				'multiple'	=> false,
+			))
+			->val()->optional();
 
 		$form->add('forename', 'text', 'Forename', array('data' => $user->forename))
 			->val()->maxLength(255);
@@ -208,9 +209,8 @@ class Edit extends Controller
 		$form->add('email', 'email', 'E-Mail', array('data' => $user->email))
 			->val()->maxLength(255);
 
-		$selected = $this->get('user.subscription.loader')->getByUser($user) ? array('checked' => 'checked') : array();
-
-		$form->add('email_updates', 'checkbox', 'Send me e-mail updates', array('attr' => $selected
+		$form->add('email_updates', 'checkbox', 'Send me e-mail updates', array(
+			'data' => $this->get('user.subscription.loader')->getByUser($user),
 		))->val()->optional();
 
 		return $form;
@@ -244,12 +244,19 @@ class Edit extends Controller
 
 		$form->add('town','text','Town', array('data' => $address->town));
 		$form->add('postcode','text','Postcode', array('data' => $address->postcode));
-		$form->add('stateID','text','State ID', array('data' => $address->stateID))
+
+		$form
+			->add('stateID','choice','State ID', array(
+				'choices'     => $this->get('state.list')->all(),
+				'data'        => $address->stateID,
+				'empty_value' => 'Select state id...',
+			))
 			->val()->optional();
 
 		$form->add('countryID','choice','Country', array(
-			'choices' => $this->get('country.list')->all(),
-			'data'    => $address->countryID,
+			'choices'     => $this->get('country.list')->all(),
+			'data'        => $address->countryID,
+			'empty_value' => 'Select country...'
 		));
 
 		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
