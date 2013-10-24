@@ -38,6 +38,12 @@ class Register extends Controller
 			return $this->redirectToReferer();
 		}
 
+		if (null !== $this->get('user.loader')->getByEmail($data['email'])) {
+			$this->addFlash('error', 'This email address is already in use, please try another.');
+
+			return $this->redirectToReferer();
+		}
+
 		$user           = new \Message\User\User;
 		$user->forename = $data['forename'];
 		$user->surname  = $data['surname'];
