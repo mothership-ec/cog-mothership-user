@@ -4,7 +4,7 @@ namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form;
-use Message\Mothership\User\Event;
+use Message\User\Event;
 
 class Impersonate extends Controller
 {
