@@ -26,7 +26,7 @@ class Login extends EventListener implements SubscriberInterface
 
 	public function checkUserSubscription(Event $event)
 	{
-		$user = $this->_services['user.current']
+		$user = $this->_services['user.current'];
 		$user->emailSubscription = $this->_services['user.subscription.loader']->getByUser($user);
 
 		return $user;
