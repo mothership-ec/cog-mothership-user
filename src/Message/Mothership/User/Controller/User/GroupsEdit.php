@@ -21,20 +21,24 @@ class GroupsEdit extends Controller
 	public function groupsUpdate($userID)
 	{
 		$groupsForm = $this->getGroupsForm($userID);
-		$data = $groupsForm->getFilteredData();
 
-		$user = $this->get('user.loader')->getById($userID);
+		if ($groupsForm->isValid() && $data = $groupsForm->getFilteredData()) {
 
-		if ($this->get('user.edit')->setGroups($user, $data['groups'])) {
-			$this->addFlash('success', 'Successfully updated user groups');
+			$user = $this->get('user.loader')->getById($userID);
+
+			if ($this->get('user.edit')->setGroups($user, $data['groups'])) {
+				$this->addFlash('success', 'Successfully updated user groups');
+			}
+			else {
+				$this->addFlash('error', 'User groups could not be updated');
+			}
+
+			return $this->redirect($this->generateUrl('ms.cp.user.admin.groups.edit', array(
+				'userID' => $userID
+			)));
 		}
-		else {
-			$this->addFlash('error', 'User groups could not be updated');
-		}
 
-		return $this->redirect($this->generateUrl('ms.cp.user.admin.groups.edit', array(
-			'userID' => $userID
-		)));
+		return $this->redirectToReferer();
 	}
 
 	public function getGroupsForm($userID)
