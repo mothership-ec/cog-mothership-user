@@ -21,7 +21,6 @@ class GroupsEdit extends Controller
 	public function groupsUpdate($userID)
 	{
 		$groupsForm = $this->getGroupsForm($userID);
-//		$data = $groupsForm->getFilteredData();
 
 		if ($groupsForm->isValid() && $data = $groupsForm->getFilteredData()) {
 
