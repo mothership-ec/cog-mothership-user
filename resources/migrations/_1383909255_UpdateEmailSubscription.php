@@ -8,7 +8,7 @@ class _1383909255_UpdateEmailSubscription extends Migration
 	{
 		$this->run("
 			ALTER `email_subscription`
-			ADD `subscribed` tinyint(1) DEFAULT 0,
+			ADD `subscribed` tinyint(1) DEFAULT 1,
 			ADD `updated_at` int(11) unsigned DEFAULT NULL,
 			ADD `updated_by` int(11) unsigned DEFAULT NULL;
 		");
