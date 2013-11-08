@@ -7,7 +7,7 @@ class _1383909255_UpdateEmailSubscription extends Migration
 	public function up()
 	{
 		$this->run("
-			ALTER `email_subscription`
+			ALTER TABLE `email_subscription`
 			ADD `subscribed` tinyint(1) DEFAULT 1,
 			ADD `updated_at` int(11) unsigned DEFAULT NULL,
 			ADD `updated_by` int(11) unsigned DEFAULT NULL;
@@ -17,7 +17,7 @@ class _1383909255_UpdateEmailSubscription extends Migration
 	public function down()
 	{
 		$this->run('
-			ALTER `email_subscription`
+			ALTER TABLE `email_subscription`
 			DROP `subscribed`,
 			DROP `updated_at`,
 			DROP `updated_by`;
