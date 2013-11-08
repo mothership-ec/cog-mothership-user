@@ -9,7 +9,7 @@ class Services implements ServicesInterface
 	public function registerServices($services)
 	{
 		$services['user.subscription.create'] = function($c) {
-			return new \Message\Mothership\User\Subscription\Create($c['db.query']);
+			return new \Message\Mothership\User\Subscription\Create($c['db.query'], $c['current.user']);
 		};
 
 		$services['user.subscription.loader'] = function($c) {
@@ -17,7 +17,7 @@ class Services implements ServicesInterface
 		};
 
 		$services['user.subscription.delete'] = function($c) {
-			return new \Message\Mothership\User\Subscription\Delete($c['db.query']);
+			return new \Message\Mothership\User\Subscription\Delete($c['db.query'], $c['current.user']);
 		};
 	}
 }
