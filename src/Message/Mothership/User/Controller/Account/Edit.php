@@ -246,10 +246,13 @@ class Edit extends Controller
 		$form->add('postcode','text','Postcode', array('data' => $address->postcode));
 
 		$form
-			->add('stateID','choice','State ID', array(
+			->add('stateID','choice','State', array(
 				'choices'     => $this->get('state.list')->all(),
 				'data'        => $address->stateID,
-				'empty_value' => 'Select state id...',
+				'empty_value' => 'Select state...',
+				'attr' => array(
+					'data-state-filter-country-selector' => "#" . $address->type . "-address-edit_countryID"
+				),
 			))
 			->val()->optional();
 
