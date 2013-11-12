@@ -33,14 +33,14 @@ class Create
 			REPLACE INTO
 				email_subscription
 			SET
-				email = :email?s,
+				email      = :email?s,
 				subscribed = 1,
 				updated_at = :updatedAt?d,
 				updated_by = :updatedBy?in
 		', array(
 			'updatedAt' => $updatedAt,
-			'updatedBy' => ($this->_currentUser) ? $this->_currentUser->id : null,
-			'email' => $email,
+			'updatedBy' => $this->_currentUser->id,
+			'email'     => $email,
 		));
 
 		if ($this->_query instanceof DB\Transaction) {
