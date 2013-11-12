@@ -84,14 +84,14 @@ class EmailSubscriptions extends BaseTask
 				)
 				VALUES
 				(
-					:email?,
-					:subscribed?,
-					:updatedAt?d
+					:email?s,
+					:subscribed?s,
+					:updatedAt?dn
 				)',
 				array(
 					'email'      => $row->email,
 					'subscribed' => (bool) $row->subscribed,
-					'updatedAt'  => new \DateTime($row->updated_at)
+					'updatedAt'  => $row->updated_at ? new \DateTime($row->updated_at) : null,
 				)
 			);
 		}
