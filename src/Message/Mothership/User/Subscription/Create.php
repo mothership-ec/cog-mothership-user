@@ -6,8 +6,6 @@ use Message\Cog\DB;
 use Message\Cog\ValueObject\DateTimeImmutable;
 use Message\User\UserInterface;
 
-use DateTimeZone;
-
 class Create
 {
 	protected $_query;
@@ -26,9 +24,6 @@ class Create
 
 	public function create($email)
 	{
-		$updatedAt = new DateTimeImmutable('now');
-		$updatedAt->setTimezone(new DateTimeZone(date_default_timezone_get()));
-
 		$result = $this->_query->run('
 			REPLACE INTO
 				email_subscription
@@ -38,7 +33,7 @@ class Create
 				updated_at = :updatedAt?d,
 				updated_by = :updatedBy?in
 		', array(
-			'updatedAt' => $updatedAt,
+			'updatedAt' => new \DateTime('now'),
 			'updatedBy' => $this->_currentUser->id,
 			'email'     => $email,
 		));
