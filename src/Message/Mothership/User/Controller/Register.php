@@ -16,6 +16,9 @@ class Register extends Controller
 	{
 		$form = $this->_getForm();
 
+		// Clear out session
+		$this->get('http.session')->remove('user.register.form');
+
 		return $this->render('Message:Mothership:User::register', array(
 			'form' => $form,
 			'privacyText' => $privacyText,
@@ -28,7 +31,18 @@ class Register extends Controller
 	{
 		$form = $this->_getForm();
 
-		if (!$form->isValid() || !$data = $form->getFilteredData()) {
+		if (!$data = $form->getFilteredData()) {
+			return $this->redirectToReferer();
+		}
+
+		// Put the data in the session, excluding the passwords, to re-populate
+		// the form on a redirect.
+		$session = $data;
+		if (isset($session['password']))      unset($session['password']);
+		if (isset($session['password_conf'])) unset($session['password_conf']);
+		$this->get('http.session')->set('user.register.form', $session);
+
+		if (!$form->isValid()) {
 			return $this->redirectToReferer();
 		}
 
@@ -83,7 +97,13 @@ class Register extends Controller
 		$url      = $this->generateUrl('user.register.action');
 		$redirect = $this->generateUrl('user.register');
 
-		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'));
+		$data = array();
+
+		if ($this->get('http.session')->has('user.register.form')) {
+			$data = $this->get('http.session')->get('user.register.form');
+		}
+
+		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data);
 		$form->add('opt_in','checkbox','Send me email udpates')
 			->val()->optional();
 
