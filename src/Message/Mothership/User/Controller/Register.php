@@ -69,6 +69,7 @@ class Register extends Controller
 		$createUser = $this->get('user.create');
 		$createUser->setTransaction($trans);
 		$user = $createUser->create($user);
+		$trans->setIDVariable('USER_ID');
 
 		if (isset($data['opt_in']) && $data['opt_in']) {
 			$addSubscriber = $this->get('user.subscription.create');
@@ -77,6 +78,8 @@ class Register extends Controller
 		}
 
 		$trans->commit();
+
+		$user = $this->get('user.loader')->getByID($trans->getIDVariable('USER_ID'));
 
 		// Set the user session
 		$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
