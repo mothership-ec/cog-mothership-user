@@ -60,26 +60,40 @@ class EmailSubscriptions extends BaseTask
 		$new = new \Message\Cog\DB\Transaction($uwNew);
 		$old = new \Message\Cog\DB\Query($uwOld);
 
-		$sql = 'SELECT
-					email_name AS email
-				FROM
-					val_email
-				JOIN att_email_list USING (email_id)';
+		$sql = '
+			SELECT
+				val_email.email_name AS email,
+				att_email_list.email_id AS subscribed,
+				att_email_modified.email_modified AS updated_at
+			FROM
+				val_email
+			LEFT JOIN att_email_list USING (email_id)
+			LEFT JOIN att_email_modified USING (email_id)
+		';
 
 		$result = $old->run($sql);
 		$new->add('TRUNCATE email_subscription');
 		$output= '';
 		foreach($result as $row) {
 			$new->add('
-				INSERT INTO
-					email_subscription
+				INSERT INTO email_subscription
 				(
-					email
+					email,
+					subscribed,
+					updated_at
 				)
 				VALUES
 				(
-					:email?
-				)', (array) $row);
+					:email?s,
+					:subscribed?s,
+					:updatedAt?dn
+				)',
+				array(
+					'email'      => $row->email,
+					'subscribed' => (bool) $row->subscribed,
+					'updatedAt'  => $row->updated_at ? new \DateTime($row->updated_at) : null,
+				)
+			);
 		}
 
 		if ($new->commit()) {

@@ -26,16 +26,17 @@ class Loader
 
 	public function _load($email)
 	{
-		$result = $this->_query->run(
-			'SELECT
+		$result = $this->_query->run('
+			SELECT
 				email
 			FROM
 				email_subscription
 			WHERE
-				email = ?s', array(
-					$email
-			)
-		);
+				email = ?s AND
+				subscribed = 1
+		', array(
+			$email
+		));
 
 		return (bool) count($result);
 	}

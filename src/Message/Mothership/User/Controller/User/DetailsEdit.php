@@ -50,7 +50,7 @@ class DetailsEdit extends Controller
 				$message = $this->get('mail.message');
 				$message->setTo('laurence@message.co.uk');
 				$message->setFrom('laurence@message.co.uk');
-				$message->setSubject(sprintf('%s password reset request', $this->get('cfg')->merchant->companyName));
+				$message->setSubject(sprintf('%s password reset request', $this->get('cfg')->app->defaultEmailFrom->name));
 				$message->setView('Message:User::mail:reset-password', array(
 					'user'     => $user,
 					'domain'   => null,
