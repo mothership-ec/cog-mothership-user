@@ -1,7 +1,7 @@
 {% extends 'Message:Mothership:User::user:listing:view' %}
 {% block main %}
 <hgroup class="title">
-	<h1>User Name Goes Here <span>User #{{ userID }}</span></h1>
+	<h1>{{ user.name }} <span>User #{{ userID }}</span></h1>
 </hgroup>
 {# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
 <div class="topbar products">

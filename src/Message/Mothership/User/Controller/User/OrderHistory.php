@@ -14,6 +14,7 @@ class OrderHistory extends Controller
 		return $this->render('Message:Mothership:User::user:order-history', array(
 			'orders' => $orders,
 			'userID' => $userID,
+			'user'   => $user,
 		));
 	}
 
