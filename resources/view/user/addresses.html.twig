@@ -1,17 +1,13 @@
 {% extends 'Message:Mothership:User::user:listing:view' %}
-
 {% block main %}
-
 <hgroup class="title">
-	<h1>Update User - {{ userID }}</h1>
+	<h1>User Name Goes Here <span>User #{{ userID }}</span></h1>
 </hgroup>
-
 {# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
-
 <div class="topbar products">
 	<ul class="tabs">
 		<li class="">
-			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
+			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-live>Details</a>
 		</li>
 		<li class="active">
 			<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
@@ -24,30 +20,22 @@
 		</li>
 	</ul>
 </div>
-
 <div class="container-content">
 	<div class="container-details dual-column">
-
-<div class="column">
-	<h2> Billing Address</h2>
-
-	{{ form_start(billingform) }}
-		{{ form_rest(billingform) }}
-		<button type="submit" class="button small save">Update billing address</button>
-	{{ form_end(billingform) }}
+		<div class="column">
+			<h2> Billing Address</h2>
+			{{ form_start(billingform) }}
+				{{ form_rest(billingform) }}
+				<button type="submit" class="button small save">Update billing address</button>
+			{{ form_end(billingform) }}
+		</div>
+		<div class="column">
+			<h2> Delivery Address</h2>
+			{{ form_start(deliveryform) }}
+				{{ form_rest(deliveryform) }}
+				<button type="submit" class="button small save">Update delivery address</button>
+			{{ form_end(deliveryform) }}
+		</div>
+	</div>
 </div>
-
-<div class="column">
-	<h2> Delivery Address</h2>
-
-	{{ form_start(deliveryform) }}
-		{{ form_rest(deliveryform) }}
-		<button type="submit" class="button small save">Update delivery address</button>
-	{{ form_end(deliveryform) }}
-</div>
-
-
-</div>
-</div>
-
 {% endblock %}
