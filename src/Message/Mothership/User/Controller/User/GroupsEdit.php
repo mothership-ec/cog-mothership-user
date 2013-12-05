@@ -10,11 +10,13 @@ class GroupsEdit extends Controller
 
 	public function index($userID)
 	{
+		$user = $this->get('user.loader')->getByID($userID);
 		$groupsForm = $this->getGroupsForm($userID);
 
 		return $this->render('Message:Mothership:User::user:groups', array(
-			'userID'    => $userID,
+			'userID'     => $userID,
 			'groupsForm' => $groupsForm,
+			'user'       => $user,
 		));
 	}
 

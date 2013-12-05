@@ -18,7 +18,8 @@ class DetailsEdit extends Controller
 		return $this->render('Message:Mothership:User::user:details', array(
 			'accountdetails'  => $accountdetails,
 			'impersonateForm' => $impersonateForm,
-			'userID'   		  => $userID,
+			'userID'          => $userID,
+			'user'            => $user,
 		));
 	}
 
