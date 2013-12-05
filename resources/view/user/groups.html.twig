@@ -20,10 +20,13 @@
 			</li>
 		</ul>
 	</div>
-	<div class="container-content">
-		{{ form_start(groupsForm) }}
-			{{ form_row(groupsForm.groups) }}
-			<button type="submit" class="button small save" id="save-content">Update</button>
-		{{ form_end(groupsForm) }}
+	<div class="container-content short">
+		<div class="group">
+			<h2 class="title">Groups</h2>
+			{{ form_start(groupsForm) }}
+				{{ form_widget(groupsForm.groups) }}
+				<button type="submit" class="button small save" id="save-content">Update</button>
+			{{ form_end(groupsForm) }}		
+		</div>
 	</div>
 {% endblock %}
