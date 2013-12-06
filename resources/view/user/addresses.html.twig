@@ -21,19 +21,27 @@
 		</ul>
 	</div>
 	<div class="container-content short">
-		<div class="group">
-			<h2 class="title"> Billing Address</h2>
-			{{ form_start(billingform) }}
-				{{ form_rest(billingform) }}
-				<button type="submit" class="button small save">Update billing address</button>
-			{{ form_end(billingform) }}
-		</div>
-		<div class="group">
-			<h2 class="title"> Delivery Address</h2>
-			{{ form_start(deliveryform) }}
-				{{ form_rest(deliveryform) }}
-				<button type="submit" class="button small save">Update delivery address</button>
-			{{ form_end(deliveryform) }}
+		<div class="group-grid">
+			<div class="row">
+				<div class="group">
+					<h2 class="title"> Billing Address</h2>
+					<div class="content">
+						{{ form_start(billingform) }}
+							{{ form_rest(billingform) }}
+							<button type="submit" class="button small save">Update billing address</button>
+						{{ form_end(billingform) }}
+					</div>
+				</div>
+				<div class="group">
+					<h2 class="title"> Delivery Address</h2>
+					<div class="content">
+						{{ form_start(deliveryform) }}
+							{{ form_rest(deliveryform) }}
+							<button type="submit" class="button small save">Update delivery address</button>
+						{{ form_end(deliveryform) }}
+					</div>
+				</div>				
+			</div>
 		</div>
 	</div>
 {% endblock %}
