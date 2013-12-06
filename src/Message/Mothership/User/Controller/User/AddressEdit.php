@@ -11,6 +11,10 @@ class AddressEdit extends Controller
 	public function index($userID)
 	{
 		$user = $this->get('user.loader')->getByID($userID);
+		$groups = array_reduce($this->get('user.group.loader')->getByUser($user), function($result, $group) {
+			return ((null === $result) ? '' : $result . ', ') . $group->getDisplayName();
+		});
+
 		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
@@ -31,6 +35,7 @@ class AddressEdit extends Controller
 			'deliveryform'    => $deliveryform,
 			'userID'          => $userID,
 			'user'            => $user,
+			'groups'          => $groups,
 		));
 	}
 
