@@ -88,6 +88,7 @@ class Edit extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$user = $this->get('user.current');
+			$subscriptionEdit = $this->get('mailing.subscription.edit');
 
 			$user->title 	= $data['title'];
 			$user->forename = $data['forename'];
@@ -95,9 +96,9 @@ class Edit extends Controller
 			$user->email 	= $data['email'];
 
 			if (isset($data['email_updates']) && $data['email_updates']) {
-				$this->get('user.subscription.create')->create($data['email']);
+				$subscriptionEdit->subscribe($data['email']);
 			} else {
-				$this->get('user.subscription.delete')->delete($data['email']);
+				$subscriptionEdit->unsubscribe($data['email']);
 			}
 
 			if($this->get('user.edit')->save($user)) {
@@ -210,7 +211,7 @@ class Edit extends Controller
 			->val()->maxLength(255);
 
 		$form->add('email_updates', 'checkbox', 'Send me e-mail updates', array(
-			'data' => $this->get('user.subscription.loader')->getByUser($user),
+			'data' => $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed(),
 		))->val()->optional();
 
 		return $form;

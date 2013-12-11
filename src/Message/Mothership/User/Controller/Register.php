@@ -71,10 +71,11 @@ class Register extends Controller
 		$user = $createUser->create($user);
 		$trans->setIDVariable('USER_ID');
 
-		if (isset($data['opt_in']) && $data['opt_in']) {
-			$addSubscriber = $this->get('user.subscription.create');
-			$addSubscriber->setTransaction($trans);
-			$addSubscriber->create($user->email);
+		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')
+		 && isset($data['opt_in']) && $data['opt_in']) {
+			$editSubscriber = $this->get('mailing.subscription.edit');
+			$editSubscriber->setTransaction($trans);
+			$editSubscriber->subscribe($user->email);
 		}
 
 		$trans->commit();
@@ -107,8 +108,11 @@ class Register extends Controller
 		}
 
 		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data);
-		$form->add('opt_in','checkbox','Send me email udpates')
-			->val()->optional();
+
+		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')) {
+			$form->add('opt_in','checkbox','Send me email udpates')
+				->val()->optional();
+		}
 
 		return $form;
 	}
