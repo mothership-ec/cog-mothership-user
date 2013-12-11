@@ -5,6 +5,9 @@ namespace Message\Mothership\User\Controller\Account;
 use Message\Cog\Controller\Controller;
 use Message\Mothership\Ecommerce\Form\UserRegister;
 use Message\Mothership\Commerce\Order\Statuses as OrderStatuses;
+
+use Message\Mothership\Mailing\Subscription\Subscriber;
+
 /**
  * Class Account
  *
@@ -14,9 +17,9 @@ class Account extends Controller
 {
 	public function index()
 	{
-		$user = $this->get('user.current');
-		$subscribed = $this->get('user.subscription.loader')->getByUser($user) ? 'Yes' : 'No';
-		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
+		$user            = $this->get('user.current');
+		$subscribed      = $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed();
+		$billingAddress  = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
 
 		return $this->render('Message:Mothership:User::account:account', array(
