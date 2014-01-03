@@ -1,0 +1,8 @@
+ms.user:
+  password:
+    request:
+      title: Forgotten your password?
+      intro: If you've forgotten your password, enter the email address you registered with in the text box and we'll send that address an email with a link to reset your password. If you can't remember which email address you registered with, please <a href="mailto:%email%">contact us</a>.
+    reset:
+      title: Reset your password
+      intro: To reset the password for the account linked to the email address <strong>%email%</strong>, enter a new password in the text box.
