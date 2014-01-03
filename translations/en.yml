@@ -1,4 +1,6 @@
 ms.user:
+  login:
+    title: Log in
   password:
     request:
       title: Forgotten your password?

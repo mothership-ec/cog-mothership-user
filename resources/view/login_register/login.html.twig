@@ -1,0 +1,18 @@
+{% extends '::login_register:template' %}
+
+{% block title %}{{ 'ms.user.login.title'|trans }} | {{ app.cfg.app.name }}{% endblock %}
+
+{% block content %}
+	<h1>{{ 'ms.user.login.title'|trans }}</h1>
+
+	{% block form %}
+		{{ render(controller('Message:User::Controller:Authentication#login', {
+			redirectURL           : refererUrl,
+			forgottenPasswordRoute: 'ms.user.password.request'
+		})) }}
+	{% endblock %}
+
+	{% block register_link %}
+		<p><a href="">If you're new to the wesite, register here</a></p>
+	{% endblock %}
+{% endblock %}
