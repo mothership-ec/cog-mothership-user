@@ -13,6 +13,6 @@
 	{% endblock %}
 
 	{% block register_link %}
-		<p><a href="">If you're new to the wesite, register here</a></p>
+		<p><a href="{{ url('ms.user.register') }}">{{ 'ms.user.login.register-link-text'|trans }}</a></p>
 	{% endblock %}
 {% endblock %}

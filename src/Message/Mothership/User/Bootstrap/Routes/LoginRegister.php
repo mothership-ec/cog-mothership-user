@@ -10,9 +10,8 @@ class LoginRegister implements RoutesInterface
 	{
 		$router['ms.user.login_register']->add('ms.user.login', '/login', 'Message:Mothership:User::Controller:Authentication#login');
 
-
-		# THE BELOW NEEDS TWEAKING/CHANGING
-		$router['ms.user']->add('user.register.action', '/register/action', 'Message:Mothership:User::Controller:Register#registerAction')
+		$router['ms.user.login_register']->add('ms.user.register.action', '/register', 'Message:Mothership:User::Controller:Register#action')
 			->setMethod('POST');
+		$router['ms.user.login_register']->add('ms.user.register', '/register', 'Message:Mothership:User::Controller:Register#index');
 	}
 }

@@ -1,0 +1,10 @@
+{{ form_start(form) }}
+	{{ form_rest(form) }}
+
+	{# Show privacy policy only if there is one #}
+	{% if 'ms.user.register.privacy'|trans != 'ms.user.register.privacy' %}
+	{{ 'ms.user.register.privacy'|trans }}
+	{% endif %}
+
+	<button type="submit">{{ 'ms.user.register.button'|trans }}</button>
+{{ form_end(form) }}
