@@ -117,7 +117,7 @@ class Register extends Controller
 		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data);
 
 		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')) {
-			$form->add('opt_in','checkbox','Send me email updates')
+			$form->add('opt_in', 'checkbox', $this->trans('ms.mailing.subscribe.option'))
 				->val()->optional();
 		}
 
