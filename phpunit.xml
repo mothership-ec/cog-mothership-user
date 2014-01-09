@@ -16,7 +16,7 @@
 	</testsuites>
 	<filter>
 		<whitelist>
-			<directory>./src/Message</directory>
+			<directory>./src</directory>
 		</whitelist>
 	</filter>
 	<php>
