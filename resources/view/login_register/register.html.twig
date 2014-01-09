@@ -1,0 +1,15 @@
+{% extends '::login_register:template' %}
+
+{% block title %}{{ 'ms.user.register.title'|trans }} | {{ app.cfg.app.name }}{% endblock %}
+
+{% block content %}
+	<h1>{{ 'ms.user.register.title'|trans }}</h1>
+
+	{% block form %}
+		{{ render(controller('Message:Mothership:User::Controller:Register#form')) }}
+	{% endblock %}
+
+	{% block login_link %}
+		<p><a href="{{ url('ms.user.login') }}">{{ 'ms.user.register.login-link-text'|trans }}</a></p>
+	{% endblock %}
+{% endblock %}
