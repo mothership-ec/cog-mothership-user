@@ -15,9 +15,9 @@
 		"issues": "http://github.com/messagedigital/cog-mothership-user/issues"
 	},
 	"autoload": {
-		"psr-0": {
-			"Message\\Mothership\\User"      : "src",
-			"Message\\Mothership\\User\\Test": "tests"
+		"psr-4": {
+			"Message\\Mothership\\User\\"      : "src",
+			"Message\\Mothership\\User\\Test\\": "tests"
 		}
 	},
 	"repositories": [
