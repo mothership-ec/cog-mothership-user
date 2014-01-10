@@ -10,7 +10,7 @@
 	bootstrap="vendor/autoload.php"
 >
 	<testsuites>
-		<testsuite name="Cog Mothership User Module Test Suite">
+		<testsuite name="Mothership User Cogule Test Suite">
 			<directory>./tests</directory>
 		</testsuite>
 	</testsuites>
