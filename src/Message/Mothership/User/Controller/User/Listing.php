@@ -39,7 +39,7 @@ class Listing extends Controller
 			->setMethod('GET')
 			->setAction($this->generateUrl('ms.cp.user.search'));
 
-		$form->add('term', 'search', 'Enter search terms...', array('attr' => array('placeholder' => 'Enter search term...')));
+		$form->add('term', 'search', 'Enter search terms...', array('attr' => array('placeholder' => 'Search users...')));
 
 		return $form;
 	}
