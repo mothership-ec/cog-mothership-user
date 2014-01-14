@@ -3,31 +3,38 @@
 namespace Message\Mothership\User\Controller;
 
 use Message\Cog\Controller\Controller;
+
+use Message\User\AnonymousUser;
 use Message\User\Event;
 
 /**
- * Class Account
- *
- * Controller for viewing user account details
+ * Controllers for user registration.
  */
 class Register extends Controller
 {
-	public function index($privacyText, $buttonText)
+	public function index()
+	{
+		// If user is already logged in, send them to the account section
+		if (!($this->get('user.current') instanceof AnonymousUser)) {
+			return $this->redirectToRoute('ms.user.account');
+		}
+
+		return $this->render('Message:Mothership:User::login_register:register');
+	}
+
+	public function form()
 	{
 		$form = $this->_getForm();
 
 		// Clear out session
 		$this->get('http.session')->remove('user.register.form');
 
-		return $this->render('Message:Mothership:User::register', array(
+		return $this->render('Message:Mothership:User::login_register:register_form', array(
 			'form' => $form,
-			'privacyText' => $privacyText,
-			'buttonText' => $buttonText
 		));
-
 	}
 
-	public function registerAction()
+	public function action()
 	{
 		$form = $this->_getForm();
 
@@ -71,10 +78,11 @@ class Register extends Controller
 		$user = $createUser->create($user);
 		$trans->setIDVariable('USER_ID');
 
-		if (isset($data['opt_in']) && $data['opt_in']) {
-			$addSubscriber = $this->get('user.subscription.create');
-			$addSubscriber->setTransaction($trans);
-			$addSubscriber->create($user->email);
+		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')
+		 && isset($data['opt_in']) && $data['opt_in']) {
+			$editSubscriber = $this->get('mailing.subscription.edit');
+			$editSubscriber->setTransaction($trans);
+			$editSubscriber->subscribe($user->email);
 		}
 
 		$trans->commit();
@@ -97,8 +105,8 @@ class Register extends Controller
 	public function _getForm()
 	{
 		$userForm = $this->get('user.register.form');
-		$url      = $this->generateUrl('user.register.action');
-		$redirect = $this->generateUrl('user.register');
+		$url      = $this->generateUrl('ms.user.register.action');
+		$redirect = $this->generateUrl('ms.user.register');
 
 		$data = array();
 
@@ -107,8 +115,11 @@ class Register extends Controller
 		}
 
 		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data);
-		$form->add('opt_in','checkbox','Send me email udpates')
-			->val()->optional();
+
+		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')) {
+			$form->add('opt_in', 'checkbox', $this->trans('ms.mailing.subscribe.option'))
+				->val()->optional();
+		}
 
 		return $form;
 	}
