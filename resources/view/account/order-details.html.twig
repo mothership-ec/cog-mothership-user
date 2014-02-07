@@ -35,17 +35,6 @@
 </table>
 
 
-<p>Order Tracking:
-	{% if order.dispatches|length %}
-		{% for dispatch in order.dispatches %}
-			<a href="http://www.fedexuk.net/accounts/QuickTrack.aspx?consignment={{ dispatch.code }}">Track this order</a>
-		{% endfor %}
-	{% else %}
-		Not available
-	{% endif %}
-</p>
-
-
 {% set items = order.items %}
 
 <table class="account-orders">
