@@ -7,7 +7,6 @@ use Message\Mothership\User\Form\UserGroups;
 
 class GroupsEdit extends Controller
 {
-
 	public function index($userID)
 	{
 		$groupsForm = $this->getGroupsForm($userID);
@@ -23,7 +22,6 @@ class GroupsEdit extends Controller
 		$groupsForm = $this->getGroupsForm($userID);
 
 		if ($groupsForm->isValid() && $data = $groupsForm->getFilteredData()) {
-
 			$user = $this->get('user.loader')->getById($userID);
 
 			if ($this->get('user.edit')->setGroups($user, $data['groups'])) {
@@ -64,7 +62,7 @@ class GroupsEdit extends Controller
 			'multiple'          => true,
 			'preferred_choices' => $userGroups,
 			'data'              => $userGroups,
-		));
+		))->val()->optional();
 
 		return $form;
 	}
