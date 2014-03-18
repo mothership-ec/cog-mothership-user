@@ -11,6 +11,9 @@ class DetailsEdit extends Controller
 	public function index($userID)
 	{
 		$user = $this->get('user.loader')->getByID($userID);
+		$groups = array_reduce($this->get('user.group.loader')->getByUser($user), function($result, $group) {
+			return ((null === $result) ? '' : $result . ', ') . $group->getDisplayName();
+		});
 
 		$accountdetails = $this->_getDetailsForm($user);
 		$impersonateForm = $this->_getImpersonateForm($user);
@@ -18,7 +21,9 @@ class DetailsEdit extends Controller
 		return $this->render('Message:Mothership:User::user:details', array(
 			'accountdetails'  => $accountdetails,
 			'impersonateForm' => $impersonateForm,
-			'userID'   		  => $userID,
+			'userID'          => $userID,
+			'user'            => $user,
+			'groups'		  => $groups,
 		));
 	}
 

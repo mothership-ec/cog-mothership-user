@@ -1,17 +1,12 @@
 {% extends 'Message:Mothership:User::user:listing:view' %}
-
 {% block main %}
 	<hgroup class="title">
-		<h1>Create a new user</h1>
+		<h1>Add a new user</h1>
 	</hgroup>
-
-<div class="container-content extended">
-
-{{ form_start(newuser) }}
-	{{ form_rest(newuser) }}
-		<button type="submit" class="button small save">Create user</button>
-{{ form_end(newuser) }}
-
-</div>
-
+	<div class="container-content extended">
+		{{ form_start(newuser) }}
+			{{ form_rest(newuser) }}
+				<button type="submit" class="button small save" id="save-content">Create user</button>
+		{{ form_end(newuser) }}
+	</div>
 {% endblock %}

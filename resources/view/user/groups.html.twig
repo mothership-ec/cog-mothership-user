@@ -1,37 +1,34 @@
 {% extends 'Message:Mothership:User::user:listing:view' %}
-
 {% block main %}
-
-<hgroup class="title">
-	<h1>Update User - {{ userID }}</h1>
-</hgroup>
-
-{# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
-
-<div class="topbar">
-	<ul class="tabs">
-		<li class="">
-			<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
-		</li>
-		<li class="">
-			<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
-		</li>
-		<li class="active">
-			<a href="{{ url('ms.cp.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
-		</li>
-		<li class="">
-			<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
-		</li>
-	</ul>
-</div>
-
-<div class="container-content extended">
-
-	{{ form_start(groupsForm) }}
-		{{ form_row(groupsForm.groups) }}
-		<button type="submit" class="button small save" id="save-content">Update</button>
-	{{ form_end(groupsForm) }}
-
-</div>
-
+	<hgroup class="title">
+		<h1>{{ user.name }} {% if groups %}<span class="flag role">{{ groups }}</span>{% endif %} <span>User #{{ userID }}</span> </h1>
+	</hgroup>
+	{# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
+	<div class="topbar">
+		<ul class="tabs">
+			<li class="">
+				<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
+			</li>
+			<li class="">
+				<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
+			</li>
+			<li class="active">
+				<a href="{{ url('ms.cp.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
+			</li>
+			<li class="">
+				<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
+			</li>
+		</ul>
+	</div>
+	<div class="container-content short">
+		<div class="group">
+			<h2 class="title">Groups</h2>
+				<div class="content">
+					{{ form_start(groupsForm) }}
+						{{ form_widget(groupsForm.groups) }}
+						<button type="submit" class="button small save" id="save-content">Save changes</button>
+					{{ form_end(groupsForm) }}
+				</div>
+		</div>
+	</div>
 {% endblock %}

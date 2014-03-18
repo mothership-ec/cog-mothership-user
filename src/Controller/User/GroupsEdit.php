@@ -7,14 +7,20 @@ use Message\Mothership\User\Form\UserGroups;
 
 class GroupsEdit extends Controller
 {
-
 	public function index($userID)
 	{
+		$user = $this->get('user.loader')->getByID($userID);
+		$groups = array_reduce($this->get('user.group.loader')->getByUser($user), function($result, $group) {
+			return ((null === $result) ? '' : $result . ', ') . $group->getDisplayName();
+		});
+
 		$groupsForm = $this->getGroupsForm($userID);
 
 		return $this->render('Message:Mothership:User::user:groups', array(
-			'userID'    => $userID,
+			'userID'     => $userID,
 			'groupsForm' => $groupsForm,
+			'user'       => $user,
+			'groups'     => $groups,
 		));
 	}
 
@@ -23,7 +29,6 @@ class GroupsEdit extends Controller
 		$groupsForm = $this->getGroupsForm($userID);
 
 		if ($groupsForm->isValid() && $data = $groupsForm->getFilteredData()) {
-
 			$user = $this->get('user.loader')->getById($userID);
 
 			if ($this->get('user.edit')->setGroups($user, $data['groups'])) {
@@ -64,7 +69,7 @@ class GroupsEdit extends Controller
 			'multiple'          => true,
 			'preferred_choices' => $userGroups,
 			'data'              => $userGroups,
-		));
+		))->val()->optional();
 
 		return $form;
 	}
