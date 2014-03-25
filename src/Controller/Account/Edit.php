@@ -6,6 +6,7 @@ use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form\UserAddresses;
 use Message\Mothership\User\Form\UserDetails;
 use Message\Mothership\Commerce\User\Address\Address;
+use Symfony\Component\Validator\Constraints;
 
 /**
  * Class Account
@@ -257,11 +258,12 @@ class Edit extends Controller
 			))
 			->val()->optional();
 
-		$form->add('countryID','choice','Country', array(
-			'choices'     => $this->get('country.list')->all(),
-			'data'        => $address->countryID,
-			'empty_value' => 'Select country...'
-		));
+		$event = $this->get('country.event');
+		$form->add('countryID', 'choice', 'Country', [
+			'choices'     => $this->get('event.dispatcher')->dispatch('country.'.$address->type, $event)->getCountries(),
+			'empty_value' => 'Please select...',
+			'data'        => $address->countryID
+		]);
 
 		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
 
