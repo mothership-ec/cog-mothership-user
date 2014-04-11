@@ -4,7 +4,11 @@
 	</h2>
 	<div class="wrap">
 		<div class="profile-image">
-			<img src="http://placehold.it/165x165"  width="165" height="165" alt="">
+			{{ render(controller('Message:Mothership:User::Controller:Module:Avatar#index', {
+				user: user,
+				size: 165
+			})) }}
+			{# <img src="http://gravatar.com/avatar/"  width="165" height="165" alt=""> #}
 		</div>
 		<div class="activity">
 			<h3>Your recent activity</h3>
