@@ -11,11 +11,9 @@ class UserSummary extends Controller
 	const CACHE_TTL = 60;
 
 	/**
+	 * Build the user activity dashboard with an ActivitySummaryEvent.
 	 *
-	 *
-	 * @todo   Fire an event which the activities are loaded onto from their
-	 *         respective cogules.
-	 * @return
+	 * @return \Message\Cog\HTTP\Response
 	 */
 	public function index()
 	{
