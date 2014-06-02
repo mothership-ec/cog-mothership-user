@@ -7,9 +7,6 @@ use Message\Mothership\ControlPanel\Event\Dashboard\ActivitySummaryEvent;
 
 class UserSummary extends Controller
 {
-	const CACHE_KEY = 'dashboard.module.user-summary.';
-	const CACHE_TTL = 60;
-
 	/**
 	 * Build the user activity dashboard with an ActivitySummaryEvent.
 	 *
@@ -19,18 +16,14 @@ class UserSummary extends Controller
 	{
 		$user = $this->get('user.current');
 
-		if (false === $data = $this->get('cache')->fetch(self::CACHE_KEY . $user->id)) {
-			$event = new ActivitySummaryEvent;
-			$event->setUser($user);
+		$event = new ActivitySummaryEvent;
+		$event->setUser($user);
 
-			$this->get('event.dispatcher')->dispatch(ActivitySummaryEvent::DASHBOARD_ACTIVITY_SUMMARY, $event);
+		$this->get('event.dispatcher')->dispatch(ActivitySummaryEvent::DASHBOARD_ACTIVITY_SUMMARY, $event);
 
-			$data = [
-				'activities' => $event->getActivities(),
-			];
-
-			$this->get('cache')->store(self::CACHE_KEY . $user->id, $data, self::CACHE_TTL);
-		}
+		$data = [
+			'activities' => $event->getActivities(),
+		];
 
 		return $this->render('Message:Mothership:User::module:dashboard:user-summary', [
 			'user'       => $user,
