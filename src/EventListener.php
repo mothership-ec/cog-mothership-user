@@ -8,6 +8,8 @@ use Message\Cog\Event\EventListener as BaseListener;
 use Message\Cog\Event\SubscriberInterface;
 use Message\Cog\HTTP\RedirectResponse;
 
+use Message\Mothership\ControlPanel\Event\Dashboard\DashboardEvent;
+
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
@@ -27,6 +29,9 @@ class EventListener extends BaseListener implements SubscriberInterface
 			KernelEvents::REQUEST => array(
 				array('checkLoggedIn')
 			),
+			DashboardEvent::DASHBOARD_INDEX => array(
+				'buildDashboardIndex'
+			)
 		);
 	}
 
@@ -46,5 +51,15 @@ class EventListener extends BaseListener implements SubscriberInterface
 		) {
 			$event->setResponse(new RedirectResponse('/'));
 		}
+	}
+
+	/**
+	 * Add controller references to the dashboard index.
+	 *
+	 * @param  DashboardEvent $event
+	 */
+	public function buildDashboardIndex(DashboardEvent $event)
+	{
+		$event->addReference('Message:Mothership:User::Controller:Module:Dashboard:UserSummary#index');
 	}
 }
