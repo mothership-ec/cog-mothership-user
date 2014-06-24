@@ -1,0 +1,27 @@
+<div class="module landscape welcome">
+	<h2 class="title">
+		Welcome, {{ user.getName() }}
+	</h2>
+	<div class="wrap">
+		<div class="profile-image">
+			{{ render(controller('Message:Mothership:User::Controller:Module:Avatar#index', {
+				user: user,
+				size: 165
+			})) }}
+		</div>
+		<div class="activity">
+			<h3>Your recent activity</h3>
+			<ul>
+				{% for activity in activities %}
+					<li>
+						<strong>{{ activity.label }}</strong>
+						<time>{{ activity.date|date }}</time>
+						<span><a href="{{ activity.url }}">{{ activity.name }}</a></span>
+					</li>
+				{% else %}
+					<li><span><em>You have no recent activities.</em></span></li>
+				{% endfor %}
+			</ul>
+		</div>
+	</div>
+</div>
