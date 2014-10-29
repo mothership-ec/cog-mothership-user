@@ -58,7 +58,7 @@
 				<td class="description">{{ item.description }}</td>
 				<td class="order-status">{{ item.status.name }}</td>
 				<td class="qty">1</td>
-				<td class="unit-price">{{ item.gross|price }}</td>
+				<td class="unit-price">{{ item.gross|price(order.currencyID) }}</td>
 				{% if moduleExists('Message\\Mothership\\OrderReturn') %}
 					<td class="return">
 						{% if despatchedStatus is defined and item.status.code == despatchedStatus %}
