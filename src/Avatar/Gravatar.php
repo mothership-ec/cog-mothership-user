@@ -11,26 +11,36 @@ class Gravatar implements ProviderInterface
 		return 'gravatar';
 	}
 
-	public function getAvatarUrl($email, $size = 100, $default = null)
+	public function getAvatar($email, $size = 100, $default = null)
 	{
 		if (!is_int($size)) {
 			throw new \InvalidArgumentException('Size must be an integer');
 		}
 
+		$default = $this->_parseDefault($default);
+		$hash    = $this->_getHash($email);
+		$url     =  $this->_buildUrl($hash, $size, $default);
+
+		$avatar = new Avatar;
+		$avatar->setUrl($url);
+		$avatar->setSize($size);
+		$avatar->setDefault($default);
+
+		return $avatar;
+	}
+
+	private function _parseDefault($default)
+	{
 		if (null !== $default && !is_string($default)) {
 			throw new \InvalidArgumentException('Default path must be a string');
 		}
-
-		$hash = $this->_getHash($email);
 
 		if (null !== $default) {
 			$default = urldecode($default);
 			$default = urlencode($default);
 		}
 
-		$default = ($default) ?: urlencode('/cogules/Message:Mothership:User/images/avatar.png');
-
-		return $this->_buildUrl($hash, $size, $default);
+		return ($default) ?: urlencode('/cogules/Message:Mothership:User/images/avatar.png');
 	}
 
 	private function _buildUrl($hash,  $size, $default)

@@ -22,9 +22,7 @@ class Avatar extends Controller
 		}
 
 		return $this->render('Message:Mothership:User::module:avatar', [
-			'url'     => $this->get('avatar.collection')->get('gravatar')->getAvatarUrl($user->email, $size, $default),
-			'size'    => $size,
-			'default' => $default,
+			'avatar'   => $this->get('avatar.provider.collection')->get('gravatar')->getAvatar($user->email, $size, $default),
 		]);
 	}
 }

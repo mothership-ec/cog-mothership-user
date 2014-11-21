@@ -4,7 +4,11 @@ namespace Message\Mothership\User\Avatar;
 
 use Message\Cog\ValueObject\Collection as BaseCollection;
 
-class Collection extends BaseCollection
+/**
+ * Class ProviderCollection
+ * @package Message\Mothership\User\Avatar
+ */
+class ProviderCollection extends BaseCollection
 {
 	protected function _configure()
 	{

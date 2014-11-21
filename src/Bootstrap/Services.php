@@ -9,8 +9,8 @@ class Services implements ServicesInterface
 {
 	public function registerServices($services)
 	{
-		$services['avatar.collection'] = function($c) {
-			return new User\Avatar\Collection([
+		$services['avatar.provider.collection'] = function($c) {
+			return new User\Avatar\ProviderCollection([
 				new User\Avatar\Gravatar,
 			]);
 		};
