@@ -51,7 +51,7 @@ class CreateAdminUser extends Task
 		$asking = true;
 
 		while ($asking) {
-			$this->writeln($c('Please enter your user details:')->fg('black')->bg('green'));
+			$this->writeln($c('Please enter your admin user details:')->fg('black')->bg('green'));
 
 			foreach ($this->_details as $detail => $detailName) {
 				$user->$detail = $this->_ask($detail, $detailName);
