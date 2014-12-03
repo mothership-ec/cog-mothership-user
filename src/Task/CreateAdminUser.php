@@ -21,11 +21,6 @@ class CreateAdminUser extends Task
 	const ADMIN = 'ms-super-admin';
 
 	/**
-	 * @var Color
-	 */
-	private $_colour;
-
-	/**
 	 * Details to ask for when creating a new user
 	 *
 	 * @var array
