@@ -15,8 +15,6 @@ class Avatar extends Controller
 	 */
 	public function index(UserInterface $user, $size = 100, $default = null)
 	{
-		$hash = md5(strtolower(trim($user->email)));
-
 		if ('local' == $this->get('env')) {
 			$default = 'identicon';
 		} else {
@@ -24,9 +22,7 @@ class Avatar extends Controller
 		}
 
 		return $this->render('Message:Mothership:User::module:avatar', [
-			'hash'    => $hash,
-			'size'    => $size,
-			'default' => $default,
+			'avatar'   => $this->get('avatar.provider.collection')->get('gravatar')->getAvatar($user->email, $size, $default),
 		]);
 	}
 }
