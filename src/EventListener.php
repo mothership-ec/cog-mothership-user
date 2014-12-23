@@ -13,6 +13,8 @@ use Message\Mothership\ControlPanel\Event\Dashboard\DashboardEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
+use Message\Mothership\Report\Event as ReportEvents;
+
 /**
  *
  *
@@ -31,7 +33,10 @@ class EventListener extends BaseListener implements SubscriberInterface
 			),
 			DashboardEvent::DASHBOARD_INDEX => array(
 				'buildDashboardIndex'
-			)
+			),
+			ReportEvents\Events::REGISTER_REPORTS => [
+				'registerReports'
+			]
 		);
 	}
 
@@ -61,5 +66,12 @@ class EventListener extends BaseListener implements SubscriberInterface
 	public function buildDashboardIndex(DashboardEvent $event)
 	{
 		$event->addReference('Message:Mothership:User::Controller:Module:Dashboard:UserSummary#index');
+	}
+
+	public function registerReports(ReportEvents\BuildReportCollectionEvent $event)
+	{
+		foreach ($this->get('user.reports') as $report) {
+			$event->registerReport($report);
+		}
 	}
 }
