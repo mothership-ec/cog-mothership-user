@@ -11,5 +11,8 @@ class Tasks implements TasksInterface
     {
         // Order related ports
         $tasks->add(new Task\Porting\EmailSubscriptions('user:porting:email_subscription'), 'Ports subscribed emails from pre mothership');
-    }
+
+		// User tasks
+		$tasks->add(new Task\CreateAdminUser('user:create_admin'), 'Create an admin user via the command line');
+	}
 }

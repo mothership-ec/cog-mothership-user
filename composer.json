@@ -29,6 +29,8 @@
 	"require": {
 		"php": ">=5.4.0",
 
+		"kevinlebrun/colors.php": "0.*",
+
 		"message/cog"              : "~3.0",
 		"message/cog-user"         : "~1.1",
 		"message/cog-mothership-cp": "~1.2"
