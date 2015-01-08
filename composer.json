@@ -33,7 +33,7 @@
 
 		"message/cog"              : "~3.0",
 		"message/cog-user"         : "~1.1",
-		"message/cog-mothership-cp": "~1.2"
+		"message/cog-mothership-cp": "~1.2 | ~2.0"
 	},
 	"suggest": {
 	}
