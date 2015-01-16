@@ -4,6 +4,7 @@ namespace Message\Mothership\User\Address;
 
 use Message\Cog\ValueObject\DateTimeImmutable;
 use Message\Cog\DB\Query;
+use Message\Cog\DB\Result;
 use Message\Cog\Location\CountryList;
 use Message\Cog\Location\StateList;
 

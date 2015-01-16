@@ -21,10 +21,10 @@ class Address
 
 	public $authorship;
 
-
 	public function __construct()
 	{
 		$this->authorship = new Authorship;
+		$this->authorship->enableUpdate();
 
 		for($i = 1; $i <= self::AMOUNT_LINES; ++$i) {
 			$this->lines[$i] = null;
