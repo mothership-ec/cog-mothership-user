@@ -3,22 +3,8 @@
 	<hgroup class="title">
 		<h1>{{ user.name }} {% if groups %}<span class="flag role">{{ groups }}</span>{% endif %} <span>User #{{ userID }}</span> </h1>
 	</hgroup>
-	{# {{ render(controller('Message:Mothership:User::Controller:User:Menu#index', {'userID':userID}))}} #}
 	<div class="topbar">
-		<ul class="tabs">
-			<li class="">
-				<a href="{{ url('ms.cp.user.admin.detail.edit', {userID:userID}) }}" data-liv>Details</a>
-			</li>
-			<li class="">
-				<a href="{{ url('ms.cp.user.admin.address.edit', {userID:userID}) }}" data-live>Addresses</a>
-			</li>
-			<li class="">
-				<a href="{{ url('ms.cp.user.admin.groups.edit', {userID:userID}) }}" data-live>Groups</a>
-			</li>
-			<li class="active">
-				<a href="{{ url('ms.cp.user.admin.orderhistory', {userID:userID}) }}" data-live>Order History</a>
-			</li>
-		</ul>
+		{{ render(controller('Message:Mothership:User::Controller:User:Tabs#tabs'))}}
 	</div>
 	<div class="container-content short">
 		{% set orderLink = 'ms.commerce.order.detail.view'%}
