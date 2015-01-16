@@ -1,4 +1,5 @@
 ms.user:
+  please-select: Please select...
   login:
     title: Log in
     register-link-text: If you're new to the website, register here
@@ -14,3 +15,33 @@ ms.user:
     reset:
       title: Reset your password
       intro: To reset the password for the account linked to the email address <strong>%email%</strong>, enter a new password in the text box.
+  user:
+    title: Title
+    firstname: Forename
+    lastname: Surname
+    email: Email
+    email-updates: Send me e-mail updates
+    email-in-use: This email address is already in use, please try another.
+    update:
+      success: You successfully updated your account detail.
+      error: Your account detail could not be updated.
+    password:
+      password: Password
+      new-password: New password
+      old-password: Old password
+      old-password-error: Your old password is not correct.
+      confirm: Confirm Password
+      match-error: The entered passwords do not match.
+      update:
+        success: You successfully changed your password.
+        error: Your password could not be changed.
+    address:
+      lines: lines
+      town: Town
+      postcode: Postcode / ZIP Code
+      telephone: Telephone
+      state: State/Province
+      state-required: This value is required for %s addresses.
+      country: Country
+      created-success: You successfully created a %s address.
+      updated-success: You successfully updated you %s address detail.
