@@ -7,6 +7,7 @@ use Message\Mothership\User\Form\UserAddresses;
 use Message\Mothership\User\Form\UserDetails;
 use Message\Mothership\Commerce\User\Address\Address;
 use Symfony\Component\Validator\Constraints;
+use Message\Cog\Localisation\Translator;
 
 /**
  * Class Account
@@ -103,15 +104,14 @@ class Edit extends Controller
 			}
 
 			if($this->get('user.edit')->save($user)) {
-				$this->addFlash('success', 'You successfully updated your account detail');
+				$this->addFlash('success', $this->get('translator')->trans('ms.user.user.update.success'));
 			} else {
-				$this->addFlash('error', 'Your account detail could not be updated');
+				$this->addFlash('error', $this->get('translator')->trans('ms.user.user.update.error'));
 			}
 		}
 
 		return $this->redirectToReferer();
 	}
-
 
 	public function processAddress($type)
 	{
@@ -140,11 +140,11 @@ class Edit extends Controller
 
 			if($created) {
 				if($this->get('commerce.user.address.create')->create($address)) {
-					$this->addFlash('success', sprintf('You successfully created a %s address.', $type));
+					$this->addFlash('success', sprintf($this->get('translator')->trans('ms.user.user.address.created-success'), $type));
 				}
 			} else {
 				if($this->get('commerce.user.address.edit')->save($address)) {
-					$this->addFlash('success', sprintf('You successfully updated you %s address detail.', $type));
+					$this->addFlash('success', sprintf($this->get('translator')->trans('ms.user.user.address.updated-success'), $type));
 				}
 			}
 		}
@@ -167,14 +167,14 @@ class Edit extends Controller
 				$this->get('user.loader')->getUserPassword($user)
 			)) {
 				de('wrong pwd');
-				$this->addFlash('error', 'Your old password is not correct');
+				$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.old-password-error'));
 			} elseif(strcmp($data['passwordRepeat'], $newPwd) !== 0) {
-				$this->addFlash('error', 'The entered passwords do not match');
+				$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.match-error'));
 			} else {
 				if($this->get('user.edit')->changePassword($user, $newPwd)) {
-					$this->addFlash('success', 'You successfully changed your password');
+					$this->addFlash('success', $this->get('translator')->trans('ms.user.user.password.update.success'));
 				} else {
-					$this->addFlash('error', 'Your password could not be changed');
+					$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.update.error'));
 				}
 			}
 		}
@@ -194,7 +194,7 @@ class Edit extends Controller
 		$titleChoices = $this->get('title.list');
 
 		$form
-			->add('title', 'choice', 'Title', array(
+			->add('title', 'choice', $this->get('translator')->trans('ms.user.user.title'), array(
 				'choices' 	=> $titleChoices,
 				'data'  	=> $user->title,
 				'expanded' 	=> false,
@@ -202,22 +202,21 @@ class Edit extends Controller
 			))
 			->val()->optional();
 
-		$form->add('forename', 'text', 'Forename', array('data' => $user->forename))
+		$form->add('forename', 'text', $this->get('translator')->trans('ms.user.user.firstname'), array('data' => $user->forename))
 			->val()->maxLength(255);
 
-		$form->add('surname', 'text', 'Surname', array('data' => $user->surname))
+		$form->add('surname', 'text', $this->get('translator')->trans('ms.user.user.lastname'), array('data' => $user->surname))
 			->val()->maxLength(255);
 
-		$form->add('email', 'email', 'E-Mail', array('data' => $user->email))
+		$form->add('email', 'email', $this->get('translator')->trans('ms.user.user.email'), array('data' => $user->email))
 			->val()->maxLength(255);
 
-		$form->add('email_updates', 'checkbox', 'Send me e-mail updates', array(
+		$form->add('email_updates', 'checkbox', $this->get('translator')->trans('ms.user.user.email-updates'), array(
 			'data' => $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed(),
 		))->val()->optional();
 
 		return $form;
 	}
-
 
 	protected function _getAddressForm(Address $address)
 	{
@@ -227,7 +226,7 @@ class Edit extends Controller
 			->setMethod('post');
 
 		$linesForm = $this->get('form')
-			->setName('lines')
+			->setName($this->get('translator')->trans('ms.user.user.address.lines'))
 			->addOptions(array(
 				'auto_initialize' => false,
 			));
@@ -244,14 +243,14 @@ class Edit extends Controller
 
 		$form->add($linesForm->getForm(), 'form', 'Address Lines');
 
-		$form->add('town','text','Town', array('data' => $address->town));
-		$form->add('postcode','text','Postcode', array('data' => $address->postcode));
+		$form->add('town','text', $this->get('translator')->trans('ms.user.user.address.town') , array('data' => $address->town));
+		$form->add('postcode','text', $this->get('translator')->trans('ms.user.user.address.postcode') , array('data' => $address->postcode));
 
 		$form
-			->add('stateID','choice','State', array(
+			->add('stateID','choice', $this->get('translator')->trans('ms.user.user.address.state') , array(
 				'choices'     => $this->get('state.list')->all(),
 				'data'        => $address->stateID,
-				'empty_value' => 'Select state...',
+				'empty_value' => $this->get('translator')->trans('ms.user.please-select'),
 				'attr' => array(
 					'data-state-filter-country-selector' => "#" . $address->type . "-address-edit_countryID"
 				),
@@ -259,13 +258,13 @@ class Edit extends Controller
 			->val()->optional();
 
 		$event = $this->get('country.event');
-		$form->add('countryID', 'choice', 'Country', [
+		$form->add('countryID', 'choice', $this->get('translator')->trans('ms.user.user.address.country'), [
 			'choices'     => $this->get('event.dispatcher')->dispatch('country.'.$address->type, $event)->getCountries(),
-			'empty_value' => 'Please select...',
+			'empty_value' => $this->get('translator')->trans('ms.user.please-select'),
 			'data'        => $address->countryID
 		]);
 
-		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
+		$form->add('telephone','text', $this->get('translator')->trans('ms.user.user.address.telephone') , array('data' => $address->telephone))->val()->optional();
 
 		return $form;
 	}
@@ -277,9 +276,9 @@ class Edit extends Controller
 			->setAction($this->generateUrl('ms.user.password.edit.action'))
 			->setMethod('post');
 
-		$form->add('oldPassword', 'password', 'Old Password');
-		$form->add('newPassword', 'password', 'New Password');
-		$form->add('passwordRepeat', 'password', 'Repeat Password');
+		$form->add('oldPassword', 'password', $this->get('translator')->trans('ms.user.user.password.old-password'));
+		$form->add('newPassword', 'password', $this->get('translator')->trans('ms.user.user.password.new-password'));
+		$form->add('passwordRepeat', 'password', $this->get('translator')->trans('ms.user.user.password.confirm'));
 
 		return $form;
 	}
