@@ -6,6 +6,7 @@ use Message\Cog\Controller\Controller;
 
 use Message\User\AnonymousUser;
 use Message\User\Event;
+use Message\Cog\Localisation\Translator;
 
 /**
  * Controllers for user registration.
@@ -54,13 +55,13 @@ class Register extends Controller
 		}
 
 		if ($data['password'] !== $data['password_conf']) {
-			$this->addFlash('error', 'Your passwords do not match');
+			$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.match-error'));
 
 			return $this->redirectToReferer();
 		}
 
 		if (null !== $this->get('user.loader')->getByEmail($data['email'])) {
-			$this->addFlash('error', 'This email address is already in use, please try another.');
+			$this->addFlash('error', $this->get('translator')->trans('ms.user.user.email-in-use'));
 
 			return $this->redirectToReferer();
 		}
@@ -107,6 +108,7 @@ class Register extends Controller
 		$userForm = $this->get('user.register.form');
 		$url      = $this->generateUrl('ms.user.register.action');
 		$redirect = $this->generateUrl('ms.user.register');
+		$translator = $this->get('translator');
 
 		$data = array();
 
@@ -114,7 +116,7 @@ class Register extends Controller
 			$data = $this->get('http.session')->get('user.register.form');
 		}
 
-		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data);
+		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data, $translator);
 
 		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')) {
 			$form->add('opt_in', 'checkbox', $this->trans('ms.mailing.subscribe.option'))

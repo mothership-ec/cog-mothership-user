@@ -19,6 +19,7 @@
 	</ul>
 </section>
 
+{# @todo abstract this in a way where it does not rely on commerce to work #}
 {% if billingAddress %}
 	{% set address = billingAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
