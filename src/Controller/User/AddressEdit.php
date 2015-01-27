@@ -4,35 +4,28 @@ namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form\UserAddresses;
-use Message\Mothership\Commerce\User\Address\Address;
+use Message\Mothership\User\Address\Address;
 
 class AddressEdit extends Controller
 {
+	private $_loadedUsers = [];
+
 	public function index($userID)
 	{
-		$user = $this->get('user.loader')->getByID($userID);
+		$user = $this->_getUser($userID);
+
 		$groups = array_reduce($this->get('user.group.loader')->getByUser($user), function($result, $group) {
 			return ((null === $result) ? '' : $result . ', ') . $group->getDisplayName();
 		});
 
-		$billingAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
-		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
+		$addressForms = [];
 
-		if(!$billingAddress) {
-			$billingAddress = new Address;
-			$billingAddress->type = 'billing';
+		foreach ($this->get('user.address.types') as $type) {
+			$addressForms[$type] = $this->addressForm($user, $type);
 		}
-		if(!$deliveryAddress) {
-			$deliveryAddress = new Address;
-			$deliveryAddress->type = 'delivery';
-		}
-
-		$billingform = $this->addressForm('billing', $userID);
-		$deliveryform = $this->addressForm('delivery', $userID);
 
 		return $this->render('Message:Mothership:User::user:addresses', array(
-			'billingform'     => $billingform,
-			'deliveryform'    => $deliveryform,
+			'addressForms'    => $addressForms,
 			'userID'          => $userID,
 			'user'            => $user,
 			'groups'          => $groups,
@@ -41,8 +34,9 @@ class AddressEdit extends Controller
 
 	public function addressForm($type,$userID)
 	{
-		$user = $this->get('user.loader')->getByID($userID);
-		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		$user = $this->_getUser($userID);
+		$address = $this->get('user.address.loader')->getByUserAndType($user, $type);
+
 		if(!$address) {
 			$address = new Address;
 			$address->type = $type;
@@ -59,8 +53,8 @@ class AddressEdit extends Controller
 
 	public function addressFormProcess($type,$userID)
 	{
-		$user = $this->get('user.loader')->getByID($userID);
-		$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
+		$user = $this->_getUser($userID);
+		$address = $this->get('user.address.loader')->getByUserAndType($user, $type);
 		$created = false;
 		if(!$address) {
 			$address = new Address;
@@ -85,20 +79,30 @@ class AddressEdit extends Controller
 			$address->userID	  = $user->id;
 
 			if($created) {
-				if($this->get('commerce.user.address.create')->create($address)) {
+				if($this->get('user.address.create')->create($address)) {
 					$this->addFlash('success', sprintf('You successfully created a %s address.', $type));
 				} else {
 					$this->addFlash('error', 'Account details could not be updated');
 				}
 			} else {
-				if($this->get('commerce.user.address.edit')->save($address)) {
+				if($this->get('user.address.edit')->save($address)) {
 					$this->addFlash('success', sprintf('You successfully updated the %s address.', $type));
 				} else {
 					$this->addFlash('error', 'Account details could not be updated');
 				}
 			}
 		}
-		return $this->redirectToReferer();;
+
+		return $this->redirectToReferer();
+	}
+
+	private function _getUser($userID)
+	{
+		if (!array_key_exists($userID, $this->_loadedUsers)) {
+			$this->_loadedUsers[$userID] = $this->get('user.loader')->getByID($userID);
+		}
+
+		return $this->_loadedUsers[$userID];
 	}
 
 }

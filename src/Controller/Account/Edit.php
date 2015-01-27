@@ -66,24 +66,6 @@ class Edit extends Controller
 		));
 	}
 
-	/*
-	public function deleteAddress($type)
-	{
-		if ($delete = $this->get('request')->get('delete')) {
-			$user = $this->get('user.current');
-			$address = $this->get('commerce.user.address.loader')->getByUserAndType($user, $type);
-
-			if ($address = $this->get('commerce.user.address.delete')->delete($address)) {
-				$this->addFlash('success', 'You successfully deleted an address');
-			} else {
-				$this->addFlash('error', 'Your address could not be deleted.');
-			}
-		}
-
-		return $this->redirectToReferer();
-	}
-	*/
-
 	public function processDetail()
 	{
 		$form = $this->_getDetailForm();

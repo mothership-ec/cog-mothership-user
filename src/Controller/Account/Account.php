@@ -19,8 +19,8 @@ class Account extends Controller
 	{
 		$user            = $this->get('user.current');
 		$subscribed      = $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed();
-		$billingAddress  = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'billing');
-		$deliveryAddress = $this->get('commerce.user.address.loader')->getByUserAndType($user, 'delivery');
+		$billingAddress  = $this->get('user.address.loader')->getByUserAndType($user, 'billing');
+		$deliveryAddress = $this->get('user.address.loader')->getByUserAndType($user, 'delivery');
 
 		return $this->render('Message:Mothership:User::account:account', array(
 			'user'            => $user,
