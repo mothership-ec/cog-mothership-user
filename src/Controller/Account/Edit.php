@@ -241,7 +241,7 @@ class Edit extends Controller
 				'data'        => $address->stateID,
 				'empty_value' => 'Select state...',
 				'attr' => array(
-					'data-state-filter-country-selector' => "#" . $address->type . "-address-edit_countryID"
+					'data-state-filter-country-id' => $address->type . "-address-edit_countryID"
 				),
 			))
 			->val()->optional();
