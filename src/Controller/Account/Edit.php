@@ -228,13 +228,19 @@ class Edit extends Controller
 		$form->add('town','text', $this->get('translator')->trans('ms.user.user.address.town') , array('data' => $address->town));
 		$form->add('postcode','text', $this->get('translator')->trans('ms.user.user.address.postcode') , array('data' => $address->postcode));
 
+		$event = $this->get('country.event');
+		$form->add('countryID', 'choice', 'Country', [
+			'choices'     => $this->get('event.dispatcher')->dispatch('country.'.$address->type, $event)->getCountries(),
+			'empty_value' => 'Please select...',
+			'data'        => $address->countryID
+		]);
 		$form
 			->add('stateID','choice', $this->get('translator')->trans('ms.user.user.address.state') , array(
 				'choices'     => $this->get('state.list')->all(),
 				'data'        => $address->stateID,
 				'empty_value' => $this->get('translator')->trans('ms.user.please-select'),
 				'attr' => array(
-					'data-state-filter-country-selector' => "#" . $address->type . "-address-edit_countryID"
+					'data-state-filter-country-id' => $address->type . "-address-edit_countryID"
 				),
 			))
 			->val()->optional();
@@ -245,7 +251,6 @@ class Edit extends Controller
 			'empty_value' => $this->get('translator')->trans('ms.user.please-select'),
 			'data'        => $address->countryID
 		]);
-
 		$form->add('telephone','text', $this->get('translator')->trans('ms.user.user.address.telephone') , array('data' => $address->telephone))->val()->optional();
 
 		return $form;
