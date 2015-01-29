@@ -229,6 +229,12 @@ class Edit extends Controller
 		$form->add('town','text','Town', array('data' => $address->town));
 		$form->add('postcode','text','Postcode', array('data' => $address->postcode));
 
+		$event = $this->get('country.event');
+		$form->add('countryID', 'choice', 'Country', [
+			'choices'     => $this->get('event.dispatcher')->dispatch('country.'.$address->type, $event)->getCountries(),
+			'empty_value' => 'Please select...',
+			'data'        => $address->countryID
+		]);
 		$form
 			->add('stateID','choice','State', array(
 				'choices'     => $this->get('state.list')->all(),
@@ -239,13 +245,6 @@ class Edit extends Controller
 				),
 			))
 			->val()->optional();
-
-		$event = $this->get('country.event');
-		$form->add('countryID', 'choice', 'Country', [
-			'choices'     => $this->get('event.dispatcher')->dispatch('country.'.$address->type, $event)->getCountries(),
-			'empty_value' => 'Please select...',
-			'data'        => $address->countryID
-		]);
 
 		$form->add('telephone','text','Telephone', array('data' => $address->telephone))->val()->optional();
 
