@@ -21,7 +21,7 @@ class AddressEdit extends Controller
 		$addressForms = [];
 
 		foreach ($this->get('user.address.types') as $type) {
-			$addressForms[$type] = $this->addressForm($type, $user->id);
+			$addressForms[$type] = $this->addressForm($type, $user->id)->getForm()->createView();
 		}
 
 		return $this->render('Message:Mothership:User::user:addresses', array(
@@ -49,7 +49,7 @@ class AddressEdit extends Controller
 			'type' => $type,
 		)));
 
-		return $form->getForm()->createView();
+		return $form;
 	}
 
 	public function addressFormProcess($type,$userID)

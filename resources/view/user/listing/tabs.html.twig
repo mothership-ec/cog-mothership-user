@@ -1,7 +1,7 @@
 <ul class="tabs">
 	{% for route, name in tabs %}
 		<li class="{{ route == current ? 'active' : '' }}">
-			<a href="{{ url(route, {userID: userID}) }}" data-liv>{{ name }}</a>
+			<a href="{{ url(route, {userID: userID}) }}" data-live>{{ name }}</a>
 		</li>
 	{% endfor %}
 </ul>
