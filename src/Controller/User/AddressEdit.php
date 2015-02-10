@@ -21,7 +21,7 @@ class AddressEdit extends Controller
 		$addressForms = [];
 
 		foreach ($this->get('user.address.types') as $type) {
-			$addressForms[$type] = $this->addressForm($user, $type);
+			$addressForms[$type] = $this->addressForm($type, $user->id)->getForm()->createView();
 		}
 
 		return $this->render('Message:Mothership:User::user:addresses', array(
@@ -35,6 +35,7 @@ class AddressEdit extends Controller
 	public function addressForm($type,$userID)
 	{
 		$user = $this->_getUser($userID);
+
 		$address = $this->get('user.address.loader')->getByUserAndType($user, $type);
 
 		if(!$address) {
@@ -98,6 +99,8 @@ class AddressEdit extends Controller
 
 	private function _getUser($userID)
 	{
+		$userID = (int) $userID;
+
 		if (!array_key_exists($userID, $this->_loadedUsers)) {
 			$this->_loadedUsers[$userID] = $this->get('user.loader')->getByID($userID);
 		}
