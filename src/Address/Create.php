@@ -71,7 +71,7 @@ class Create
 				'telephone'  => $address->telephone,
 				'created_at' => $address->authorship->createdAt(),
 				'created_by' => $address->authorship->createdBy(),
-				'userID'     => $this->_currentUser->id,
+				'userID'     => $address->userID ?: $this->_currentUser->id,
 				'type'		 => $address->type,
 			)
 		);

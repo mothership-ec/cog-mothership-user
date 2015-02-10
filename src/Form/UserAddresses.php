@@ -6,7 +6,7 @@ use Message\Cog\Form\Handler;
 use Message\Cog\Service\Container;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Message\User\UserInterface;
-use Message\Mothership\Commerce\Address\Address;
+use Message\Mothership\User\Address\Address;
 
 class UserAddresses extends Handler
 {

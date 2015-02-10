@@ -9,6 +9,7 @@ class Address
 	const AMOUNT_LINES = 4;
 
 	public $id;
+	public $userID;
 	public $type;
 	public $lines;
 	public $town;

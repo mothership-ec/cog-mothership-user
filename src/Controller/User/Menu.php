@@ -10,5 +10,6 @@ class Menu extends Controller
 	{
 		return $this->render('Message:Mothership:User::user:listing:tabs', array(
 			'userID' => $userID,
-		));	}
+		));
+	}
 }
