@@ -1,4 +1,17 @@
 {% extends 'Message:Mothership:ControlPanel::_templates/cp' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{% stylesheets
+		'@Message:Mothership:User::resources/assets/css/user.css'
+
+		output='/assets/css/ms_user.css'
+		filter='csscogulerewrite,?cssmin'
+	%}
+		<link rel="stylesheet" href="{{ asset_url }}">
+	{% endstylesheets %}
+{% endblock %}
+
 {% block main %}
 	<hgroup class="title">
 		<h1>{{ user.name }} {% if groups %}<span class="flag role">{{ groups }}</span>{% endif %} <span>User #{{ userID }}</span></h1>
