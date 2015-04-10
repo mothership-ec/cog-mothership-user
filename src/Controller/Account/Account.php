@@ -18,16 +18,21 @@ class Account extends Controller
 	public function index()
 	{
 		$user            = $this->get('user.current');
-		$subscribed      = $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed();
 		$billingAddress  = $this->get('user.address.loader')->getByUserAndType($user, 'billing');
 		$deliveryAddress = $this->get('user.address.loader')->getByUserAndType($user, 'delivery');
 
-		return $this->render('Message:Mothership:User::account:account', array(
+		$details = [
 			'user'            => $user,
-			'subscribed'      => $subscribed,
 			'billingAddress'  => $billingAddress,
 			'deliveryAddress' => $deliveryAddress,
-		));
+		];
+
+		// Quick fix to pseudo decouple from mailing.
+		if ($this->_services->offsetExists('mailing.subscription.loader')){
+			$details['subscribed'] = $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed();
+		}
+
+		return $this->render('Message:Mothership:User::account:account', $details);
 	}
 
 	public function orderListing()
