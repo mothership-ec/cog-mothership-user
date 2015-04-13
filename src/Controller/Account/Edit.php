@@ -72,18 +72,22 @@ class Edit extends Controller
 
 		if ($form->isValid() && $data = $form->getFilteredData()) {
 			$user = $this->get('user.current');
-			$subscriptionEdit = $this->get('mailing.subscription.edit');
 
 			$user->title 	= $data['title'];
 			$user->forename = $data['forename'];
 			$user->surname 	= $data['surname'];
 			$user->email 	= $data['email'];
 
-			if (isset($data['email_updates']) && $data['email_updates']) {
-				$subscriptionEdit->subscribe($data['email']);
-			} else {
-				$subscriptionEdit->unsubscribe($data['email']);
+			if ($this->_services->offsetExists('mailing.subscription.edit')){
+				$subscriptionEdit = $this->get('mailing.subscription.edit');
+
+				if (isset($data['email_updates']) && $data['email_updates']) {
+					$subscriptionEdit->subscribe($data['email']);
+				} else {
+					$subscriptionEdit->unsubscribe($data['email']);
+				}
 			}
+
 
 			if($this->get('user.edit')->save($user)) {
 				$this->addFlash('success', $this->get('translator')->trans('ms.user.user.update.success'));
@@ -193,9 +197,11 @@ class Edit extends Controller
 		$form->add('email', 'email', $this->get('translator')->trans('ms.user.user.email'), array('data' => $user->email))
 			->val()->maxLength(255);
 
-		$form->add('email_updates', 'checkbox', $this->get('translator')->trans('ms.user.user.email-updates'), array(
-			'data' => $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed(),
-		))->val()->optional();
+		if ($this->_services->offsetExists('mailing.subscription.edit')) {
+			$form->add('email_updates', 'checkbox', $this->get('translator')->trans('ms.user.user.email-updates'), array(
+				'data' => $this->get('mailing.subscription.loader')->getByUser($user)->isSubscribed(),
+			))->val()->optional();
+		}
 
 		return $form;
 	}
