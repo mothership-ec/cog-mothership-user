@@ -29,7 +29,9 @@
 	{% set address = deliveryAddress %}
 	{% include 'Message:Mothership:Commerce::order:detail:address:detail' %}
 {% endif %}
+{% if subscribed is defined %}
 <p>
-	<li>Send me E-Mail updates? {{ subscribed }} </li>
+	Send me E-Mail updates? {{ subscribed }}
 </p>
+{% endif %}
 {% endblock %}
