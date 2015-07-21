@@ -23,10 +23,12 @@ class UserDetails extends Handler
 		$defaults = array();
 		if (!is_null($user)) {
 			$defaults = array(
-				'title'    => $user->title,
-				'forename' => $user->forename,
-				'surname'  => $user->surname,
-				'email'    => $user->email,
+				'title'       => $user->title,
+				'forename'    => $user->forename,
+				'surname'     => $user->surname,
+				'email'       => $user->email,
+				'job_title'   => $user->jobTitle,
+				'description' => $user->description,
 			);
 		}
 
@@ -45,6 +47,11 @@ class UserDetails extends Handler
 		$this->add('forename','text','');
 		$this->add('surname','text','');
 		$this->add('email','text','');
+		$this->add('job_title', 'text', '')
+			->val()->optional();
+		$this->add('description','textarea','')
+			->val()->optional()
+		;
 
 		// $this->add('reset_password', 'checkbox', 'Send Reset Password Email?')
 		// 	->val()->optional();
