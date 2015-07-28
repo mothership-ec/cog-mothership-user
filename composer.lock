@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "03620617e17012c1509100aa5d924ada",
+    "hash": "4d7be4c45672a7d5581e46c7d077322c",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -116,6 +116,63 @@
                 "zf2"
             ],
             "time": "2013-12-04 14:19:30"
+        },
+        {
+            "name": "imagine/imagine",
+            "version": "0.6.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/avalanche123/Imagine.git",
+                "reference": "83ca8babede0e54f935ec09d55a726bf4b0a3f7c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/avalanche123/Imagine/zipball/83ca8babede0e54f935ec09d55a726bf4b0a3f7c",
+                "reference": "83ca8babede0e54f935ec09d55a726bf4b0a3f7c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "sami/sami": "dev-master"
+            },
+            "suggest": {
+                "ext-gd": "to use the GD implementation",
+                "ext-gmagick": "to use the Gmagick implementation",
+                "ext-imagick": "to use the Imagick implementation"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-develop": "0.7-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Imagine": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Bulat Shakirzyanov",
+                    "email": "mallluhuct@gmail.com",
+                    "homepage": "http://avalanche123.com"
+                }
+            ],
+            "description": "Image processing for PHP 5.3",
+            "homepage": "http://imagine.readthedocs.org/",
+            "keywords": [
+                "drawing",
+                "graphics",
+                "image manipulation",
+                "image processing"
+            ],
+            "time": "2014-11-11 11:36:02"
         },
         {
             "name": "itbz/fpdf",
@@ -663,6 +720,54 @@
             "time": "2015-07-15 09:34:09"
         },
         {
+            "name": "mothership-ec/cog-imageresize",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mothership-ec/cog-imageresize.git",
+                "reference": "4987d2ce1d2470683540c91873cf88c598798990"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mothership-ec/cog-imageresize/zipball/4987d2ce1d2470683540c91873cf88c598798990",
+                "reference": "4987d2ce1d2470683540c91873cf88c598798990",
+                "shasum": ""
+            },
+            "require": {
+                "imagine/imagine": "~0.4",
+                "mothership-ec/cog": "~4.0",
+                "php": ">=5.4.0"
+            },
+            "suggest": {
+                "ext-imagemagick": "Provides faster and more powerful image manipulation libraries"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Message\\ImageResize\\": "src",
+                    "Message\\ImageResize\\Test\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "The Mothership Development Team",
+                    "email": "dev@mothership.ec"
+                }
+            ],
+            "description": "Dynamic URI-based image resize functionality for Cog",
+            "homepage": "http://mothership.ec",
+            "keywords": [
+                "image",
+                "resize",
+                "thumbnail"
+            ],
+            "time": "2015-02-24 15:42:16"
+        },
+        {
             "name": "mothership-ec/cog-mothership-cp",
             "version": "3.4.3",
             "source": {
@@ -711,6 +816,59 @@
                 "mothership"
             ],
             "time": "2015-07-09 15:20:47"
+        },
+        {
+            "name": "mothership-ec/cog-mothership-file-manager",
+            "version": "3.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mothership-ec/cog-mothership-file-manager.git",
+                "reference": "ab8d6cee543297a6fe17a253c49fd95524d5a98f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-file-manager/zipball/ab8d6cee543297a6fe17a253c49fd95524d5a98f",
+                "reference": "ab8d6cee543297a6fe17a253c49fd95524d5a98f",
+                "shasum": ""
+            },
+            "require": {
+                "mothership-ec/cog": "~4.0",
+                "mothership-ec/cog-imageresize": "~2.0",
+                "mothership-ec/cog-mothership-cp": "~3.0",
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Message\\Mothership\\FileManager\\": "src",
+                    "Message\\Mothership\\FileManager\\Test\\": "tests"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0+"
+            ],
+            "authors": [
+                {
+                    "name": "The Mothership Development Team",
+                    "email": "dev@mothership.ec"
+                }
+            ],
+            "description": "Cog module for file/asset management in Mothership",
+            "homepage": "http://mothership.ec",
+            "keywords": [
+                "asset",
+                "assets",
+                "cog",
+                "file",
+                "files",
+                "image",
+                "images",
+                "mothership",
+                "upload",
+                "uploads"
+            ],
+            "time": "2015-07-01 09:58:57"
         },
         {
             "name": "mothership-ec/cog-mothership-reports",
@@ -1612,7 +1770,7 @@
         },
         {
             "name": "symfony/options-resolver",
-            "version": "v2.6.10",
+            "version": "v2.6.11",
             "target-dir": "Symfony/Component/OptionsResolver",
             "source": {
                 "type": "git",

@@ -4,6 +4,7 @@ namespace Message\Mothership\User\Controller\User;
 
 use Message\Cog\Controller\Controller;
 use Message\Mothership\User\Form;
+use Message\Mothership\User\Type\Profile;
 
 class DetailsEdit extends Controller
 {
@@ -39,7 +40,14 @@ class DetailsEdit extends Controller
 			$user->surname   = $data['surname'];
 			$user->email     = $data['email'];
 
-			if($this->get('user.edit')->save($user)) {
+			$type = $this->get('user.profile.type.loader')->getByUser($user)->getName();
+			$profile = null;
+
+			if ($data['type'] !== $type) {
+				$profile = $this->get('user.profile.factory')->getProfile($data['type']);
+			}
+
+			if($this->get('user.edit')->save($user) && (null === $profile || $this->get('user.profile.edit')->save($user, $profile))) {
 				$this->addFlash('success', 'Successfully updated account details');
 			} else {
 				$this->addFlash('error', 'Account detail could not be updated');

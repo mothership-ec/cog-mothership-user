@@ -2,6 +2,7 @@
 
 namespace Message\Mothership\User;
 
+use Message\User\Event\Event as UserEvent;
 use Message\User\AnonymousUser;
 
 use Message\Cog\Event\EventListener as BaseListener;
@@ -27,7 +28,7 @@ class EventListener extends BaseListener implements SubscriberInterface
 	 */
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			KernelEvents::REQUEST => array(
 				array('checkLoggedIn')
 			),
@@ -36,8 +37,11 @@ class EventListener extends BaseListener implements SubscriberInterface
 			),
 			ReportEvents\Events::REGISTER_REPORTS => [
 				'registerReports'
-			]
-		);
+			],
+			UserEvent::CREATE => [
+				'setProfileType'
+			],
+		];
 	}
 
 	/**
@@ -73,5 +77,11 @@ class EventListener extends BaseListener implements SubscriberInterface
 		foreach ($this->get('user.reports') as $report) {
 			$event->registerReport($report);
 		}
+	}
+
+	public function setProfileType(UserEvent $event)
+	{
+		$profile = $this->get('user.profile.factory')->getProfile('none');
+		$this->get('user.profile.edit')->save($event->getUser(), $profile);
 	}
 }

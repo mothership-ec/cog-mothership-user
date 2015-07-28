@@ -45,12 +45,59 @@ class Services implements ServicesInterface
 		$services['user.tabs'] = function($c) {
 			$tabs = [];
 			$tabs['ms.cp.user.admin.detail.edit'] = 'Details';
+			$tabs['ms.cp.user.admin.profile'] = 'Profile';
 			if (count($c['user.address.types'])) {
 				$tabs['ms.cp.user.admin.address.edit'] = 'Addresses';
 			}
 			$tabs['ms.cp.user.admin.groups.edit'] = 'Groups';
 
 			return $tabs;
+		};
+
+		$services['user.profile.type.loader'] = function ($c) {
+			return new User\Type\TypeLoader(
+				$c['db.query.builder.factory'],
+				$c['user.profile.types']
+			);
+		};
+
+		$services['user.profile.loader'] = function ($c) {
+			return new User\Type\ProfileLoader(
+				$c['db.query.builder.factory'],
+				$c['user.profile.types'],
+				$c['user.profile.factory']
+			);
+		};
+
+		$services['user.profile.edit'] = function ($c) {
+			return new User\Type\ProfileEdit(
+				$c['db.transaction'],
+				$c['user.edit'],
+				$c['event.dispatcher'],
+				$c['user.current']
+			);
+		};
+
+		$services['user.profile.factory'] = function($c) {
+			return new User\Type\ProfileFactory(
+				$c['user.profile.types'],
+				$c['field.factory']
+			);
+		};
+
+		$services['user.profile.types'] = function($c) {
+			return new User\Type\Collection([
+				$c['user.profile.types.none'],
+				$c['user.profile.types.team_member'],
+			]);
+		};
+
+		$services['user.profile.types.none'] = function($c) {
+			return new User\Type\NoneType;
+		};
+
+		$services['user.profile.types.team_member'] = function($c) {
+			return new User\Type\TeamMemberType;
 		};
 	}
 

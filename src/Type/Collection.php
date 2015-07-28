@@ -1,0 +1,21 @@
+<?php
+
+namespace Message\Mothership\User\Type;
+
+use Message\Cog\ValueObject\Collection as BaseCollection;
+
+class Collection extends BaseCollection
+{
+	protected function _configure()
+	{
+		$this->addValidator(function ($item) {
+			if (!$item instanceof UserTypeInterface) {
+				$type = gettype($item) === 'object' ? get_class($item) : gettype($item);
+				throw new \InvalidArgumentException('User type in collection expected to be instance of UserTypeInterface, ' . $type . ' given');
+			}
+		});
+		$this->setKey(function ($item) {
+			return $item->getName();
+		});
+	}
+}

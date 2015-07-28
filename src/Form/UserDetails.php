@@ -27,6 +27,7 @@ class UserDetails extends Handler
 				'forename' => $user->forename,
 				'surname'  => $user->surname,
 				'email'    => $user->email,
+				'type'     => $this->_container['user.profile.type.loader']->getByUser($user)->getName(),
 			);
 		}
 
@@ -45,12 +46,27 @@ class UserDetails extends Handler
 		$this->add('forename','text','');
 		$this->add('surname','text','');
 		$this->add('email','text','');
+		$this->add('type', 'choice', '', [
+			'choices' => $this->_getTypeChoices()
+		]);
 
 		// $this->add('reset_password', 'checkbox', 'Send Reset Password Email?')
 		// 	->val()->optional();
 
 		return $this;
 
+	}
+
+	private function _getTypeChoices()
+	{
+		$types = $this->_container['user.profile.types'];
+		$choices = [];
+
+		foreach ($types as $type) {
+			$choices[$type->getName()] = $type->getDisplayName();
+		}
+
+		return $choices;
 	}
 
 }
