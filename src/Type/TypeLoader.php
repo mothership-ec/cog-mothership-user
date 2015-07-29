@@ -39,16 +39,17 @@ class TypeLoader
 			throw new \InvalidArgumentException('User ID must be numeric');
 		}
 
-		$type = $this->_queryBuilderFactory->getQueryBuilder()
+		$result = $this->_queryBuilderFactory->getQueryBuilder()
 			->select('type')
 			->from(self::TYPE_TABLE)
 			->where('user_id = ?i', [$userID])
 			->getQuery()
 			->run()
-			->value()
 		;
 
-		return $this->_userTypes->get($type ?: 'none');
+		$type = $result->count() ? $result->value() : 'none';
+
+		return $this->_userTypes->get($type);
 	}
 
 	public function getByUser(User\User $user)
