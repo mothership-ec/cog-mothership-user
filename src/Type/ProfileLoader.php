@@ -6,10 +6,17 @@ use Message\Cog\Field;
 use Message\User\User;
 use Message\Cog\DB;
 
+/**
+ * Class ProfileLoader
+ * @package Message\Mothership\User\Type
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Class for loading profiles from the database
+ */
 class ProfileLoader
 {
 	const PROFILE_TABLE = 'user_profile';
-	const TYPE_TABLE    = 'user_type';
 
 	/**
 	 * @var DB\QueryBuilderFactory
@@ -31,6 +38,9 @@ class ProfileLoader
 	 */
 	private $_queryBuilder;
 
+	/**
+	 * @var array
+	 */
 	private $_columns = [
 		'p.user_id AS userID',
 		'p.field_name AS field',
@@ -42,6 +52,11 @@ class ProfileLoader
 		't.type'
 	];
 
+	/**
+	 * @param DB\QueryBuilderFactory $queryBuilderFactory
+	 * @param Collection $userTypes
+	 * @param ProfileFactory $factory
+	 */
 	public function __construct(
 		DB\QueryBuilderFactory $queryBuilderFactory,
 		Collection $userTypes,
@@ -53,6 +68,13 @@ class ProfileLoader
 		$this->_factory = $factory;
 	}
 
+	/**
+	 * Load the profile by the user
+	 *
+	 * @param User $user
+	 *
+	 * @return array|mixed
+	 */
 	public function getByUser(User $user)
 	{
 		$this->_buildQuery();
@@ -62,14 +84,24 @@ class ProfileLoader
 		return $this->_load();
 	}
 
+	/**
+	 * Build the basic query for loading profiles
+	 */
 	private function _buildQuery()
 	{
 		$this->_queryBuilder = $this->_queryBuilderFactory->getQueryBuilder()
 			->select($this->_columns)
 			->from('p', self::PROFILE_TABLE)
-			->leftJoin('t', 't.user_id = p.user_id', self::TYPE_TABLE);
+			->leftJoin('t', 't.user_id = p.user_id', TypeLoader::TYPE_TABLE);
 	}
 
+	/**
+	 * Loop through loaded data and assign to fields in profile instances as appropriate
+	 *
+	 * @param bool $returnAsArray
+	 *
+	 * @return array|mixed
+	 */
 	private function _load($returnAsArray = false)
 	{
 		if (null === $this->_queryBuilder) {

@@ -10,11 +10,29 @@ use Message\Cog\ValueObject\DateTimeImmutable;
 
 class ProfileEdit implements DB\TransactionalInterface
 {
+	/**
+	 * @var DB\Transaction
+	 */
 	private $_transaction;
+
+	/**
+	 * @var User\Edit
+	 */
 	private $_userEdit;
+
+	/**
+	 * @var DispatcherInterface
+	 */
 	private $_dispatcher;
+
+	/**
+	 * @var User\UserInterface
+	 */
 	private $_currentUser;
 
+	/**
+	 * @var array
+	 */
 	private $_fieldKeys = [
 		'field',
 		'value',
@@ -23,8 +41,17 @@ class ProfileEdit implements DB\TransactionalInterface
 		'data_name',
 	];
 
+	/**
+	 * @var bool
+	 */
 	private $_transOverride = false;
 
+	/**
+	 * @param DB\Transaction $transaction
+	 * @param User\Edit $userEdit
+	 * @param DispatcherInterface $dispatcher
+	 * @param User\UserInterface $user
+	 */
 	public function __construct(
 		DB\Transaction $transaction,
 		User\Edit $userEdit,
@@ -38,10 +65,19 @@ class ProfileEdit implements DB\TransactionalInterface
 		$this->_currentUser = $user;
 	}
 
+	/**
+	 * Save changes to the user profile to the database
+	 *
+	 * @param User\User $user
+	 * @param Profile $profile
+	 *
+	 * @return User\User
+	 */
 	public function save(User\User $user, Profile $profile)
 	{
 		$data = $this->_flatten($profile);
 
+		// Update user type
 		$this->_transaction->add("
 			REPLACE INTO
 				user_type
@@ -59,6 +95,7 @@ class ProfileEdit implements DB\TransactionalInterface
 			'type' => $profile->getType()->getName(),
 		]);
 
+		// Delete existing fields in repeatable groups
 		foreach ($profile as $key => $part) {
 			if ($part instanceof Field\RepeatableContainer) {
 				$this->_transaction->add("
@@ -75,6 +112,7 @@ class ProfileEdit implements DB\TransactionalInterface
 			}
 		}
 
+		// Delete any values that have been set to empty
 		foreach ($data as $row) {
 			if ($row['value'] === 'none') {
 				$this->_transaction->add("
@@ -98,6 +136,7 @@ class ProfileEdit implements DB\TransactionalInterface
 				continue;
 			}
 
+			// Update values
 			$this->_transaction->add("
 				REPLACE INTO
 					user_profile
@@ -130,6 +169,7 @@ class ProfileEdit implements DB\TransactionalInterface
 			]);
 		}
 
+		// Flag the user object as having been edited
 		$user->authorship->update(new DateTimeImmutable, $this->_currentUser->id);
 
 		$this->_commitTransaction();
@@ -144,11 +184,21 @@ class ProfileEdit implements DB\TransactionalInterface
 		return $user;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function setTransaction(DB\Transaction $transaction)
 	{
 		$this->_transaction = $transaction;
 	}
 
+	/**
+	 * Create an array of data stored in the profile
+	 *
+	 * @param Profile $profile
+	 *
+	 * @return array
+	 */
 	private function _flatten(Profile $profile)
 	{
 		$fields = [];
@@ -166,6 +216,12 @@ class ProfileEdit implements DB\TransactionalInterface
 		return $fields;
 	}
 
+	/**
+	 * Loop through groups in a repeatable container and add them to the array
+	 *
+	 * @param array $fields
+	 * @param Field\RepeatableContainer $repeatable
+	 */
 	private function _appendRepeatable(array &$fields, Field\RepeatableContainer $repeatable)
 	{
 		foreach ($repeatable as $sequence => $group) {
@@ -173,6 +229,13 @@ class ProfileEdit implements DB\TransactionalInterface
 		}
 	}
 
+	/**
+	 * Loop through fields in a group and add them to the array
+	 *
+	 * @param array $fields
+	 * @param Field\Group $group
+	 * @param null $sequence
+	 */
 	private function _appendGroup(array &$fields, Field\Group $group, $sequence = null)
 	{
 		foreach ($group->getFields() as $field) {
@@ -180,6 +243,14 @@ class ProfileEdit implements DB\TransactionalInterface
 		}
 	}
 
+	/**
+	 * Add the data in the field to the array, looping through the field value if it is an array
+	 *
+	 * @param array $fields
+	 * @param Field\BaseField $field
+	 * @param null $group
+	 * @param null $sequence
+	 */
 	private function _appendField(array &$fields, Field\BaseField $field, $group = null, $sequence = null)
 	{
 		if (is_array($field->getValue())) {
@@ -203,6 +274,9 @@ class ProfileEdit implements DB\TransactionalInterface
 		}
 	}
 
+	/**
+	 * Commit transaction if it is not overridden
+	 */
 	private function _commitTransaction()
 	{
 		if (false === $this->_transOverride) {

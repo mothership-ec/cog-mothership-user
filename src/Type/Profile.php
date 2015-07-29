@@ -5,6 +5,12 @@ namespace Message\Mothership\User\Type;
 use Message\Cog\Field;
 use Message\Cog\ValueObject\Collection as BaseCollection;
 
+/**
+ * Class Profile
+ * @package Message\Mothership\User\Type
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ */
 class Profile extends BaseCollection
 {
 	/**
@@ -12,6 +18,9 @@ class Profile extends BaseCollection
 	 */
 	private $_type;
 
+	/**
+	 * @param UserTypeInterface $type
+	 */
 	public function __construct(UserTypeInterface $type)
 	{
 		$this->_type = $type;
@@ -19,11 +28,20 @@ class Profile extends BaseCollection
 		parent::__construct();
 	}
 
+	/**
+	 * Get the user type
+	 *
+	 * @return UserTypeInterface
+	 */
 	public function getType()
 	{
 		return $this->_type;
 	}
 
+	/**
+	 * @param $var
+	 * @param Field\FieldInterface $value
+	 */
 	public function __set($var, Field\FieldInterface $value)
 	{
 		if ($this->exists($var)) {
@@ -33,6 +51,11 @@ class Profile extends BaseCollection
 		$this->add($value);
 	}
 
+	/**
+	 * @param $var
+	 *
+	 * @return Field\FieldInterface | null
+	 */
 	public function __get($var)
 	{
 		if ($this->exists($var)) {
@@ -42,6 +65,11 @@ class Profile extends BaseCollection
 		return null;
 	}
 
+	/**
+	 * Populate the profile with data from an array
+	 *
+	 * @param array $data
+	 */
 	public function update(array $data)
 	{
 		foreach ($data as $name => $value) {
@@ -74,6 +102,9 @@ class Profile extends BaseCollection
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	protected function _configure()
 	{
 		$this->addValidator(function ($item) {

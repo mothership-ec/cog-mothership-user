@@ -5,9 +5,17 @@ namespace Message\Mothership\User\Type;
 use Message\Cog\DB;
 use Message\User;
 
+/**
+ * Class TypeLoader
+ * @package Message\Mothership\User\Type
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Class for loading the user type from the database
+ */
 class TypeLoader
 {
-	const TYPE_TABLE    = 'user_type';
+	const TYPE_TABLE = 'user_type';
 
 	/**
 	 * @var DB\QueryBuilderFactory

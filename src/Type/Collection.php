@@ -4,6 +4,14 @@ namespace Message\Mothership\User\Type;
 
 use Message\Cog\ValueObject\Collection as BaseCollection;
 
+/**
+ * Class Collection
+ * @package Message\Mothership\User\Type
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Collection of user types for accessing from the service container
+ */
 class Collection extends BaseCollection
 {
 	protected function _configure()

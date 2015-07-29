@@ -5,14 +5,30 @@ namespace Message\Mothership\User\Controller\User;
 use Message\Cog\Field;
 use Message\Cog\Controller\Controller;
 
+/**
+ * Class Profile
+ * @package Message\Mothership\User\Controller\User
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Controller for editing the profile from the admin panel
+ */
 class Profile extends Controller
 {
+	/**
+	 * Render the profile edit form
+	 *
+	 * @param $userID
+	 *
+	 * @return \Message\Cog\HTTP\Response
+	 */
 	public function index($userID)
 	{
 		$user    = $this->get('user.loader')->getByID($userID);
 		$profile = $this->get('user.profile.loader')->getByUser($user);
 
 		$repeatables = [];
+
 		foreach ($profile as $name => $part) {
 			if ($part instanceof Field\RepeatableContainer) {
 				$repeatables[$name] = [];
@@ -37,6 +53,13 @@ class Profile extends Controller
 		));
 	}
 
+	/**
+	 * Validate the form data and save the profile to the database
+	 *
+	 * @param $userID
+	 *
+	 * @return \Message\Cog\HTTP\RedirectResponse
+	 */
 	public function editProfile($userID)
 	{
 		$user = $this->get('user.loader')->getByID($userID);
