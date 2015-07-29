@@ -117,5 +117,7 @@ class Profile extends BaseCollection
 		$this->setKey(function ($item) {
 			return $item->getName();
 		});
+
+		$this->setSort(null);
 	}
 }

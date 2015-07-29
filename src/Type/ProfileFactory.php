@@ -37,7 +37,7 @@ class ProfileFactory
 	/**
 	 * Get a new instance of Profile with the fields set up
 	 *
-	 * @param $type
+	 * @param string | UserTypeInterface $type
 	 *
 	 * @return Profile
 	 */
