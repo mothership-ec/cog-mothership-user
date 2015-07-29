@@ -47,7 +47,7 @@ class DetailsEdit extends Controller
 				$profile = $this->get('user.profile.factory')->getProfile($data['type']);
 			}
 
-			if($this->get('user.edit')->save($user) && (null === $profile || $this->get('user.profile.edit')->save($user, $profile))) {
+			if($this->get('user.edit')->save($user) && (null === $profile || $this->get('user.profile.type.edit')->save($user, $profile->getType()))) {
 				$this->addFlash('success', 'Successfully updated account details');
 			} else {
 				$this->addFlash('error', 'Account detail could not be updated');

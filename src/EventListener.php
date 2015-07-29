@@ -82,6 +82,6 @@ class EventListener extends BaseListener implements SubscriberInterface
 	public function setProfileType(UserEvent $event)
 	{
 		$profile = $this->get('user.profile.factory')->getProfile('none');
-		$this->get('user.profile.edit')->save($event->getUser(), $profile);
+		$this->get('user.profile.type.edit')->save($event->getUser(), $profile->getType());
 	}
 }

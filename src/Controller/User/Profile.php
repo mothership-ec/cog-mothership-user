@@ -44,13 +44,13 @@ class Profile extends Controller
 
 		$form = $this->get('field.form')->generate($profile);
 
-		return $this->render('Message:Mothership:User::user:profile', array(
+		return $this->render('Message:Mothership:User::user:profile', [
 			'profile'     => $profile,
 			'form'        => $form,
 			'repeatables' => $repeatables,
 			'user'        => $user,
 			'groups'      => $groups,
-		));
+		]);
 	}
 
 	/**

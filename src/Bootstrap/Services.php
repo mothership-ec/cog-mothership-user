@@ -61,6 +61,10 @@ class Services implements ServicesInterface
 			);
 		};
 
+		$services['user.profile.type.edit'] = function ($c) {
+			return new User\Type\TypeEdit($c['db.transaction']);
+		};
+
 		$services['user.profile.loader'] = function ($c) {
 			return new User\Type\ProfileLoader(
 				$c['db.query.builder.factory'],
@@ -73,6 +77,7 @@ class Services implements ServicesInterface
 			return new User\Type\ProfileEdit(
 				$c['db.transaction'],
 				$c['user.edit'],
+				$c['user.profile.type.edit'],
 				$c['event.dispatcher'],
 				$c['user.current']
 			);

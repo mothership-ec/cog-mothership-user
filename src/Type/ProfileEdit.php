@@ -21,6 +21,11 @@ class ProfileEdit implements DB\TransactionalInterface
 	private $_userEdit;
 
 	/**
+	 * @var TypeEdit
+	 */
+	private $_typeEdit;
+
+	/**
 	 * @var DispatcherInterface
 	 */
 	private $_dispatcher;
@@ -49,18 +54,21 @@ class ProfileEdit implements DB\TransactionalInterface
 	/**
 	 * @param DB\Transaction $transaction
 	 * @param User\Edit $userEdit
+	 * @param TypeEdit $typeEdit
 	 * @param DispatcherInterface $dispatcher
 	 * @param User\UserInterface $user
 	 */
 	public function __construct(
 		DB\Transaction $transaction,
 		User\Edit $userEdit,
+		TypeEdit $typeEdit,
 		DispatcherInterface $dispatcher,
 		User\UserInterface $user
 	)
 	{
 		$this->_transaction = $transaction;
 		$this->_userEdit    = $userEdit;
+		$this->_typeEdit    = $typeEdit;
 		$this->_dispatcher  = $dispatcher;
 		$this->_currentUser = $user;
 	}
@@ -78,22 +86,8 @@ class ProfileEdit implements DB\TransactionalInterface
 		$data = $this->_flatten($profile);
 
 		// Update user type
-		$this->_transaction->add("
-			REPLACE INTO
-				user_type
-				(
-					user_id,
-					`type`
-				)
-			VALUES
-				(
-					:id?i,
-					:type?s
-				)
-		", [
-			'id'   => $user->id,
-			'type' => $profile->getType()->getName(),
-		]);
+		$this->_typeEdit->setTransaction($this->_transaction);
+		$this->_typeEdit->save($user, $profile->getType());
 
 		// Delete existing fields in repeatable groups
 		foreach ($profile as $key => $part) {
