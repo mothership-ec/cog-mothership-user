@@ -61,9 +61,9 @@ class Services implements ServicesInterface
 			);
 		};
 
-		$services['user.profile.type.edit'] = function ($c) {
+		$services['user.profile.type.edit'] = $services->factory(function ($c) {
 			return new User\Type\TypeEdit($c['db.transaction']);
-		};
+		});
 
 		$services['user.profile.loader'] = function ($c) {
 			return new User\Type\ProfileLoader(
@@ -73,7 +73,7 @@ class Services implements ServicesInterface
 			);
 		};
 
-		$services['user.profile.edit'] = function ($c) {
+		$services['user.profile.edit'] = $services->factory(function ($c) {
 			return new User\Type\ProfileEdit(
 				$c['db.transaction'],
 				$c['user.edit'],
@@ -81,7 +81,7 @@ class Services implements ServicesInterface
 				$c['event.dispatcher'],
 				$c['user.current']
 			);
-		};
+		});
 
 		$services['user.profile.factory'] = function($c) {
 			return new User\Type\ProfileFactory(

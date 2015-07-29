@@ -87,8 +87,12 @@ class Register extends Controller
 		}
 
 		$trans->commit();
-
 		$user = $this->get('user.loader')->getByID($trans->getIDVariable('USER_ID'));
+
+		$this->get('event.dispatcher')->dispatch(
+			Event\Event::CREATE,
+			new Event\Event($user)
+		);
 
 		// Set the user session
 		$this->get('http.session')->set($this->get('cfg')->user->sessionName, $user);
