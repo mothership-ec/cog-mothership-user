@@ -5,6 +5,14 @@ namespace Message\Mothership\User\Type;
 use Message\User;
 use Message\Cog\DB;
 
+/**
+ * Class TypeEdit
+ * @package Message\Mothership\User\Type
+ *
+ * @author  Thomas Marchant <thomas@mothership.ec>
+ *
+ * Class for updating the type set against a user
+ */
 class TypeEdit implements DB\TransactionalInterface
 {
 	/**
@@ -17,11 +25,22 @@ class TypeEdit implements DB\TransactionalInterface
 	 */
 	private $_transOverride = false;
 
+	/**
+	 * @param DB\Transaction $transaction
+	 */
 	public function __construct(DB\Transaction $transaction)
 	{
 		$this->_transaction = $transaction;
 	}
 
+	/**
+	 * Save the type against the user
+	 *
+	 * @param User\User $user
+	 * @param UserTypeInterface $type
+	 *
+	 * @return UserTypeInterface
+	 */
 	public function save(User\User $user, UserTypeInterface $type)
 	{
 		$this->_transaction->add("
@@ -46,12 +65,18 @@ class TypeEdit implements DB\TransactionalInterface
 		return $type;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function setTransaction(DB\Transaction $transaction)
 	{
 		$this->_transaction = $transaction;
 		$this->_transOverride = true;
 	}
 
+	/**
+	 * Commit the transaction if it has not been overridden
+	 */
 	private function _commitTransaction()
 	{
 		if (false === $this->_transOverride) {
