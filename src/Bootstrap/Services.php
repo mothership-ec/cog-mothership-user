@@ -69,6 +69,7 @@ class Services implements ServicesInterface
 			return new User\Type\ProfileLoader(
 				$c['db.query.builder.factory'],
 				$c['user.profile.types'],
+				$c['user.profile.type.loader'],
 				$c['user.profile.factory']
 			);
 		};

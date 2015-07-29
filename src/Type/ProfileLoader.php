@@ -29,6 +29,11 @@ class ProfileLoader
 	private $_userTypes;
 
 	/**
+	 * @var TypeLoader
+	 */
+	private $_typeLoader;
+
+	/**
 	 * @var ProfileFactory
 	 */
 	private $_factory;
@@ -60,11 +65,13 @@ class ProfileLoader
 	public function __construct(
 		DB\QueryBuilderFactory $queryBuilderFactory,
 		Collection $userTypes,
+		TypeLoader $typeLoader,
 		ProfileFactory $factory
 	)
 	{
 		$this->_queryBuilderFactory = $queryBuilderFactory;
 		$this->_userTypes = $userTypes;
+		$this->_typeLoader = $typeLoader;
 		$this->_factory = $factory;
 	}
 
@@ -81,7 +88,7 @@ class ProfileLoader
 
 		$this->_queryBuilder->where('p.user_id = ?i', [$user->id]);
 
-		return $this->_load();
+		return $this->_load() ?: $this->_factory->getProfile($this->_typeLoader->getByUser($user));
 	}
 
 	/**
