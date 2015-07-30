@@ -42,8 +42,17 @@ class Profile extends BaseCollection
 	 * @param $var
 	 * @param Field\FieldInterface $value
 	 */
-	public function __set($var, Field\FieldInterface $value)
+	public function __set($var, $value)
 	{
+		if (!($value instanceof Field\FieldInterface || $value instanceof Field\RepeatableContainer)) {
+			$type = gettype($value) === 'object' ? get_class($value) : gettype($value);
+			throw new \InvalidArgumentException(sprintf(
+				'Profile content must be a `FieldInterface` or a `RepeatableContainer`, `%s` given',
+				$type
+			));
+		}
+
+
 		if ($this->exists($var)) {
 			$this->remove($var);
 		}
