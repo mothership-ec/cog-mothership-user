@@ -1,0 +1,111 @@
+{% macro getRepeatablePrototype(form, groupName, fields, identifierField, singularName) %}
+	{% filter escape %}
+	<section class="group" data-collapse data-identifier-field="{{ identifierField }}">
+		<h1 class="title" data-group-label></h1>
+		<div class="content">
+			{{ form_widget(form[groupName].vars.prototype) }}
+			<a href="#" data-group-remove class="button small remove">{{ 'ms.user.profile.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
+		</div>
+	</section>
+	{% endfilter %}
+{% endmacro %}
+
+{% extends 'Message:Mothership:User::user:listing:view' %}
+
+{% block main %}
+	<hgroup class="title">
+		<h1>{{ user.name }} {% if groups %}<span class="flag role">{{ groups }}</span>{% endif %} <span>User #{{ user.id }}</span></h1>
+	</hgroup>
+
+	<div class="topbar">
+		{{ render(controller('Message:Mothership:User::Controller:User:Tabs#tabs', {'userID': user.id}))}}
+	</div>
+
+	<section class="container-content short">
+
+	{% if profile.count == 0 %}
+		<p>{{ 'ms.user.profile.type.no_content_areas'|trans }}</p>
+	{% else %}
+		
+		{{ form_start(form) }}
+
+		{# Loop through content parts #}
+		{% for name, part in profile %}
+
+			{# If this part is not repeatable group #}
+			{% if repeatables[name] is null %}
+
+				{# If this part is a group, output the title & description, then each field in it #}
+				{% if part.getFields is not null %}
+
+					<section class="group">
+						<h2 class="title">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
+						<div class="content">
+							<p class="group-desc">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
+							{% for field in part.getFields %}
+								{{ form_row(form[name][field.getName]) }}
+							{% endfor %}
+						</div>
+					</section>
+
+					{# If this part is a normal field, just output it #}
+				{% else %}
+					{{ form_row(form[name]) }}
+				{% endif %}
+
+				{# If this content part is a repeatable group, output the title & description, then each group #}
+			{% else %}
+
+				{% set singularName = ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.singularName')|trans %}
+
+				<section class="group">
+					<h2 class="title">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
+					<div class="content">
+						<p class="group-desc">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
+						<section class="repeatable-group">
+							{% set identifierField = "" %}
+							{% for i,group in part %}
+								{% set identifierField = group.getIdentifierField().getName() %}
+								<section class="group" data-collapse data-identifier-field="{{ identifierField }}">
+									<h1 class="title" data-group-label>
+										{% if group.getIdentifierField() is sameas(false) %}
+											Group #{{ i+1 }}
+										{% else %}
+											{{ group.getIdentifierField() }}
+										{% endif %}
+									</h1>
+									<div class="content">
+										{% for field in repeatables[name] %}
+											{{ form_widget(form[name][i]) }}
+										{% endfor %}
+										<a href="#" data-group-remove class="button small remove">{{ 'ms.user.profile.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
+									</div>
+								</section>
+							{% else %}
+								{% do form[name].setRendered %}
+							{% endfor %}
+
+							{# <div class="add-group"> #}
+							<a href="#" data-group-add data-prototype="{{
+							_self.getRepeatablePrototype(
+							form,
+							name,
+							repeatables[name],
+							identifierField,
+							singularName
+							) }}"
+							   data-group-index="{{ part.count }}" class="button small add">
+								{{ 'ms.cms.repeatable_group.add'|transchoice(part.count, {'%name%': ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.singularName')|trans|lower}) }}
+							</a>
+							{# </div> #}
+						</section>
+					</div>
+				</section>
+			{% endif %}
+		{% endfor %}
+		<button type="submit" class="button small save" id="save-content">{{ 'ms.user.profile.button.save'|trans }}</button>
+		{{ form_end(form)}}
+	{% endif %}
+
+	</section>
+{% endblock %}

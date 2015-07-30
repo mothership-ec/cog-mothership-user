@@ -12,9 +12,14 @@ class Administration implements RoutesInterface
 
 		$router['ms.cp.user.user']->add('ms.cp.user.user', '/', 'Message:Mothership:User::Controller:User:Listing#dashboard');
 
-		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit.action', '/{userID}/detail', 'Message:Mothership:User::Controller:User:DetailsEdit#detailsFormProcess')
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit.action', '/{userID}/details', 'Message:Mothership:User::Controller:User:DetailsEdit#detailsFormProcess')
 			->setMethod('post');
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.detail.edit', '/{userID}/details', 'Message:Mothership:User::Controller:User:DetailsEdit#index');
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.profile.action', '/{userID}/profile', 'Message:Mothership:User::Controller:User:Profile#editProfile')
+			->setMethod('POST')
+			->setRequirement('userID', '\d+');
+		$router['ms.cp.user.user']->add('ms.cp.user.admin.profile', '/{userID}/profile', 'Message:Mothership:User::Controller:User:Profile#index')
+			->setRequirement('userID', '\d+');
 
 		$router['ms.cp.user.user']->add('ms.cp.user.admin.address.edit.action', '/{userID}/address/{type}', 'Message:Mothership:User::Controller:User:AddressEdit#addressFormProcess')
 			->setMethod('post');
