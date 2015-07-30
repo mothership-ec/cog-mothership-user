@@ -4,7 +4,7 @@
 		<h1 class="title" data-group-label></h1>
 		<div class="content">
 			{{ form_widget(form[groupName].vars.prototype) }}
-			<a href="#" data-group-remove class="button small remove">{{ 'ms.cms.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
+			<a href="#" data-group-remove class="button small remove">{{ 'ms.user.profile.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
 		</div>
 	</section>
 	{% endfilter %}
@@ -24,14 +24,10 @@
 	<section class="container-content short">
 
 	{% if profile.count == 0 %}
-		<p>{{ 'ms.cms.content.type.no-content-areas'|trans({'%pageType': page.type.displayName}) }}
+		<p>{{ 'ms.user.profile.type.no_content_areas'|trans }}</p>
 	{% else %}
-
-		{% if page.isHomepage %}
-			{{ form_start(form, {'attr': {'data-confirm': 'ms.cms.content.home.confirm'|trans}}) }}
-		{% else %}
-			{{ form_start(form) }}
-		{% endif %}
+		
+		{{ form_start(form) }}
 
 		{# Loop through content parts #}
 		{% for name, part in profile %}
@@ -43,9 +39,9 @@
 				{% if part.getFields is not null %}
 
 					<section class="group">
-						<h2 class="title">{{ ('page.' ~ page.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
+						<h2 class="title">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
 						<div class="content">
-							<p class="group-desc">{{ ('page.' ~ page.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
+							<p class="group-desc">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
 							{% for field in part.getFields %}
 								{{ form_row(form[name][field.getName]) }}
 							{% endfor %}
@@ -60,12 +56,12 @@
 				{# If this content part is a repeatable group, output the title & description, then each group #}
 			{% else %}
 
-				{% set singularName = ('page.' ~ page.type.getName ~ '.' ~ name ~ '.singularName')|trans %}
+				{% set singularName = ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.singularName')|trans %}
 
 				<section class="group">
-					<h2 class="title">{{ ('page.' ~ page.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
+					<h2 class="title">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.name')|trans }}</h2>
 					<div class="content">
-						<p class="group-desc">{{ ('page.' ~ page.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
+						<p class="group-desc">{{ ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.description')|trans }}</p>
 						<section class="repeatable-group">
 							{% set identifierField = "" %}
 							{% for i,group in part %}
@@ -82,7 +78,7 @@
 										{% for field in repeatables[name] %}
 											{{ form_widget(form[name][i]) }}
 										{% endfor %}
-										<a href="#" data-group-remove class="button small remove">{{ 'ms.cms.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
+										<a href="#" data-group-remove class="button small remove">{{ 'ms.user.profile.repeatable_group.remove'|trans({'%name%': singularName}) }}</a>
 									</div>
 								</section>
 							{% else %}
@@ -99,7 +95,7 @@
 							singularName
 							) }}"
 							   data-group-index="{{ part.count }}" class="button small add">
-								{{ 'ms.cms.repeatable_group.add'|transchoice(part.count, {'%name%': ('page.' ~ page.type.getName ~ '.' ~ name ~ '.singularName')|trans|lower}) }}
+								{{ 'ms.cms.repeatable_group.add'|transchoice(part.count, {'%name%': ('profile.' ~ profile.type.getName ~ '.' ~ name ~ '.singularName')|trans|lower}) }}
 							</a>
 							{# </div> #}
 						</section>
@@ -107,7 +103,7 @@
 				</section>
 			{% endif %}
 		{% endfor %}
-		<button type="submit" class="button small save" id="save-content">{{ 'ms.cms.content.button.save'|trans }}</button>
+		<button type="submit" class="button small save" id="save-content">{{ 'ms.user.profile.button.save'|trans }}</button>
 		{{ form_end(form)}}
 	{% endif %}
 
