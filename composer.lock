@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "4d7be4c45672a7d5581e46c7d077322c",
+    "hash": "ad35678464ea054b6b49306a416738e3",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -626,16 +626,16 @@
         },
         {
             "name": "mothership-ec/cog",
-            "version": "4.6.0",
+            "version": "4.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog.git",
-                "reference": "5812baf3f8001debd8205a6bbbfb01b82718ef4b"
+                "reference": "442b2aeab9405449b4e83912d136fa8f35ba8e11"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/5812baf3f8001debd8205a6bbbfb01b82718ef4b",
-                "reference": "5812baf3f8001debd8205a6bbbfb01b82718ef4b",
+                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/442b2aeab9405449b4e83912d136fa8f35ba8e11",
+                "reference": "442b2aeab9405449b4e83912d136fa8f35ba8e11",
                 "shasum": ""
             },
             "require": {
@@ -717,7 +717,7 @@
                 "cog",
                 "framework"
             ],
-            "time": "2015-07-15 09:34:09"
+            "time": "2015-07-30 10:29:20"
         },
         {
             "name": "mothership-ec/cog-imageresize",
