@@ -92,14 +92,14 @@ class Profile extends BaseCollection
 				$part->clear();
 				$key = 0;
 				foreach ($value as $row) {
+					$part->add($key);
 					foreach ($row as $fieldName => $fieldValue) {
 						$part->get($key)
 							->$fieldName
 							->setValue($fieldValue)
 						;
-
-						++$key;
 					}
+					++$key;
 				}
 			} elseif ($part instanceof Field\Group) {
 				foreach ($value as $fieldName => $fieldValue) {
@@ -117,7 +117,7 @@ class Profile extends BaseCollection
 	protected function _configure()
 	{
 		$this->addValidator(function ($item) {
-			if (!$item instanceof Field\FieldInterface || !$item instanceof Field\RepeatableContainer) {
+			if (!$item instanceof Field\FieldInterface && !$item instanceof Field\RepeatableContainer) {
 				$type = gettype($item) === 'object' ? get_class($item) : gettype($item);
 				throw new \InvalidArgumentException('Objects passed to user profile must be instances of Message\\Cog\\Field\\FieldInterface or Message\\Cog\\Field\\RepeatableContainer ' . $type . ' given');
 			}

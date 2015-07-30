@@ -17,7 +17,7 @@ class _1438004331_UserProfiles extends Migration
 					group_name VARCHAR(255) DEFAULT NULL,
 					sequence INT(11) NOT NULL DEFAULT 0,
 					data_name VARCHAR(255) DEFAULT NULL,
-					PRIMARY KEY (`user_id`, `field_name`, `group_name`)
+					PRIMARY KEY (`user_id`, `field_name`, `group_name`, `sequence`)
 				) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		");
 
