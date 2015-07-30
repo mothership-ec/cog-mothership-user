@@ -117,9 +117,9 @@ class Profile extends BaseCollection
 	protected function _configure()
 	{
 		$this->addValidator(function ($item) {
-			if (!$item instanceof Field\FieldInterface) {
+			if (!$item instanceof Field\FieldInterface || !$item instanceof Field\RepeatableContainer) {
 				$type = gettype($item) === 'object' ? get_class($item) : gettype($item);
-				throw new \InvalidArgumentException('Objects passed to user profile must be instances of Message\\Cog\\Field\\FieldInterface, ' . $type . ' given');
+				throw new \InvalidArgumentException('Objects passed to user profile must be instances of Message\\Cog\\Field\\FieldInterface or Message\\Cog\\Field\\RepeatableContainer ' . $type . ' given');
 			}
 		});
 
