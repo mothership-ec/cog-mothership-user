@@ -6,6 +6,7 @@ use Message\Cog\Field;
 use Message\Cog\DB;
 use Message\User as BaseUser;
 use Message\Mothership\User\Type;
+use Symfony\Component\Form\FormBuilder;
 
 class User extends Field\Field
 {
@@ -67,9 +68,11 @@ class User extends Field\Field
 		return 'choice';
 	}
 
-	public function getFormField()
+	public function getFormField(FormBuilder $formBuilder)
 	{
 		$this->_setFieldOptions();
+
+		parent::getFormField($formBuilder);
 	}
 
 	public function setUserType($type)
