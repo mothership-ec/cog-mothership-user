@@ -152,7 +152,6 @@ class Edit extends Controller
 				$data['oldPassword'],
 				$this->get('user.loader')->getUserPassword($user)
 			)) {
-				de('wrong pwd');
 				$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.old-password-error'));
 			} elseif(strcmp($data['passwordRepeat'], $newPwd) !== 0) {
 				$this->addFlash('error', $this->get('translator')->trans('ms.user.user.password.match-error'));
