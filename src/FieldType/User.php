@@ -57,11 +57,17 @@ class User extends Field\Field
 		$this->_profileLoader = $profileLoader;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getFieldType()
 	{
 		return 'user';
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public function getFormType()
 	{
 		$this->_setFieldOptions();
@@ -69,6 +75,14 @@ class User extends Field\Field
 		return 'choice';
 	}
 
+	/**
+	 * Set the user type to determine which user choices will be set.
+	 * An exception will be thrown if this method is not called when using this field.
+	 *
+	 * @param string | Type\UserTypeInterface $type
+	 *
+	 * @return User
+	 */
 	public function setUserType($type)
 	{
 		if (!is_string($type) && !$type instanceof Type\UserTypeInterface) {
@@ -80,6 +94,11 @@ class User extends Field\Field
 		return $this;
 	}
 
+	/**
+	 * Get the user assigned to the field
+	 *
+	 * @return BaseUser\User | null
+	 */
 	public function getUser()
 	{
 		if (null === $this->_user) {
@@ -101,6 +120,11 @@ class User extends Field\Field
 		return $this->_user;
 	}
 
+	/**
+	 * Get the profile of the user assigned to the field
+	 *
+	 * @return Type\Profile | null
+	 */
 	public function getUserProfile()
 	{
 		if (null === $this->_profile) {
@@ -114,11 +138,19 @@ class User extends Field\Field
 		return $this->_profile;
 	}
 
+	/**
+	 * Shorthand alias for getUserProfile()
+	 *
+	 * @return Type\Profile | null
+	 */
 	public function getProfile()
 	{
 		return $this->getUserProfile();
 	}
 
+	/**
+	 * Load all users by type and set them as the choices for the form field
+	 */
 	private function _setFieldOptions()
 	{
 		$options = $this->getFieldOptions();
