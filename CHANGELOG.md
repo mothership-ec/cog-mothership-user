@@ -1,5 +1,14 @@
 # Changelog
 
+## 4.2.0
+
+- Added `FieldType` namespace for content fields
+- Added `FieldType\User` class which extends `Message\Cog\Field\Field` for assigning users and user profiles to instances of `Message\Cog\Field\ContentTypeInterface`
+- Added `User\Loader` class to alias `Message\User\Loader`. This class adds a method `getByType()`, and will eventually extend `Message\User\Loader` once it has been refactored to use the query builder
+- Added `ms.user.loader` service for getting the `User\Loader` from the service container. **Note:** This will eventually be the same as `user.loader` and will therefore be deprecated, this service is just for the interim
+- Remove debug code when wrong password is entered on `Controller\Account\Edit`
+- Updated `cog` dependency to 4.9
+
 ## 4.1.0
 
 - Ability to set user types against a user (defaults to 'none'). A 'Profile' tab will appear in the user admin screen if the type is not set to 'none'.
