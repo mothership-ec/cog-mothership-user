@@ -65,6 +65,13 @@ class Services implements ServicesInterface
 			return new User\Type\TypeEdit($c['db.transaction']);
 		});
 
+		$services['ms.user.loader'] = function ($c) {
+			return new User\Loader(
+				$c['db.query.builder.factory'],
+				$c['user.loader']
+			);
+		};
+
 		$services['user.profile.loader'] = function ($c) {
 			return new User\Type\ProfileLoader(
 				$c['db.query.builder.factory'],
@@ -105,6 +112,21 @@ class Services implements ServicesInterface
 		$services['user.profile.types.team_member'] = function($c) {
 			return new User\Type\TeamMemberType;
 		};
+
+		$services['user.fields.user'] = function ($c) {
+			return new User\FieldType\User(
+				$c['user.profile.types'],
+				$c['ms.user.loader'],
+				$c['user.profile.loader'],
+				$c['user.loader']
+			);
+		};
+
+		$services->extend('field.collection', function($fields, $c) {
+			$fields->add($c['user.fields.user']);
+
+			return $fields;
+		});
 	}
 
 	public function registerReports($services)
