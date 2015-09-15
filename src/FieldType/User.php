@@ -6,6 +6,7 @@ use Message\Cog\Field;
 use Message\Cog\DB;
 use Message\User as BaseUser;
 use Message\Mothership\User\Type;
+use Message\Mothership\User\Loader as UserLoader;
 
 class User extends Field\Field
 {
@@ -15,9 +16,9 @@ class User extends Field\Field
 	private $_userTypes;
 
 	/**
-	 * @var Type\UserLoader
+	 * @var UserLoader
 	 */
-	private $_typeUserLoader;
+	private $_userLoader;
 
 	/**
 	 * @var BaseUser\Loader
@@ -46,13 +47,13 @@ class User extends Field\Field
 
 	public function __construct(
 		Type\Collection $userTypes,
-		Type\UserLoader $typeUserLoader,
+		UserLoader $userLoader,
 		Type\ProfileLoader $profileLoader,
 		BaseUser\Loader $baseUserLoader
 	)
 	{
 		$this->_userTypes = $userTypes;
-		$this->_typeUserLoader = $typeUserLoader;
+		$this->_userLoader = $userLoader;
 		$this->_baseUserLoader = $baseUserLoader;
 		$this->_profileLoader = $profileLoader;
 	}
@@ -161,7 +162,7 @@ class User extends Field\Field
 				throw new \LogicException('User type must be set');
 			}
 
-			$users = $this->_typeUserLoader->getByType($this->_type);
+			$users = $this->_userLoader->getByType($this->_type);
 			$choices = [];
 
 			if ($users) {

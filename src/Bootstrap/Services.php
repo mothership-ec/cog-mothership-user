@@ -65,8 +65,8 @@ class Services implements ServicesInterface
 			return new User\Type\TypeEdit($c['db.transaction']);
 		});
 
-		$services['user.profile.type.user_loader'] = function ($c) {
-			return new User\Type\UserLoader(
+		$services['ms.user.loader'] = function ($c) {
+			return new User\Loader(
 				$c['db.query.builder.factory'],
 				$c['user.loader']
 			);
@@ -116,7 +116,7 @@ class Services implements ServicesInterface
 		$services['user.fields.user'] = function ($c) {
 			return new User\FieldType\User(
 				$c['user.profile.types'],
-				$c['user.profile.type.user_loader'],
+				$c['ms.user.loader'],
 				$c['user.profile.loader'],
 				$c['user.loader']
 			);
