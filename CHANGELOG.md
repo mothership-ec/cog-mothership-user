@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.1
+
+- Resolve issue where order overview page would break if the returns module is not installed
+- Do not display returns section of order overview if there are no returns
+
 ## 4.2.0
 
 - Added `FieldType` namespace for content fields
