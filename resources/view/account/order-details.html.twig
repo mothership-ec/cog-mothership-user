@@ -2,79 +2,76 @@
 
 {% block account_content %}
 
-<h1>Order Details</h1>
+	<h1>Order Details</h1>
 
-<table class="account-orders">
-	<thead>
-		<tr>
-			<th>Order ID</th>
-			<th>Created at</th>
-			<th>Order Status</th>
-			<th>Customer</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td> {{ order.orderID }} </td>
-			<td> {{ order.authorship.createdAt|date }} </td>
-			<td> {{ order.status.name }} </td>
-			<td> {{ order.user.title }} {{ order.user.forename }} {{ order.user.surname }}
-			<br />
-				 {{ address.name }} <br />
-			   	 {% for line in address.lines if line %}
-   					{{ line }} <br />
-				 {% endfor %}
-				 {{ address.town }} <br />
-				 {% if address.state %}
-					{{ address.state }} <br />
-				 {% endif %}
-				 {{ address.postcode }} <br />
-				 {{ address.country }} </td>
-		</tr>
-	</tbody>
-</table>
-
-
-{% set items = order.items %}
-
-<table class="account-orders">
-	<thead>
-		<tr>
-			<th class="item">Item</th>
-			<th class="description">Description</th>
-			<th class="order-status">Status</th>
-			<th class="qty">QTY</th>
-			<th class="unit-price">Unit Price</th>
-			{% if moduleExists('Message\\Mothership\\OrderReturn') %}
-				<th class="return"><span>Return</span></th>
-			{% endif %}
-		</tr>
-	</thead>
-	<tbody>
-
-		{% for item in items %}
+	<table class="account-orders">
+		<thead>
 			<tr>
-				<td class="item">{{ getResizedImage(item.product.getUnitImage(item.unit), 80, 80) }}</td>
-				<td class="description">{{ item.description }}</td>
-				<td class="order-status">{{ item.status.name }}</td>
-				<td class="qty">1</td>
-				<td class="unit-price">{{ item.gross|price(order.currencyID) }}</td>
+				<th>Order ID</th>
+				<th>Created at</th>
+				<th>Order Status</th>
+				<th>Customer</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td> {{ order.orderID }} </td>
+				<td> {{ order.authorship.createdAt|date }} </td>
+				<td> {{ order.status.name }} </td>
+				<td> {{ order.user.title }} {{ order.user.forename }} {{ order.user.surname }}
+				<br />
+					 {{ address.name }} <br />
+					 {% for line in address.lines if line %}
+						{{ line }} <br />
+					 {% endfor %}
+					 {{ address.town }} <br />
+					 {% if address.state %}
+						{{ address.state }} <br />
+					 {% endif %}
+					 {{ address.postcode }} <br />
+					 {{ address.country }} </td>
+			</tr>
+		</tbody>
+	</table>
+
+	{% set items = order.items %}
+
+	<table class="account-orders">
+		<thead>
+			<tr>
+				<th class="item">Item</th>
+				<th class="description">Description</th>
+				<th class="order-status">Status</th>
+				<th class="qty">QTY</th>
+				<th class="unit-price">Unit Price</th>
 				{% if moduleExists('Message\\Mothership\\OrderReturn') %}
-					<td class="return">
-						{% if despatchedStatus is defined and item.status.code == despatchedStatus %}
-						<a href="{{ url('ms.user.return.create',{itemID: item.id}) }}">Return / Exchange<a>
-						{% endif %}
-					</td>
+					<th class="return"><span>Return</span></th>
 				{% endif %}
 			</tr>
-		{% endfor %}
-	</tbody>
-</table>
+		</thead>
+		<tbody>
 
-		<h2>Returns</h2>
-
+			{% for item in items %}
+				<tr>
+					<td class="item">{{ getResizedImage(item.product.getUnitImage(item.unit), 80, 80) }}</td>
+					<td class="description">{{ item.description }}</td>
+					<td class="order-status">{{ item.status.name }}</td>
+					<td class="qty">1</td>
+					<td class="unit-price">{{ item.gross|price(order.currencyID) }}</td>
+					{% if moduleExists('Message\\Mothership\\OrderReturn') %}
+						<td class="return">
+							{% if despatchedStatus is defined and item.status.code == despatchedStatus %}
+							<a href="{{ url('ms.user.return.create',{itemID: item.id}) }}">Return / Exchange<a>
+							{% endif %}
+						</td>
+					{% endif %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
 
 	{% if not returns is empty %}
+		<h2>Returns</h2>
 		<table class="account-orders">
 			<thead>
 			<tr>
@@ -97,8 +94,6 @@
 				{% endfor %}
 			</tbody>
 		</table>
-	{% else %}
-		<p>{{ 'ms.commerce.return.status.none'|trans }}</p>
 	{% endif %}
 
 

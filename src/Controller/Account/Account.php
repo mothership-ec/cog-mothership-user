@@ -61,7 +61,10 @@ class Account extends Controller
 		}
 
 		$address = $this->get('order.address.loader')->getByOrder($order);
-		$returns = $this->get('return.loader')->getByOrder($order);
+
+		$returns = $this->get('module.loader')->exists('Message\\Mothership\\Returns') ?
+			$this->get('return.loader')->getByOrder($order) :
+			[];
 
 		return $this->render('Message:Mothership:User::account:order-details', array(
 			'order'   => $order,
