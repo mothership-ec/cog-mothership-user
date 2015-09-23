@@ -2,8 +2,9 @@
 
 namespace Message\Mothership\User\Report;
 
-use Message\Cog\DB\QueryBuilderInterface;
-use Message\Cog\DB\QueryBuilderFactory;
+use Message\Cog\Location\CountryList;
+use Message\Cog\Location\StateList;
+use Message\Cog\DB;
 use Message\Cog\Routing\UrlGenerator;
 
 use Message\Mothership\Report\Report\AbstractReport;
@@ -11,19 +12,32 @@ use Message\Mothership\Report\Chart\TableChart;
 
 class UserSummary extends AbstractReport
 {
+//	private $_filters;
+	private $_countryList;
+	private $_stateList;
+
 	/**
 	 * Constructor.
 	 *
-	 * @param QueryBuilderFactory   $builderFactory
+	 * @param DB\QueryBuilderFactory   $builderFactory
 	 * @param UrlGenerator          $routingGenerator
+	 * @param CountryList           $countryList
+	 * @param StateList             $stateList
 	 */
-	public function __construct(QueryBuilderFactory $builderFactory, UrlGenerator $routingGenerator)
+	public function __construct(
+		DB\QueryBuilderFactory $builderFactory,
+		UrlGenerator $routingGenerator,
+		CountryList $countryList,
+		StateList $stateList
+	)
 	{
 		parent::__construct($builderFactory, $routingGenerator);
 		$this->_setName('user_summary');
 		$this->_setDisplayName('User Summary');
 		$this->_setReportGroup('Users');
 		$this->_charts = [new TableChart];
+		$this->_countryList = $countryList;
+		$this->_stateList = $stateList;
 	}
 
 	/**
@@ -53,8 +67,16 @@ class UserSummary extends AbstractReport
 	public function getColumns()
 	{
 		return [
-			'Name'    => 'string',
 			'Email'   => 'string',
+			'Name'    => 'string',
+			'Address line 1' => 'string',
+			'Address line 2' => 'string',
+			'Address line 3' => 'string',
+			'Address line 4' => 'string',
+			'Town' => 'string',
+			'Postcode' => 'string',
+			'State' => 'string',
+			'Country' => 'string',
 			'Created' => 'number',
 		];
 	}
@@ -68,12 +90,29 @@ class UserSummary extends AbstractReport
 	{
 		$queryBuilder = $this->_builderFactory->getQueryBuilder();
 
+//		$addressType = $this->_filters->exists('address_type') ? $this->_filters->get('address_type')->getChoices() : 'delivery';
+		$addressType = 'delivery';
+
+		if (is_array($addressType)) {
+			$addressType = array_shift($addressType);
+		}
+
 		$queryBuilder
 			->select('user.user_id AS "ID"')
-			->select('created_at AS "Created"')
-			->select('CONCAT(surname,", ",forename) AS "User"')
-			->select('email AS "Email"')
+			->select('user.created_at AS "Created"')
+			->select('CONCAT(user.surname,", ",user.forename) AS "User"')
+			->select('user.email AS "Email"')
+			->select('address.line_1 AS "Line1"')
+			->select('address.line_2 AS "Line2"')
+			->select('address.line_3 AS "Line3"')
+			->select('address.line_4 AS "Line4"')
+			->select('address.town AS "Town"')
+			->select('address.postcode AS "Postcode"')
+			->select('address.state_id AS "State"')
+			->select('address.country_id AS "Country"')
 			->from('user')
+			->leftJoin('address', 'user.user_id = address.user_id AND address.type = :addressType?s', 'user_address')
+			->addParams(['addressType' => $addressType])
 			->orderBy('surname')
 		;
 
@@ -95,27 +134,65 @@ class UserSummary extends AbstractReport
 		if ($output === "json") {
 
 			foreach ($data as $row) {
+				foreach ($row as $name => $value) {
+					$row->$name = is_string($value) ? trim($value) : $value;
+				}
 
+				$this->_getLocations($row);
 				$result[] = [
-					$row->User ? [ 'v' => utf8_encode($row->User), 'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', ['userID' => $row->ID]).'">'.ucwords(utf8_encode($row->User)).'</a>' ] : $row->User,
 					$row->Email,
-					[ 'v' => $row->Created, 'f' => date('Y-m-d H:i', $row->Created)],
+					$row->User ? [
+						'v' => utf8_encode(trim($row->User)),
+						'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', [
+								'userID' => $row->ID
+							]).'">'.ucwords(utf8_encode(trim($row->User))).'</a>'
+					] : $row->User,
+					$row->Line1,
+					$row->Line2,
+					$row->Line3,
+					$row->Line4,
+					$row->Town,
+					$row->Postcode,
+					$row->State ?: '',
+					$row->Country ?: '',
+					[ 'v' => (int) $row->Created, 'f' => date('Y-m-d H:i', $row->Created)],
 				];
-
 			}
-			return json_encode($result);
 
+			return json_encode($result);
 		} else {
 
 			foreach ($data as $row) {
+				$this->_getLocations($row);
 				$result[] = [
+					utf8_encode($row->Email),
 					utf8_encode($row->User),
-					$row->Email,
+					utf8_encode($row->Line1),
+					utf8_encode($row->Line2),
+					utf8_encode($row->Line3),
+					utf8_encode($row->Line4),
+					utf8_encode($row->Town),
+					utf8_encode($row->Postcode),
+					utf8_encode($row->State),
+					utf8_encode($row->Country),
 					date('Y-m-d H:i', $row->Created),
 				];
 			}
-			return $result;
 
+			return $result;
 		}
+	}
+
+	private function _getLocations($row)
+	{
+		$validCountries = array_keys($this->_stateList->all());
+
+		if ($row->State && in_array($row->Country, $validCountries)) {
+			if (array_key_exists($row->Country, $this->_stateList->all())) {
+				$row->State = $this->_stateList->getByID($row->Country, $row->State);
+			}
+		}
+
+		$row->Country = $this->_countryList->getByID($row->Country);
 	}
 }

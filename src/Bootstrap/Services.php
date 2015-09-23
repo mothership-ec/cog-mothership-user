@@ -134,7 +134,9 @@ class Services implements ServicesInterface
 		$services['user.user_summary'] = $services->factory(function($c) {
 			return new User\Report\UserSummary(
 				$c['db.query.builder.factory'],
-				$c['routing.generator']
+				$c['routing.generator'],
+				$c['country.list'],
+				$c['state.list']
 			);
 		});
 
