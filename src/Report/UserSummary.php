@@ -2,33 +2,40 @@
 
 namespace Message\Mothership\User\Report;
 
+use Message\Mothership\User\Report\Filter\AddressTypeFilter;
+use Message\Mothership\User\Report\Filter\CountryFilter;
+
 use Message\Cog\Location\CountryList;
 use Message\Cog\Location\StateList;
 use Message\Cog\DB;
 use Message\Cog\Routing\UrlGenerator;
 
+use Message\Mothership\Report\Report\AppendQuery\FilterableInterface;
+use Message\Mothership\Report\Filter\Collection as FilterCollection;
 use Message\Mothership\Report\Report\AbstractReport;
 use Message\Mothership\Report\Chart\TableChart;
 
-class UserSummary extends AbstractReport
+class UserSummary extends AbstractReport implements FilterableInterface
 {
-//	private $_filters;
 	private $_countryList;
 	private $_stateList;
+	private $_queryBuilder;
 
 	/**
 	 * Constructor.
 	 *
 	 * @param DB\QueryBuilderFactory   $builderFactory
-	 * @param UrlGenerator          $routingGenerator
-	 * @param CountryList           $countryList
-	 * @param StateList             $stateList
+	 * @param UrlGenerator             $routingGenerator
+	 * @param CountryList              $countryList
+	 * @param StateList                $stateList
+	 * @param FilterCollection         $filters
 	 */
 	public function __construct(
 		DB\QueryBuilderFactory $builderFactory,
 		UrlGenerator $routingGenerator,
 		CountryList $countryList,
-		StateList $stateList
+		StateList $stateList,
+		FilterCollection $filters
 	)
 	{
 		parent::__construct($builderFactory, $routingGenerator);
@@ -38,6 +45,7 @@ class UserSummary extends AbstractReport
 		$this->_charts = [new TableChart];
 		$this->_countryList = $countryList;
 		$this->_stateList = $stateList;
+		$this->_filters = $filters;
 	}
 
 	/**
@@ -88,16 +96,17 @@ class UserSummary extends AbstractReport
 	 */
 	protected function _getQuery()
 	{
-		$queryBuilder = $this->_builderFactory->getQueryBuilder();
+		$this->_queryBuilder = $this->_builderFactory->getQueryBuilder();
 
-//		$addressType = $this->_filters->exists('address_type') ? $this->_filters->get('address_type')->getChoices() : 'delivery';
-		$addressType = 'delivery';
+		$addressType = $this->_filters->exists(AddressTypeFilter::NAME) && $this->_filters->get(AddressTypeFilter::NAME)->getChoices() ?
+			$this->_filters->get(AddressTypeFilter::NAME)->getChoices() :
+			'delivery';
 
 		if (is_array($addressType)) {
 			$addressType = array_shift($addressType);
 		}
 
-		$queryBuilder
+		$this->_queryBuilder
 			->select('user.user_id AS "ID"')
 			->select('user.created_at AS "Created"')
 			->select('CONCAT(user.surname,", ",user.forename) AS "User"')
@@ -116,7 +125,16 @@ class UserSummary extends AbstractReport
 			->orderBy('surname')
 		;
 
-		return $queryBuilder->getQuery();
+		if ($this->_filters->exists(CountryFilter::NAME) && $this->_filters->get(CountryFilter::NAME)->getChoices()) {
+			$this->_queryBuilder->where('address.country_id IN (?js)', [$this->_filters->get(CountryFilter::NAME)->getChoices()]);
+		}
+
+		return $this->_queryBuilder->getQuery();
+	}
+
+	public function getQueryBuilder()
+	{
+		return $this->_queryBuilder;
 	}
 
 	/**
