@@ -25,6 +25,21 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	private $_queryBuilder;
 	private $_dispatcher;
 
+	private $_select = [
+		'user.user_id AS "ID"',
+		'user.created_at AS "Created"',
+		'CONCAT(user.surname,", ",user.forename) AS "User"',
+		'user.email AS "Email"',
+		'address.line_1 AS "Line1"',
+		'address.line_2 AS "Line2"',
+		'address.line_3 AS "Line3"',
+		'address.line_4 AS "Line4"',
+		'address.town AS "Town"',
+		'address.postcode AS "Postcode"',
+		'address.state_id AS "State"',
+		'address.country_id AS "Country"',
+	];
+
 	/**
 	 * Constructor.
 	 *
@@ -106,25 +121,13 @@ class UserSummary extends AbstractReport implements FilterableInterface
 		$this->_queryBuilder = $this->_builderFactory->getQueryBuilder();
 
 		$this->_queryBuilder
-			->select('user.user_id AS "ID"')
-			->select('user.created_at AS "Created"')
-			->select('CONCAT(user.surname,", ",user.forename) AS "User"')
-			->select('user.email AS "Email"')
-			->select('address.line_1 AS "Line1"')
-			->select('address.line_2 AS "Line2"')
-			->select('address.line_3 AS "Line3"')
-			->select('address.line_4 AS "Line4"')
-			->select('address.town AS "Town"')
-			->select('address.postcode AS "Postcode"')
-			->select('address.state_id AS "State"')
-			->select('address.country_id AS "Country"')
+			->select($this->_select, true)
 			->from('user')
 			->leftJoinUsing('address', 'user_id', 'user_address')
 			->orderBy('surname')
 		;
 
 		$this->_dispatchEvent();
-
 		return $this->_queryBuilder->getQuery();
 	}
 

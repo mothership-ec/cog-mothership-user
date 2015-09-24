@@ -137,7 +137,8 @@ class Services implements ServicesInterface
 				$c['routing.generator'],
 				$c['country.list'],
 				$c['state.list'],
-				$c['user.report.user_summary.filters']
+				$c['user.report.user_summary.filters'],
+				$c['event.dispatcher']
 			);
 		});
 
@@ -166,10 +167,14 @@ class Services implements ServicesInterface
 		});
 
 		$services['user.report.user_summary.filters'] = $services->factory(function ($c) {
-			return new \Message\Mothership\Report\Filter\Collection([
+			$collection = new \Message\Mothership\Report\Filter\Collection([
 				$c['user.report.filter.address_type'],
 				$c['user.report.filter.country']
 			]);
+
+			$collection->setSort();
+
+			return $collection;
 		});
 	}
 }
