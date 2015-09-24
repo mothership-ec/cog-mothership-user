@@ -15,6 +15,7 @@ use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\KernelEvent;
 
 use Message\Mothership\Report\Event as ReportEvents;
+use Message\Mothership\Report\Filter\ModifyQueryInterface;
 
 /**
  *
@@ -37,6 +38,9 @@ class EventListener extends BaseListener implements SubscriberInterface
 			),
 			ReportEvents\Events::REGISTER_REPORTS => [
 				'registerReports'
+			],
+			Events::USER_SUMMARY_REPORT => [
+				'applyReportFilters'
 			],
 			UserEvent::CREATE => [
 				'setProfileType'
@@ -76,6 +80,17 @@ class EventListener extends BaseListener implements SubscriberInterface
 	{
 		foreach ($this->get('user.reports') as $report) {
 			$event->registerReport($report);
+		}
+	}
+
+	public function applyReportFilters(ReportEvents\ReportEvent $event)
+	{
+		foreach ($event->getQueryBuilders() as $queryBuilder) {
+			foreach ($event->getFilters() as $filter) {
+				if ($filter instanceof ModifyQueryInterface) {
+					$filter->apply($queryBuilder);
+				}
+			}
 		}
 	}
 

@@ -2,18 +2,20 @@
 
 namespace Message\Mothership\User\Report\Filter;
 
+use Message\Cog\DB;
 use Message\Mothership\Report\Filter\Choices;
+use Message\Mothership\Report\Filter\ModifyQueryInterface;
 
-class AddressTypeFilter extends Choices
+class AddressTypeFilter extends Choices implements ModifyQueryInterface
 {
 	const NAME = 'address_type';
 
-	public function __construct($label = null, array $choices = null)
+	public function __construct($label = 'Address type', array $choices = null)
 	{
 		if (null === $choices) {
 			$choices = [
 				'delivery' => 'Delivery',
-				'billing' => 'Billing',
+				'billing'  => 'Billing',
 			];
 		}
 
@@ -35,5 +37,18 @@ class AddressTypeFilter extends Choices
 		$this->setChoices($choice + $this->getChoices());
 
 		return $this;
+	}
+
+	public function apply(DB\QueryBuilder $queryBuilder)
+	{
+		$addressType = $this->getChoices() ?
+			$this->getChoices() :
+			'delivery';
+
+		if (is_array($addressType)) {
+			$addressType = array_shift($addressType);
+		}
+
+		$queryBuilder->where('address.type = ?s', [$addressType]);
 	}
 }

@@ -2,10 +2,12 @@
 
 namespace Message\Mothership\User\Report\Filter;
 
-use Message\Mothership\Report\Filter\Choices;
+use Message\Cog\DB;
 use Message\Cog\Location\CountryList;
+use Message\Mothership\Report\Filter\Choices;
+use Message\Mothership\Report\Filter\ModifyQueryInterface;
 
-class CountryFilter extends Choices
+class CountryFilter extends Choices implements ModifyQueryInterface
 {
 	const NAME = 'country';
 
@@ -40,6 +42,13 @@ class CountryFilter extends Choices
 		}
 
 		return array_values($choices);
+	}
+
+	public function apply(DB\QueryBuilder $queryBuilder)
+	{
+		if ($this->getChoices()) {
+			$queryBuilder->where('address.country_id IN (?js)', [$this->getChoices()]);
+		}
 	}
 
 	private function _getCountryChoices()

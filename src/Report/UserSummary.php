@@ -4,12 +4,15 @@ namespace Message\Mothership\User\Report;
 
 use Message\Mothership\User\Report\Filter\AddressTypeFilter;
 use Message\Mothership\User\Report\Filter\CountryFilter;
+use Message\Mothership\User\Events;
 
 use Message\Cog\Location\CountryList;
 use Message\Cog\Location\StateList;
 use Message\Cog\DB;
 use Message\Cog\Routing\UrlGenerator;
+use Message\Cog\Event\Dispatcher as EventDispatcher;
 
+use Message\Mothership\Report\Event\ReportEvent;
 use Message\Mothership\Report\Report\AppendQuery\FilterableInterface;
 use Message\Mothership\Report\Filter\Collection as FilterCollection;
 use Message\Mothership\Report\Report\AbstractReport;
@@ -20,6 +23,7 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	private $_countryList;
 	private $_stateList;
 	private $_queryBuilder;
+	private $_dispatcher;
 
 	/**
 	 * Constructor.
@@ -29,13 +33,15 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	 * @param CountryList              $countryList
 	 * @param StateList                $stateList
 	 * @param FilterCollection         $filters
+	 * @param EventDispatcher          $dispatcher
 	 */
 	public function __construct(
 		DB\QueryBuilderFactory $builderFactory,
 		UrlGenerator $routingGenerator,
 		CountryList $countryList,
 		StateList $stateList,
-		FilterCollection $filters
+		FilterCollection $filters,
+		EventDispatcher $dispatcher
 	)
 	{
 		parent::__construct($builderFactory, $routingGenerator);
@@ -46,6 +52,7 @@ class UserSummary extends AbstractReport implements FilterableInterface
 		$this->_countryList = $countryList;
 		$this->_stateList = $stateList;
 		$this->_filters = $filters;
+		$this->_dispatcher = $dispatcher;
 	}
 
 	/**
@@ -98,14 +105,6 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	{
 		$this->_queryBuilder = $this->_builderFactory->getQueryBuilder();
 
-		$addressType = $this->_filters->exists(AddressTypeFilter::NAME) && $this->_filters->get(AddressTypeFilter::NAME)->getChoices() ?
-			$this->_filters->get(AddressTypeFilter::NAME)->getChoices() :
-			'delivery';
-
-		if (is_array($addressType)) {
-			$addressType = array_shift($addressType);
-		}
-
 		$this->_queryBuilder
 			->select('user.user_id AS "ID"')
 			->select('user.created_at AS "Created"')
@@ -120,14 +119,11 @@ class UserSummary extends AbstractReport implements FilterableInterface
 			->select('address.state_id AS "State"')
 			->select('address.country_id AS "Country"')
 			->from('user')
-			->leftJoin('address', 'user.user_id = address.user_id AND address.type = :addressType?s', 'user_address')
-			->addParams(['addressType' => $addressType])
+			->leftJoinUsing('address', 'user_id', 'user_address')
 			->orderBy('surname')
 		;
 
-		if ($this->_filters->exists(CountryFilter::NAME) && $this->_filters->get(CountryFilter::NAME)->getChoices()) {
-			$this->_queryBuilder->where('address.country_id IN (?js)', [$this->_filters->get(CountryFilter::NAME)->getChoices()]);
-		}
+		$this->_dispatchEvent();
 
 		return $this->_queryBuilder->getQuery();
 	}
@@ -201,7 +197,7 @@ class UserSummary extends AbstractReport implements FilterableInterface
 		}
 	}
 
-	private function _getLocations($row)
+	private function _getLocations(\stdClass $row)
 	{
 		$validCountries = array_keys($this->_stateList->all());
 
@@ -212,5 +208,14 @@ class UserSummary extends AbstractReport implements FilterableInterface
 		}
 
 		$row->Country = $this->_countryList->getByID($row->Country);
+	}
+
+	private function _dispatchEvent()
+	{
+		$event = new ReportEvent;
+		$event->setFilters($this->_filters);
+		$event->addQueryBuilder($this->_queryBuilder);
+
+		$this->_dispatcher->dispatch(Events::USER_SUMMARY_REPORT, $event);
 	}
 }
