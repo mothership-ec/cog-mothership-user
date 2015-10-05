@@ -166,10 +166,15 @@ class Services implements ServicesInterface
 			return new User\Report\Filter\CountryFilter($c['country.list']);
 		});
 
+		$services['user.report.filter.date'] = $services->factory(function ($c) {
+			return new User\Report\Filter\CreatedAtFilter;
+		});
+
 		$services['user.report.user_summary.filters'] = $services->factory(function ($c) {
 			$collection = new \Message\Mothership\Report\Filter\Collection([
 				$c['user.report.filter.address_type'],
-				$c['user.report.filter.country']
+				$c['user.report.filter.country'],
+				$c['user.report.filter.date'],
 			]);
 
 			$collection->setSort();
