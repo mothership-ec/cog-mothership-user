@@ -166,7 +166,7 @@ class Services implements ServicesInterface
 			return new User\Report\Filter\CountryFilter($c['country.list']);
 		});
 
-		$services['user.report.filter.date'] = $services->factory(function ($c) {
+		$services['user.report.filter.created_at'] = $services->factory(function ($c) {
 			return new User\Report\Filter\CreatedAtFilter;
 		});
 
@@ -174,7 +174,7 @@ class Services implements ServicesInterface
 			$collection = new \Message\Mothership\Report\Filter\Collection([
 				$c['user.report.filter.address_type'],
 				$c['user.report.filter.country'],
-				$c['user.report.filter.date'],
+				$c['user.report.filter.created_at'],
 			]);
 
 			$collection->setSort();
