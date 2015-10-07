@@ -28,7 +28,8 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	private $_select = [
 		'user.user_id AS "ID"',
 		'user.created_at AS "Created"',
-		'CONCAT(user.surname,", ",user.forename) AS "User"',
+		'user.forename AS "Forename"',
+		'user.surname AS "Surname"',
 		'user.email AS "Email"',
 		'address.line_1 AS "Line1"',
 		'address.line_2 AS "Line2"',
@@ -97,17 +98,18 @@ class UserSummary extends AbstractReport implements FilterableInterface
 	public function getColumns()
 	{
 		return [
-			'Email'   => 'string',
-			'Name'    => 'string',
+			'Email'          => 'string',
+			'Forename'       => 'string',
+			'Surname'        => 'string',
 			'Address line 1' => 'string',
 			'Address line 2' => 'string',
 			'Address line 3' => 'string',
 			'Address line 4' => 'string',
-			'Town' => 'string',
-			'Postcode' => 'string',
-			'State' => 'string',
-			'Country' => 'string',
-			'Created' => 'number',
+			'Town'           => 'string',
+			'Postcode'       => 'string',
+			'State'          => 'string',
+			'Country'        => 'string',
+			'Created'        => 'number',
 		];
 	}
 
@@ -158,12 +160,18 @@ class UserSummary extends AbstractReport implements FilterableInterface
 				$this->_getLocations($row);
 				$result[] = [
 					$row->Email,
-					$row->User ? [
-						'v' => utf8_encode(trim($row->User)),
+					$row->Forename ? [
+						'v' => utf8_encode(trim($row->Forename)),
 						'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', [
 								'userID' => $row->ID
-							]).'">'.ucwords(utf8_encode(trim($row->User))).'</a>'
-					] : $row->User,
+							]).'">'.ucwords(utf8_encode(trim($row->Forename))).'</a>'
+					] : $row->Forename,
+					$row->Surname ? [
+						'v' => utf8_encode(trim($row->Surname)),
+						'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', [
+								'userID' => $row->ID
+							]).'">'.ucwords(utf8_encode(trim($row->Surname))).'</a>'
+					] : $row->Surname,
 					$row->Line1,
 					$row->Line2,
 					$row->Line3,
@@ -183,7 +191,8 @@ class UserSummary extends AbstractReport implements FilterableInterface
 				$this->_getLocations($row);
 				$result[] = [
 					utf8_encode($row->Email),
-					utf8_encode($row->User),
+					utf8_encode($row->Forename),
+					utf8_encode($row->Surname),
 					utf8_encode($row->Line1),
 					utf8_encode($row->Line2),
 					utf8_encode($row->Line3),
