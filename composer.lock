@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "0144edb83d41830dda771181162bd250",
+    "hash": "d40c584af0a34304f84fbdfcb64393dd",
     "packages": [
         {
             "name": "dflydev/markdown",
@@ -626,16 +626,16 @@
         },
         {
             "name": "mothership-ec/cog",
-            "version": "4.11.0",
+            "version": "4.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog.git",
-                "reference": "a36a5e0c98458aeb6a152ad38c8c8a78e13d5fe8"
+                "reference": "46c1473effe92997d8459ad137a3304d1b7e50da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/a36a5e0c98458aeb6a152ad38c8c8a78e13d5fe8",
-                "reference": "a36a5e0c98458aeb6a152ad38c8c8a78e13d5fe8",
+                "url": "https://api.github.com/repos/mothership-ec/cog/zipball/46c1473effe92997d8459ad137a3304d1b7e50da",
+                "reference": "46c1473effe92997d8459ad137a3304d1b7e50da",
                 "shasum": ""
             },
             "require": {
@@ -717,20 +717,20 @@
                 "cog",
                 "framework"
             ],
-            "time": "2015-09-23 13:13:32"
+            "time": "2015-10-02 16:40:49"
         },
         {
             "name": "mothership-ec/cog-imageresize",
-            "version": "2.0.0",
+            "version": "2.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog-imageresize.git",
-                "reference": "4987d2ce1d2470683540c91873cf88c598798990"
+                "reference": "11f62c0bdfd9e452b76e85857e85e9cb392345a0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog-imageresize/zipball/4987d2ce1d2470683540c91873cf88c598798990",
-                "reference": "4987d2ce1d2470683540c91873cf88c598798990",
+                "url": "https://api.github.com/repos/mothership-ec/cog-imageresize/zipball/11f62c0bdfd9e452b76e85857e85e9cb392345a0",
+                "reference": "11f62c0bdfd9e452b76e85857e85e9cb392345a0",
                 "shasum": ""
             },
             "require": {
@@ -750,7 +750,7 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "proprietary"
+                "GPL-3.0+"
             ],
             "authors": [
                 {
@@ -765,7 +765,7 @@
                 "resize",
                 "thumbnail"
             ],
-            "time": "2015-02-24 15:42:16"
+            "time": "2015-09-29 11:30:04"
         },
         {
             "name": "mothership-ec/cog-mothership-cp",
@@ -872,16 +872,16 @@
         },
         {
             "name": "mothership-ec/cog-mothership-reports",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/mothership-ec/cog-mothership-reports.git",
-                "reference": "08509152a97a468e4fb250cebe6cad3c7745096f"
+                "reference": "f1a6fe7556b0072e41a34c292f1c99c710730091"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-reports/zipball/08509152a97a468e4fb250cebe6cad3c7745096f",
-                "reference": "08509152a97a468e4fb250cebe6cad3c7745096f",
+                "url": "https://api.github.com/repos/mothership-ec/cog-mothership-reports/zipball/f1a6fe7556b0072e41a34c292f1c99c710730091",
+                "reference": "f1a6fe7556b0072e41a34c292f1c99c710730091",
                 "shasum": ""
             },
             "require": {
@@ -916,7 +916,7 @@
                 "reports",
                 "stats"
             ],
-            "time": "2015-09-28 13:33:50"
+            "time": "2015-10-07 09:50:19"
         },
         {
             "name": "mothership-ec/cog-user",
