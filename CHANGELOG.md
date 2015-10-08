@@ -1,5 +1,39 @@
 # Changelog
 
+## 4.3.0
+
+- Made **User Summary** report more useful and flexible. Now contains the following columns:
+    - Email
+    - Forename
+    - Surname
+    - Address line 1
+    - Address line 2
+    - Address line 3
+    - Address line 4
+    - Town
+    - Postcode
+    - State
+    - Country
+    - Created at
+- Added `Report\Filter\AddressTypeFilter` class for filtering the report by address type
+- Added `Report\Filter\CountryFilter` class for filtering the report by country
+- Added `Report\Filter\CreatedAtFilter` class for filtering the report users which were created within a certain range
+- Added `Events` class of constants for report names
+- Added `EventListener::applyReportFilters()` event listener for modifying queries from filters when rendering a report
+- Added `user.report.filter.address_type` service that returns instance of `Report\Filter\AddressTypeFilter`
+- Added `user.report.filter.country` service that returns instance of `Report\Filter\CountryFilter`
+- Added `user.report.filter.created_at` service that returns instance of `Report\Filter\CreatedAtFilter`
+- Added `user.report.user_summary.filters` service that returns instance of `Message\Mothership\Report\Filter\Collection`
+- Renamed `user.user_summary` service to `user.report.user_summary`
+- Deprecated `user.user_summary` service
+- `Report\UserSummary` implements `Message\Mothership\Report\Report\AppendQuery\FilterableInterface`
+- `Report\UserSummary` now takes `Message\Cog\Location\CountryList` as third parameter
+- `Report\UserSummary` now takes `Message\Cog\Location\StateList` as forth parameter
+- `Report\UserSummary` now takes `Message\Mothership\Report\Filter\Collection` as fifth parameter
+- `Report\UserSummary` now takes `Message\Cog\Event\Dispatcher` as sixth parameter
+- `Report\UserSummary` fires `Message\Mothership\Report\Event\ReportEvent` when generating a report
+- Increase Reports dependency to 2.2
+
 ## 4.2.1
 
 - Resolve issue where order overview page would break if the returns module is not installed
