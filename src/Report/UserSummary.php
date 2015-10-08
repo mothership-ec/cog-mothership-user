@@ -2,28 +2,73 @@
 
 namespace Message\Mothership\User\Report;
 
-use Message\Cog\DB\QueryBuilderInterface;
-use Message\Cog\DB\QueryBuilderFactory;
-use Message\Cog\Routing\UrlGenerator;
+use Message\Mothership\User\Report\Filter\AddressTypeFilter;
+use Message\Mothership\User\Report\Filter\CountryFilter;
+use Message\Mothership\User\Events;
 
+use Message\Cog\Location\CountryList;
+use Message\Cog\Location\StateList;
+use Message\Cog\DB;
+use Message\Cog\Routing\UrlGenerator;
+use Message\Cog\Event\Dispatcher as EventDispatcher;
+
+use Message\Mothership\Report\Event\ReportEvent;
+use Message\Mothership\Report\Report\AppendQuery\FilterableInterface;
+use Message\Mothership\Report\Filter\Collection as FilterCollection;
 use Message\Mothership\Report\Report\AbstractReport;
 use Message\Mothership\Report\Chart\TableChart;
 
-class UserSummary extends AbstractReport
+class UserSummary extends AbstractReport implements FilterableInterface
 {
+	private $_countryList;
+	private $_stateList;
+	private $_queryBuilder;
+	private $_dispatcher;
+
+	private $_select = [
+		'user.user_id AS "ID"',
+		'user.created_at AS "Created"',
+		'user.forename AS "Forename"',
+		'user.surname AS "Surname"',
+		'user.email AS "Email"',
+		'address.line_1 AS "Line1"',
+		'address.line_2 AS "Line2"',
+		'address.line_3 AS "Line3"',
+		'address.line_4 AS "Line4"',
+		'address.town AS "Town"',
+		'address.postcode AS "Postcode"',
+		'address.state_id AS "State"',
+		'address.country_id AS "Country"',
+	];
+
 	/**
 	 * Constructor.
 	 *
-	 * @param QueryBuilderFactory   $builderFactory
-	 * @param UrlGenerator          $routingGenerator
+	 * @param DB\QueryBuilderFactory   $builderFactory
+	 * @param UrlGenerator             $routingGenerator
+	 * @param CountryList              $countryList
+	 * @param StateList                $stateList
+	 * @param FilterCollection         $filters
+	 * @param EventDispatcher          $dispatcher
 	 */
-	public function __construct(QueryBuilderFactory $builderFactory, UrlGenerator $routingGenerator)
+	public function __construct(
+		DB\QueryBuilderFactory $builderFactory,
+		UrlGenerator $routingGenerator,
+		CountryList $countryList,
+		StateList $stateList,
+		FilterCollection $filters,
+		EventDispatcher $dispatcher
+	)
 	{
 		parent::__construct($builderFactory, $routingGenerator);
 		$this->_setName('user_summary');
 		$this->_setDisplayName('User Summary');
 		$this->_setReportGroup('Users');
 		$this->_charts = [new TableChart];
+		$this->_countryList = $countryList;
+		$this->_stateList = $stateList;
+		$this->_filters = $filters;
+		$this->_dispatcher = $dispatcher;
 	}
 
 	/**
@@ -53,9 +98,18 @@ class UserSummary extends AbstractReport
 	public function getColumns()
 	{
 		return [
-			'Name'    => 'string',
-			'Email'   => 'string',
-			'Created' => 'number',
+			'Email'          => 'string',
+			'Forename'       => 'string',
+			'Surname'        => 'string',
+			'Address line 1' => 'string',
+			'Address line 2' => 'string',
+			'Address line 3' => 'string',
+			'Address line 4' => 'string',
+			'Town'           => 'string',
+			'Postcode'       => 'string',
+			'State'          => 'string',
+			'Country'        => 'string',
+			'Created'        => 'number',
 		];
 	}
 
@@ -66,18 +120,22 @@ class UserSummary extends AbstractReport
 	 */
 	protected function _getQuery()
 	{
-		$queryBuilder = $this->_builderFactory->getQueryBuilder();
+		$this->_queryBuilder = $this->_builderFactory->getQueryBuilder();
 
-		$queryBuilder
-			->select('user.user_id AS "ID"')
-			->select('created_at AS "Created"')
-			->select('CONCAT(surname,", ",forename) AS "User"')
-			->select('email AS "Email"')
+		$this->_queryBuilder
+			->select($this->_select, true)
 			->from('user')
+			->leftJoinUsing('address', 'user_id', 'user_address')
 			->orderBy('surname')
 		;
 
-		return $queryBuilder->getQuery();
+		$this->_dispatchEvent();
+		return $this->_queryBuilder->getQuery();
+	}
+
+	public function getQueryBuilder()
+	{
+		return $this->_queryBuilder;
 	}
 
 	/**
@@ -95,27 +153,81 @@ class UserSummary extends AbstractReport
 		if ($output === "json") {
 
 			foreach ($data as $row) {
+				foreach ($row as $name => $value) {
+					$row->$name = is_string($value) ? trim($value) : $value;
+				}
 
+				$this->_getLocations($row);
 				$result[] = [
-					$row->User ? [ 'v' => utf8_encode($row->User), 'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', ['userID' => $row->ID]).'">'.ucwords(utf8_encode($row->User)).'</a>' ] : $row->User,
 					$row->Email,
-					[ 'v' => $row->Created, 'f' => date('Y-m-d H:i', $row->Created)],
+					$row->Forename ? [
+						'v' => utf8_encode(trim($row->Forename)),
+						'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', [
+								'userID' => $row->ID
+							]).'">'.ucwords(utf8_encode(trim($row->Forename))).'</a>'
+					] : $row->Forename,
+					$row->Surname ? [
+						'v' => utf8_encode(trim($row->Surname)),
+						'f' => (string) '<a href ="'.$this->generateUrl('ms.cp.user.admin.detail.edit', [
+								'userID' => $row->ID
+							]).'">'.ucwords(utf8_encode(trim($row->Surname))).'</a>'
+					] : $row->Surname,
+					$row->Line1,
+					$row->Line2,
+					$row->Line3,
+					$row->Line4,
+					$row->Town,
+					$row->Postcode,
+					$row->State ?: '',
+					$row->Country ?: '',
+					[ 'v' => (int) $row->Created, 'f' => date('Y-m-d H:i', $row->Created)],
 				];
-
 			}
-			return json_encode($result);
 
+			return json_encode($result);
 		} else {
 
 			foreach ($data as $row) {
+				$this->_getLocations($row);
 				$result[] = [
-					utf8_encode($row->User),
-					$row->Email,
+					utf8_encode($row->Email),
+					utf8_encode($row->Forename),
+					utf8_encode($row->Surname),
+					utf8_encode($row->Line1),
+					utf8_encode($row->Line2),
+					utf8_encode($row->Line3),
+					utf8_encode($row->Line4),
+					utf8_encode($row->Town),
+					utf8_encode($row->Postcode),
+					utf8_encode($row->State),
+					utf8_encode($row->Country),
 					date('Y-m-d H:i', $row->Created),
 				];
 			}
-			return $result;
 
+			return $result;
 		}
+	}
+
+	private function _getLocations(\stdClass $row)
+	{
+		$validCountries = array_keys($this->_stateList->all());
+
+		if ($row->State && in_array($row->Country, $validCountries)) {
+			if (array_key_exists($row->Country, $this->_stateList->all())) {
+				$row->State = $this->_stateList->getByID($row->Country, $row->State);
+			}
+		}
+
+		$row->Country = $this->_countryList->getByID($row->Country);
+	}
+
+	private function _dispatchEvent()
+	{
+		$event = new ReportEvent;
+		$event->setFilters($this->_filters);
+		$event->addQueryBuilder($this->_queryBuilder);
+
+		$this->_dispatcher->dispatch(Events::USER_SUMMARY_REPORT, $event);
 	}
 }

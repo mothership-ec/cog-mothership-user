@@ -131,11 +131,22 @@ class Services implements ServicesInterface
 
 	public function registerReports($services)
 	{
-		$services['user.user_summary'] = $services->factory(function($c) {
+		$services['user.report.user_summary'] = $services->factory(function($c) {
 			return new User\Report\UserSummary(
 				$c['db.query.builder.factory'],
-				$c['routing.generator']
+				$c['routing.generator'],
+				$c['country.list'],
+				$c['state.list'],
+				$c['user.report.user_summary.filters'],
+				$c['event.dispatcher']
 			);
+		});
+
+		/**
+		 * @deprecated use `user.report.user_summary` instead
+		 */
+		$services['user.user_summary'] = $services->factory(function ($c) {
+			return $c['user.report.user_summary'];
 		});
 
 		$services['user.reports'] = function($c) {
@@ -146,5 +157,29 @@ class Services implements ServicesInterface
 
 			return $reports;
 		};
+
+		$services['user.report.filter.address_type'] = $services->factory(function ($c) {
+			return new User\Report\Filter\AddressTypeFilter;
+		});
+
+		$services['user.report.filter.country'] = $services->factory(function ($c) {
+			return new User\Report\Filter\CountryFilter($c['country.list']);
+		});
+
+		$services['user.report.filter.created_at'] = $services->factory(function ($c) {
+			return new User\Report\Filter\CreatedAtFilter;
+		});
+
+		$services['user.report.user_summary.filters'] = $services->factory(function ($c) {
+			$collection = new \Message\Mothership\Report\Filter\Collection([
+				$c['user.report.filter.address_type'],
+				$c['user.report.filter.country'],
+				$c['user.report.filter.created_at'],
+			]);
+
+			$collection->setSort();
+
+			return $collection;
+		});
 	}
 }
