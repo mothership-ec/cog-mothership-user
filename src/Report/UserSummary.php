@@ -2,8 +2,6 @@
 
 namespace Message\Mothership\User\Report;
 
-use Message\Mothership\User\Report\Filter\AddressTypeFilter;
-use Message\Mothership\User\Report\Filter\CountryFilter;
 use Message\Mothership\User\Events;
 
 use Message\Cog\Location\CountryList;
@@ -130,6 +128,7 @@ class UserSummary extends AbstractReport implements FilterableInterface
 		;
 
 		$this->_dispatchEvent();
+
 		return $this->_queryBuilder->getQuery();
 	}
 
