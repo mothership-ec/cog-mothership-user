@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.1
+
+- Resolve issue in **User Summary** report where it would not display users without addresses
+- Added **All** option to address filter on **User Summary** report
+
 ## 4.3.0
 
 - Made **User Summary** report more useful and flexible. Now contains the following columns:
