@@ -14,6 +14,7 @@ class AddressTypeFilter extends Choices implements ModifyQueryInterface
 	{
 		if (null === $choices) {
 			$choices = [
+				'all'      => 'All',
 				'delivery' => 'Delivery',
 				'billing'  => 'Billing',
 			];
@@ -41,14 +42,20 @@ class AddressTypeFilter extends Choices implements ModifyQueryInterface
 
 	public function apply(DB\QueryBuilder $queryBuilder)
 	{
-		$addressType = $this->getChoices() ?
-			$this->getChoices() :
-			'delivery';
+		$addressType = $this->getChoices();
 
 		if (is_array($addressType)) {
 			$addressType = array_shift($addressType);
 		}
 
-		$queryBuilder->where('address.type = ?s', [$addressType]);
+		$and = true;
+
+		if (!$addressType || $addressType === 'all') {
+			$queryBuilder->where('address.type IS NULL');
+			$addressType = 'delivery';
+			$and = false;
+		}
+
+		$queryBuilder->where('address.type = ?s', [$addressType], $and);
 	}
 }
