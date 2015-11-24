@@ -1,5 +1,9 @@
 # Changelog
 
+## 4.3.2
+
+- Resolve issue where HTML was escaped on password request screen
+
 ## 4.3.1
 
 - Resolve issue in **User Summary** report where it would not display users without addresses
