@@ -78,12 +78,6 @@ class DetailsEdit extends Controller
 				else {
 					$this->addFlash('error', sprintf('Could not send reset password email to %s', '_emailaddress_'));
 				}
-
-				// Dispatch password request event
-				$this->get('event.dispatcher')->dispatch(
-					Event\Event::PASSWORD_REQUEST,
-					new Event\Event($user)
-				);
 			}
 		}
 

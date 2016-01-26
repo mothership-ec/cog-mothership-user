@@ -45,6 +45,9 @@ class EventListener extends BaseListener implements SubscriberInterface
 			UserEvent::CREATE => [
 				'setProfileType'
 			],
+			UserEvent::EDIT => [
+				'cleanupSession'
+			]
 		];
 	}
 
@@ -98,5 +101,17 @@ class EventListener extends BaseListener implements SubscriberInterface
 	{
 		$profile = $this->get('user.profile.factory')->getProfile('none');
 		$this->get('user.profile.type.edit')->save($event->getUser(), $profile->getType());
+	}
+
+	/**
+	 * When user data is modified, this event listener replaces the current user object
+	 * held in the session with the new user object that was just saved to the database.
+	 * Other cleanup related tasks could potentially be performed by overriding this method.
+	 *
+	 * @param  UserEvent $event
+	 */
+	public function cleanupSession(UserEvent $event) {
+		$sessionName = $this->get('cfg')->user->sessionName;
+		$this->get('http.session')->set($sessionName, $event->getUser());
 	}
 }
