@@ -176,11 +176,14 @@ class Edit extends Controller
 			->setAction($this->generateUrl('ms.user.detail.edit.action'))
 			->setMethod('post');
 
-		$titleChoices = $this->get('title.list');
+		// get the current locale that mothership is using, then pass the correct
+		// titles/honoraries to the form builder.
+		$locale = explode("_", $this->get('locale')->getId())[0];
+		$titles = $this->get('cfg')->titles->{$locale};
 
 		$form
 			->add('title', 'choice', $this->get('translator')->trans('ms.user.user.title'), array(
-				'choices' 	=> $titleChoices,
+				'choices' 	=> $titles,
 				'data'  	=> $user->title,
 				'expanded' 	=> false,
 				'multiple'	=> false,

@@ -35,12 +35,17 @@ class UserDetails extends Handler
 			->setDefaultValues($defaults)
 			->setAction($action);
 
+		// get the current locale that mothership is using, then pass the correct
+		// titles/honoraries to the form builder.
+		//
+		// when assigning `$locale` we need to explode the string to get just the language
+		// prefix, if available. for example, if the mothership locale is `en_GB`, we load
+		// the collection of titles for `en`
+		$locale = explode("_", $this->_container['locale']->getId())[0];
+		$titles = $this->_container['cfg']->titles->{$locale};
+
 		$this->add('title','choice','', array(
-			'choices'  => array(
-				'Mr'   => 'Mr',
-				'Miss' => 'Miss',
-				'Mrs'  => 'Mrs',
-			)
+			'choices'  => $titles
 		));
 
 		$this->add('forename','text','');
