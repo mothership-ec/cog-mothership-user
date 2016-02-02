@@ -110,7 +110,8 @@ class EventListener extends BaseListener implements SubscriberInterface
 	 *
 	 * @param  UserEvent $event
 	 */
-	public function cleanupSession(UserEvent $event) {
+	public function cleanupSession(UserEvent $event) 
+	{
 		$sessionName = $this->get('cfg')->user->sessionName;
 		$this->get('http.session')->set($sessionName, $event->getUser());
 	}
