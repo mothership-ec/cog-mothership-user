@@ -1,4 +1,17 @@
-{% extends 'Message:Mothership:User::user:listing:view' %}
+{% extends 'Message:Mothership:ControlPanel::_templates/cp' %}
+
+{% block stylesheets %}
+	{{ parent() }}
+	{% stylesheets
+		'@Message:Mothership:User::resources/assets/css/user.css'
+
+		output='/assets/css/ms_user.css'
+		filter='csscogulerewrite,?cssmin'
+	%}
+		<link rel="stylesheet" href="{{ asset_url }}">
+	{% endstylesheets %}
+{% endblock %}
+
 {% block main %}
 	{{ form_start(impersonateForm) }}
 	<hgroup class="title">
@@ -14,7 +27,7 @@
 		</div>
 	</div>
 	{{ form_end(impersonateForm) }}
-	<div class="container-content short">
+	<div class="container-content">
 		{{ form_start(accountdetails) }}
 			{{ form_rest(accountdetails) }}
 			<button type="submit" class="button small save" id="save-content">Save changes</button>

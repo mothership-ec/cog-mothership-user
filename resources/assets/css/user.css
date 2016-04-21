@@ -1,0 +1,39 @@
+/* ======================================================= */
+/*                                                         */
+/*                                                         */
+/*    Mothership                                           */
+/*                                                         */
+/*                                                         */
+/* ======================================================= */
+/*
+/*
+/*    http://mothership.ec
+/*
+/*    Users - Style Style Sheet v1.0
+/*
+/*
+/* ======================================================= */
+
+
+
+.skip-payment {
+	float: right;
+	overflow: hidden;
+	margin: 20px 20px 0 20px;
+	height: 19px;
+}
+
+.skip-payment .field {
+	margin: 0px;
+	max-width: none;
+	width: auto;
+}
+
+
+.impersonate {
+	position: relative;
+	display: inline-block;
+	float: right;
+	margin-top: 12px;
+	margin-right: 8px;
+}
