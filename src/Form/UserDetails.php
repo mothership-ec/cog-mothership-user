@@ -45,7 +45,7 @@ class UserDetails extends Handler
 		$titles = $this->_container['cfg']->titles->{$locale};
 
 		$this->add('title','choice','', array(
-			'choices'  => $titles
+			'choices'  => array_combine($titles, $titles)
 		));
 
 		$this->add('forename','text','');
