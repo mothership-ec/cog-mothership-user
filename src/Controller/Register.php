@@ -120,7 +120,10 @@ class Register extends Controller
 			$data = $this->get('http.session')->get('user.register.form');
 		}
 
-		$form = $userForm->buildForm($url, $redirect, $this->get('title.list'), $data, $translator);
+		$locale = explode("_", $this->get('locale')->getId())[0];
+		$titles = $this->get('cfg')->titles->{$locale};
+
+		$form = $userForm->buildForm($url, $redirect, $titles, $data, $translator);
 
 		if ($this->get('module.loader')->exists('Message\\Mothership\\Mailing')) {
 			$form->add('opt_in', 'checkbox', $this->trans('ms.mailing.subscribe.option'))

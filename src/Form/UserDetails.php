@@ -35,12 +35,10 @@ class UserDetails extends Handler
 			->setDefaultValues($defaults)
 			->setAction($action);
 
+		$titles = $this->_container['title.list'];
+
 		$this->add('title','choice','', array(
-			'choices'  => array(
-				'Mr'   => 'Mr',
-				'Miss' => 'Miss',
-				'Mrs'  => 'Mrs',
-			)
+			'choices'  => $titles
 		));
 
 		$this->add('forename','text','');

@@ -21,12 +21,10 @@ class NewUser extends Handler
 
 		$this->setAction($action);
 
+		$titles = $this->_container['title.list'];
+
 		$this->add('title','choice','', array(
-			'choices' => array(
-				'mr'   => 'Mr',
-				'miss' => 'Miss',
-				'mrs'  => 'Mrs',
-			)
+			'choices'  => $titles
 		));
 
 		$this->add('forename','text','');
