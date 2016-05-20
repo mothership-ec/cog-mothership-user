@@ -21,10 +21,7 @@ class NewUser extends Handler
 
 		$this->setAction($action);
 
-		// get the current locale that mothership is using, then pass the correct
-		// titles/honoraries to the form builder.
-		$locale = explode("_", $this->_container['locale']->getId())[0];
-		$titles = $this->_container['cfg']->titles->{$locale};
+		$titles = $this->_container['title.list'];
 
 		$this->add('title','choice','', array(
 			'choices'  => $titles
